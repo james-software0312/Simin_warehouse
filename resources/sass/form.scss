@@ -1,0 +1,192 @@
+input{
+    border-top-style: hidden;
+     border-right-style: hidden;
+     border-left-style: hidden;
+         border-bottom-style: groove;
+}
+.form-control{
+   background: var(--bs-primary-surface);
+   line-height: 1.5;
+   font-size: 14px !important;
+   height: 2.813rem;
+   border-radius:6px;
+   border-color:transparent;
+   padding:10px;
+   -webkit-appearance: menulist!important;
+   -moz-appearance: menulist!important;
+   -ms-appearance: menulist!important;
+   -o-appearance: menulist!important;
+   appearance: menulist!important;
+
+   &:hover,&:focus,&.active{
+       box-shadow: none;
+       background: var(--bs-primary-surface);
+       color: var(--bs-primary);
+   }
+   &:focus{
+       border-color:var(--bs-primary-border) !important;
+       border: 1px solid #dfdfdf !important;
+       box-shadow: none !important;
+   }
+   &.solid{
+       background:transparent;
+       border-color:#ececec;
+       color:#000;
+       &[type="file"]{
+           padding: 6px 10px;
+       }
+   }
+   &[type="file"] {
+       padding: 0.175rem 0.75rem;
+       line-height: 2.7;
+       
+   }
+}
+
+.modal-content .modal-header .close{
+    border:1px solid #f2f3f4;
+}
+
+.form-label{
+    font-size:14px;
+}
+
+input.error{
+    border-color: #eb3939;
+}
+label.error{
+    color: #eb3939;
+    font-size: 14px;
+}
+
+.btn{
+    font-size: 14px  !important;
+}
+
+#btnedit, #btndelete{
+    max-width: max-content;
+   
+}
+
+
+.components .status .custom-dropdown {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+}
+
+.components .status .custom-dropdown img{
+    width:24px;
+    margin-right:10px;
+}
+
+.components  .status  .dropdown-toggle {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    height: 2.813rem;
+    width:100%;
+    font-size: 14px;
+}
+
+
+.components .status  .dropdown-toggle i {
+    margin-right: 5px; /* Adjust the spacing between the icon and text */
+}
+
+.components .status .dropdown-toggle::after{
+    position: absolute;
+    right:10px;
+}
+
+.components  .status  .dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    display: none;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-top: none;
+    width: 100%;
+    font-size: 14px;
+}
+
+.components  .status  .custom-dropdown.open .dropdown-menu {
+    display: block;
+}
+
+.select2-container{
+    width: 100% !important;
+}
+
+.select2-container .select2-selection--single{
+    height: 45px !important;
+}
+
+.select2-container--default .select2-selection--single{
+    border-radius: 4px;
+    border: var(--bs-border-width) solid var(--bs-border-color) !important;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__rendered{
+    line-height: 45px !important;
+    font-size: 14px;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow{
+    height: 45px !important; 
+}
+.select2-container--default .select2-results>.select2-results__options{
+    font-size: 14px;
+}
+
+#searchResults{
+    border: var(--bs-border-width) solid var(--bs-border-color);
+    border-radius: var(--bs-border-radius);
+    cursor: pointer;
+    list-style: none;
+    padding-left: 0;
+}
+
+#searchResults .itemname, #selectedItemsBody .itemname{
+    font-weight: 800;
+    font-size: 14px;
+}
+
+#searchResults li{
+    border-bottom: var(--bs-border-width) solid var(--bs-border-color);
+    padding:10px 14px;
+}
+#searchResults li:hover{
+    background: var(--bs-gray-100);
+}
+#searchResults .itemcode, #selectedItemsBody .itemcode{
+    font-size: 12px;
+    color: var(--bs-gray-600);
+}
+
+.searchitemresult{
+    background: var(--bs-gray-100);
+    border: var(--bs-border-width) solid var(--bs-border-color);
+    border-radius: var(--bs-border-radius);
+    padding:10px;
+}
+
+.searchitemresult table th{
+    border-bottom: var(--bs-border-width) solid var(--bs-border-color);
+    padding-bottom: 5px;
+}
+.searchitemresult table td{
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+@media (max-width: 768px) {
+    .select2-container{
+        width: 100%;
+    }
+}

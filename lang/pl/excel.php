@@ -1,0 +1,26 @@
+<?php
+
+return [
+    "order_date" => 'Data wystawienia: ',
+    "order_time" => 'Czas wystawienia: ',
+    "sale_person" => 'Reprezentant: ',
+    "email" => 'Email: ',
+    "order_number" => 'Zamówienia nr.: ',
+    'customer_name' => 'Nazwa klienta: ',
+    'customer_email' => 'Email klienta: ',
+    'no' => 'Nr.',
+    'product_sub_type' => 'Podkategorie',
+    'carton' => 'Karton',
+    'packing' => 'Op.',
+    'sale_price_without_vat' => 'Cena netto',
+    'total_price_without_vat' => 'Wartość netto',
+    'total_price_with_vat' => 'Wartość brutto',
+    'total_vat' => 'Kwota VAT',
+    'total_discount' => 'Rabat',
+    'total' => 'Razem',
+    'purchase_date' => 'Data zakupu: ',
+    'supplier_name' => 'Nazwa dostawcy: ',
+    'supplier_email' => 'Email dostawcy: ',
+    'total_price' => 'Wartość netto',
+    'total_price_with_vat_after_discount' => 'Wartości po rabacie',
+];

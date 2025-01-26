@@ -1,0 +1,114 @@
+
+
+$red: #dc3545;
+$orange: #fd7e14;
+$yellow: #ffc107;
+$green: #198754;
+$teal: #20c997;
+$primary: #6E3FF3;
+$danger: #FEC6C2;
+$warning: #FEE3AD;
+$success: #C5F7D4;
+$primary-surface: #F5F5FF;
+$primary-border: #DFE0F3;
+$primary-hover: #6A58DD;
+$primary-pressed: #52459E;
+$primary-focus: #948DAE;
+$primary-sec: #6B5BD1;
+$primary-sec-det:#6E6A84;
+
+$danger-surface: #FFF4F2;
+$danger-border: #EEB4B0;
+$danger-hover: #BD251C;
+$danger-pressed: #731912;
+
+$warning-surface: #FFF9F2;
+$warning-border: #EECEB0;
+$warning-hover: #BF6919;
+$warning-pressed: #734011;
+
+$success-surface: #F7F7F7;
+$success-border: #B8DBCA;
+$success-hover: #367A59;
+$success-pressed: #20573D;
+
+$secondary-blue: #567BD9;
+$secondary-blue-sec: #E7EDFE;
+$secondary-pink: #D956B4;
+$secondary-pink-sec: #F4EBFF;
+$secondary-yellow: #F4A403;
+
+$neutral-10: #ffffff;
+$neutral-20: #F4F5F5;
+$neutral-30: #EDEDED;
+$neutral-40: #E0E0E0;
+$neutral-50: #C2C2C2;
+$neutral-60: #9E9E9E;
+$neutral-70: #757575;
+$neutral-80: #616161;
+$neutral-90: #424242;
+$neutral-100: #0A0A0A;
+
+
+$theme-colors: (
+  "primary": $primary,
+  "danger": $danger,
+  "warning": $warning,
+  "success": $success
+);
+
+// Create your own map
+$custom-colors: (
+  "red":$red,
+  "yellow":$yellow,
+  "green":$green,
+  "orange":$orange,
+  "teal":$teal,
+  "primary-surface": $primary-surface,
+  "primary-border": $primary-border,
+  "primary-hover": $primary-hover,
+  "primary-pressed": $primary-pressed,
+  "primary-focus": $primary-focus,
+  "primary-sec": $primary-sec,
+  "primary-sec-det": $primary-sec-det,
+  "danger-surface": $danger-surface,
+  "danger-border": $danger-border,
+  "danger-hover" : $danger-hover,
+  "danger-pressed" : $danger-pressed,
+  "warning-surface" : $warning-surface,
+  "warning-border": $warning-border,
+  "warning-hover": $warning-hover,
+  "warning-pressed": $warning-pressed,
+  "success-surface": $success-surface,
+  "success-border": $success-border,
+  "success-hover": $success-hover,
+  "success-pressed" : $success-pressed,
+  "secondary-blue" : $secondary-blue,
+  "secondary-blue-sec" : $secondary-blue-sec,
+  "secondary-pink" : $secondary-pink,
+  "secondary-pink-sec": $secondary-pink-sec,
+  "secondary-yellow" : $secondary-yellow,
+  "neutral-10": $neutral-10,
+  "neutral-20": $neutral-20,
+  "neutral-30": $neutral-30,
+  "neutral-40": $neutral-40,
+  "neutral-50": $neutral-50,
+  "neutral-60": $neutral-60,
+  "neutral-70": $neutral-70,
+  "neutral-80": $neutral-80,
+  "neutral-90": $neutral-90,
+  "neutral-100":$neutral-100
+);
+
+// Merge the maps
+$theme-colors: map-merge($theme-colors, $custom-colors);
+
+
+.neutral {
+	&-10{
+		color: $neutral-10;
+	}
+	&-20{
+		color: $neutral-20;
+	}
+}

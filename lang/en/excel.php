@@ -1,0 +1,26 @@
+<?php
+
+return [
+    "order_date" => 'Order Date: ',
+    "order_time" => 'Order Time: ',
+    "sale_person" => 'Sale Person: ',
+    "email" => 'Email: ',
+    "order_number" => 'Order Number: ',
+    'customer_name' => 'Customer Name: ',
+    'customer_email' => 'Customer Email: ',
+    'no' => 'No.',
+    'product_sub_type' => 'Product type (short)',
+    'carton' => 'Carton',
+    'packing' => 'Packing',
+    'sale_price_without_vat' => 'Sale price (without VAT)',
+    'total_price_without_vat' => 'Total (without VAT)',
+    'total_price_with_vat' => 'Total (with VAT)',
+    'total_vat' => 'Total VAT',
+    'total_discount' => 'Total Discount',
+    'total' => 'Total',
+    'purchase_date' => 'Purchase Date: ',
+    'supplier_name' => 'Supplier Name: ',
+    'supplier_email' => 'Supplier Email: ',
+    'total_price' => 'Total Price',
+    'total_price_with_vat_after_discount' => 'Total amount with VAT after discount ',
+];
