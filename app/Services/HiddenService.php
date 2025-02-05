@@ -137,7 +137,7 @@ class HiddenService
                 DB::raw('0 as hidden_amount'), 
                 'movement.unitid', 
                 'stockitem.unitid as stockitemunitid', 
-                DB::raw("IF(wh_movement.source_warehouse_id != '".$stockItem->warehouseid."' , source_warehouse.name, target_warehouse.name) as contactname"), 
+                DB::raw("IF(wh_movement.source_warehouse_id != '".$stockItem->warehouseid."' , wh_source_warehouse.name, wh_target_warehouse.name) as contactname"), 
                 'stock_base_unit.name as base_unit_name', 
                 'stock_converted_unit.name as converted_unit_name', 
                 'movement.created_at',

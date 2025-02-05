@@ -691,11 +691,11 @@ class TransactionService
                 'transaction.quantity', 
                 'transaction.price', 
                 DB::raw("'purchase' as type"), 
-                'transaction.description', 
-                'transaction.hidden_amount', 
-                'transaction.unitid', 
-                'stockitem.unitid as stockitemunitid', 
-                'contact.name as contactname', 
+                'wh_transaction.description', 
+                'wh_transaction.hidden_amount', 
+                'wh_transaction.unitid', 
+                'wh_stockitem.unitid as stockitemunitid', 
+                'wh_contact.name as contactname', 
                 'stock_base_unit.name as base_unit_name', 
                 'stock_converted_unit.name as converted_unit_name', 
                 'transaction.created_at',
@@ -734,11 +734,11 @@ class TransactionService
                 'sell_order_detail.quantity', 
                 'sell_order_detail.price', 
                 DB::raw("'sell' as type"), 
-                'sell_order_detail.description', 
+                'wh_sell_order_detail.description', 
                 DB::raw('0 as hidden_amount'), 
-                'sell_order_detail.unitid', 
-                'stockitem.unitid as stockitemunitid', 
-                'contact.name as contactname', 
+                'wh_sell_order_detail.unitid', 
+                'wh_stockitem.unitid as stockitemunitid', 
+                'wh_contact.name as contactname', 
                 'stock_base_unit.name as base_unit_name', 
                 'stock_converted_unit.name as converted_unit_name', 
                 'sell_order_detail.created_at',
@@ -773,20 +773,20 @@ class TransactionService
                 'movement.quantity', 
                 'movement.price', 
                 // DB::raw("'movement' as type"), 
-                DB::raw("IF(movement.source_warehouse_id != '".$stockItem->warehouseid."' , 'movement_in', 'movement_out') as type"), 
-                'movement.description', 
+                DB::raw("IF(wh_movement.source_warehouse_id != '".$stockItem->warehouseid."' , 'movement_in', 'movement_out') as type"), 
+                'wh_movement.description', 
                 DB::raw('0 as hidden_amount'), 
-                'movement.unitid', 
-                'stockitem.unitid as stockitemunitid', 
-                DB::raw("IF(movement.source_warehouse_id != '".$stockItem->warehouseid."' , source_warehouse.name, target_warehouse.name) as contactname"), 
+                'wh_movement.unitid', 
+                'wh_stockitem.unitid as stockitemunitid', 
+                DB::raw("IF(wh_movement.source_warehouse_id != '".$stockItem->warehouseid."' , wh_source_warehouse.name, wh_target_warehouse.name) as contactname"), 
                 'stock_base_unit.name as base_unit_name', 
                 'stock_converted_unit.name as converted_unit_name', 
                 'movement.created_at',
                 DB::raw('CASE 
-                WHEN movement.unitid = stockitem.unitid THEN 
-                        (movement.quantity * stockitem.unitconverter1 / stockitem.unitconverter) 
+                WHEN wh_movement.unitid = stockitem.unitid THEN 
+                        (wh_movement.quantity * wh_stockitem.unitconverter1 / wh_stockitem.unitconverter) 
                     ELSE 
-                        (movement.quantity * stockitem.unitconverter / stockitem.unitconverter1) 
+                        (wh_movement.quantity * wh_stockitem.unitconverter / wh_stockitem.unitconverter1) 
                 END as converted_quantity'),
                 DB::raw('0 as converted_hidden_amount'), 
             )
@@ -797,7 +797,7 @@ class TransactionService
             ->where('movement.code', $stockItem->code);
         if ($keyword) {
             $movements->where(function ($query) use ($keyword, $stockItem) {
-                $query->where(DB::raw("IF(wh_movement.source_warehouse_id != '".$stockItem->warehouseid."', source_warehouse.name, target_warehouse.name)"), 'LIKE', '%' . $keyword . '%')
+                $query->where(DB::raw("IF(wh_movement.source_warehouse_id != '".$stockItem->warehouseid."', wh_source_warehouse.name, wh_target_warehouse.name)"), 'LIKE', '%' . $keyword . '%')
                         ->orWhere('movement.reference', 'LIKE', '%' . $keyword . '%');
             });
         }

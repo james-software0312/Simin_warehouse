@@ -536,7 +536,7 @@ class StockItemController extends Controller
             ->filter(function ($query) use ($hasSeeHiddenPermission, $request) {
                 // Apply filter only if the user doesn't have permission to see hidden amounts
                 if (!$hasSeeHiddenPermission) {
-                    $query->whereRaw('transaction.quantity - transaction.hidden_amount > 0');
+                    $query->whereRaw('wh_transaction.quantity - wh_transaction.hidden_amount > 0');
                 }
                 // if (!empty($request->get('search'))) {
                 //     $query->where(function($q) use ($request) {

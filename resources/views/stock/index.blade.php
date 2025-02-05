@@ -118,11 +118,11 @@
                     {{-- <th class="text-center">{{__('text.code')}}</th> --}}
                     <th>{{__('text.name')}}</th>
                     {{-- <th>{{__('text.category')}}</th> --}}
-                    <th>{{__('text.sub_type')}}</th>
-                    <th>{{__('text.supplier')}}</th>
+                    <!-- <th>{{__('text.sub_type')}}</th> -->
+                    <!-- <th>{{__('text.supplier')}}</th> -->
                     {{-- <th>{{__('text.warehouse')}}</th> --}}
                     <th>{{__('text.selling_price')}}</th>
-                    <th>{{__('text.quantity')}}</th>
+                    <!-- <th>{{__('text.quantity')}}</th> -->
                     <th>{{__('text.quantity_packed')}}</th>
                     {{-- <th>{{__('text.created_at')}}</th> --}}
                     <th></th>
@@ -326,13 +326,13 @@
                     // { data: 'code', name: 'code' },
                     { data: 'name', name: 'name' },
                     // { data: 'category', name: 'category' },
-                    { data: 'itemsubtype', name: 'itemsubtype' },
-                    { data: 'suppiler', name: 'suppiler' },
+                    // { data: 'itemsubtype', name: 'itemsubtype' },
+                    // { data: 'suppiler', name: 'suppiler' },
                     // { data: 'warehouse', name: 'warehouse' },
                     { data: 'price', name: 'price', render: function(data, type, row) {
                         return `${row.price ? row.price + ' {{__("text.PLN")}}' : 'Undefined'}`
                     } },
-                    { data: 'quantity', name: 'quantity',
+                    // { data: 'quantity', name: 'quantity',
                         // render: function(data, type, row) {
                         // let pairText = "";
                         // let cartonText = "";
@@ -350,7 +350,7 @@
 
                         // return pairText + cartonText;
                         // }
-                    },
+                    // },
                     { data: 'convertedQty', name: 'convertedQty'},
                     // { data: 'created_at', name: 'created_at', render: function(data, type, row) {
                     //     const date = new Date(row.created_at);
