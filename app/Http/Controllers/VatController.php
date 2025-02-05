@@ -36,6 +36,14 @@ class VatController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\JsonResponse
      */
+
+     public function edit(Request $request) {
+        $id = $request->id;
+        $vat = $this->vatService->getById($id);
+        return view('vat.edit')->with([
+            "data" => $vat
+        ]);
+     }
     public function get(Request $request)
     {
         // Retrieve permissions from the middleware
@@ -64,7 +72,9 @@ class VatController extends Controller
                     $actionHtml .= '</div>';
                     return $actionHtml;
                 })
-                ->toJson();
+                ->rawColumns(['action'])
+                ->make(true);
+                // ->toJson();
         }
 
         return abort(403, 'Unauthorized access.');

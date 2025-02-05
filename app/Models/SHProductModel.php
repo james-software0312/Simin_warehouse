@@ -26,5 +26,6 @@ class SHProductModel extends Model
         'sold_count',
         'color',
         'size',
+        'contact_id'
     ];
 }

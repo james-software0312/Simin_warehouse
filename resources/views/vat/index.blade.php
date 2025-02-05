@@ -102,6 +102,7 @@
                     }
                 });
             });
+            var editRoute = "{!! route('vat.edit', ['id' => '__id__']) !!}";
 
             $('#data').DataTable({
                 processing: true,
@@ -115,7 +116,10 @@
                     { data: 'id', name: 'id', orderable: false, searchable: false, visible: false },
                     { data: 'name', name: 'name' },
                     { data: 'description', name: 'description' },
-                    { data: 'action', name: 'action', orderable: false, searchable: false }
+                    { data: 'action', name: 'action', orderable: false, searchable: false, render: function(data, type, row) {
+                        var url = editRoute.replace('__id__', row.id);
+                        return '<a href="' + url + '" class="btn btn-sm btn-warning edit-btn" data-id="' + row.id + '">Edit</a>';
+                    }}
                 ],
                 buttons: [
                 {

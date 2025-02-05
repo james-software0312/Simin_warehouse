@@ -25,6 +25,7 @@ return new class extends Migration
             $table->string('photo')->nullable();
             $table->string('itemsubtype');
             $table->string('size');
+            $table->string('color');
             $table->float('price', 8, 2);
             $table->float('purchase_price', 8, 2)->nullable();
             $table->unsignedBigInteger('contactid')->nullable();

@@ -134,6 +134,7 @@ Route::prefix('color')->group(function () {
 Route::prefix('vat')->group(function () {
     Route::middleware(['check.view.access'])->get('/', [VatController::class, 'index'])->name('vat.index');
     Route::get('/get', [VatController::class, 'get'])->name('vat.get');
+    Route::get('/edit/{id}', [VatController::class, 'edit'])->name('vat.edit');
     Route::get('/GetAllData', [VatController::class, 'GetAllData'])->name('vat.GetAllData');
     Route::get('/{id}', [VatController::class, 'show'])->name('vat.show');
     Route::post('/store', [VatController::class, 'store'])->name('vat.store');

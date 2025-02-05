@@ -14,6 +14,7 @@
     }
     @media (max-width: 768px) {
         #selectedItemsBody,
+        
         #selectedItemsBody tr,
         #selectedItemsBody td {
             display: block;
@@ -97,7 +98,6 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="row">
                         <div class="col-md-6">
                             <div class="mb-3">

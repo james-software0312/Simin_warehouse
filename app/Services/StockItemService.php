@@ -236,16 +236,16 @@ class StockItemService
     public function updatestock($itemData, $type, $status){
         for ($i = 0; $i < count($itemData); $i++) {
             $item = $itemData[$i];
-            $inventory = StockItemModel::where('id', $item->stockitemid)->first();
+            // $inventory = StockItemModel::where('id', $item->stockitemid)->first();
 
-            SHProductInventoryModel::insert([
-                'sku' => $inventory->code,
-                'product_id' => $inventory->product_id,
-                'stock_count' => $item->quantity*$inventory->unitconverter,
-                'sold_count' => 0,
-                'created_at' => now(),
-                'updated_at' => now()
-            ]);
+            // SHProductInventoryModel::insert([
+            //     'sku' => $inventory->code,
+            //     'product_id' => $inventory->product_id,
+            //     'stock_count' => $item->quantity*$inventory->unitconverter,
+            //     'sold_count' => 0,
+            //     'created_at' => now(),
+            //     'updated_at' => now()
+            // ]);
             $code = $item->code;
             $stockitemid = $item->stockitemid;
             $warehouseid = $item->warehouseid;
@@ -271,26 +271,33 @@ class StockItemService
                 $stockItem = StockItemModel::where('warehouseid', $warehouseid)->where('code', $code)->first();
                 TransactionModel::where('warehouseid', $warehouseid)->where('stockitemid', $stockitemid)->update(['stockitemid'=>$stockItem->id]);
             }
-
             $stockitemunitid = $stockItem->unitid;
             if ($stockItem->unitid != $newUnitid) {
-                $newQuantity = $newQuantity * $stockItem->unitconverter / $stockItem->unitconverter1;
+                $newQuantity = $newQuantity ;
+                //newQuantity == 100;
             }
-
+            
             if($stockItem->unitconverter > $stockItem->unitconverter1 && $stockItem->unitid != $newUnitid){
                 $newSignleQuantity = $newSignleQuantity * $stockItem->unitconverter / $stockItem->unitconverter1;
+                //newSignleQuantity = 100;
             }else if($stockItem->unitconverter < $stockItem->unitconverter1 && $stockItem->unitid == $newUnitid){
                 $newSignleQuantity = $newSignleQuantity * $stockItem->unitconverter1 / $stockItem->unitconverter;
             }
             $updatedQuantity = $stockItem->quantity + $newQuantity * $type * $status;
+
             $updatedSQuantity = $stockItem->single_quantity + $newSignleQuantity * $type * $status;
             if($type == 1 && $status == 1){
                 $purchase_price = 0;
                 $contactid = 0;
                 if(isset($item->price)) $purchase_price = $item->price;
                 if(isset($item->contactid)) $contactid = $item->contactid;
-
+                
                 StockItemModel::where('code', $code)->where('warehouseid', $warehouseid)->update([ 'quantity' => $updatedQuantity, 'single_quantity' => $updatedSQuantity, 'purchase_price'=>$purchase_price, 'contactid'=>$contactid ]);
+                $stockitem =  StockItemModel::where('code', $code)->where('warehouseid', $warehouseid)->first();
+                SHProductModel::where('id', $stockitem->product_id)->update([
+                    'contact_id' =>$contactid,
+                    'sale_price' => $stockitem->purchase_price,
+                ]);
             }else{
                 StockItemModel::where('code', $code)->where('warehouseid', $warehouseid)->update(['quantity' => $updatedQuantity, 'single_quantity' => $updatedSQuantity]);
             }

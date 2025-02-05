@@ -641,6 +641,7 @@ class TransactionController extends Controller
     {
         $quantity   = $request->input('quantity');
         $unit   = $request->input('unit');
+        // dd($unit);
         $price   = $request->input('price');
         $itemid     = $request->input('stockitemid');
         $warehouseid     = $request->input('warehouse');
