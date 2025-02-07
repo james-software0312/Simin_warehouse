@@ -165,4 +165,12 @@ class UnitController extends Controller
 
         return redirect()->route('unit.index')->with('success', __('text.msg_unit_deleted'));
     }
+
+    public function edit(Request $request) {
+        $id = $request->id;
+        $unit = $this->unitService->getById($id);
+        return view('unit.edit')->with([
+            "data" => $unit
+        ]);
+     }
 }

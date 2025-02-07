@@ -20,15 +20,15 @@
     ?>
     <div class="">
        
-        <form id="editdataform" method="POST" action="{{ route('vat.update') }}" enctype="multipart/form-data">
+        <form id="editdataform" method="POST" action="{{ route('color.update') }}" enctype="multipart/form-data">
             @csrf
             <input type="hidden" name="editid" id="editid" value="{{$data->id}}">
                 <div class="row">
                     <div class="col-md-12 row">
                         <div class="col-md-12">
                             <div class="mb-3">
-                                <label for="description" class="form-label">{{__('text.vat')}}</label>    
-                                <input type="number" class="form-control" id="editprice" name="name" required min="0" max="100" value="{{$data->name}}" >
+                                <label for="description" class="form-label">{{__('text.color')}}</label>    
+                                <input type="text" class="form-control" id="editprice" name="name" required min="0" max="100" value="{{$data->name}}" >
                                 </div>
                         </div>
                     </div>
@@ -41,7 +41,7 @@
                         </div>
                     </div>
                     <div class="d-flex justify-content-end">
-                        <a href="{{route('vat.index')}}" class="btn btn-danger d-flex align-items-center">
+                        <a href="{{route('color.index')}}" class="btn btn-danger d-flex align-items-center">
                             <span class="material-symbols-rounded">close</span>{{__('text.Cancel')}}</a>&nbsp;&nbsp;
                         <button type="submit" class="btn btn-primary d-flex align-items-center" id="submit"><span   class="material-symbols-rounded">check</span> {{__('text.submit')}}</button>
                     </div>

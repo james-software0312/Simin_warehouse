@@ -475,7 +475,7 @@ class TransactionController extends Controller
             return DataTables::of($data)
 
             ->addColumn('action', function ($data) use ($hasEditPermission, $hasDeletePermission, $hasViewPermission, $hasSeeHiddenPermission) {
-
+                $data = $data->first();
                 $actionHtml = '
                     <div class="dropdown">
                         <button class="btn btn-secondary dropdown-toggle text-right px-0" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 100%">

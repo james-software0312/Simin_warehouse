@@ -30,7 +30,9 @@ class SettingsService
      */
     public function update($id, $data)
     {
+        // dd($data);
         $datasetting = SettingsModel::findOrFail($id);
+        // dd($datasetting);
         $datasetting->update($data);
         return $datasetting;
     }

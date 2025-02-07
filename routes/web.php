@@ -111,6 +111,7 @@ Route::prefix('unit')->group(function () {
     Route::post('/store', [UnitController::class, 'store'])->name('unit.store');
     Route::post('/update', [UnitController::class, 'update'])->name('unit.update');
     Route::post('/destroy', [UnitController::class, 'destroy'])->name('unit.destroy');
+    Route::get('/edit/{id}', [UnitController::class, 'edit'])->name('unit.edit');
 });
 
 Route::prefix('size')->group(function () {
@@ -122,6 +123,7 @@ Route::prefix('size')->group(function () {
     Route::post('/ajaxstore', [SizeController::class, 'ajaxstore'])->name('size.ajaxstore');
     Route::post('/update', [SizeController::class, 'update'])->name('size.update');
     Route::post('/destroy', [SizeController::class, 'destroy'])->name('size.destroy');
+    Route::get('/edit/{id}', [SizeController::class, 'edit'])->name('size.edit');
 });
 
 Route::prefix('color')->group(function () {
@@ -129,16 +131,19 @@ Route::prefix('color')->group(function () {
     Route::get('/get', [ColorController::class, 'get'])->name('color.get');
     Route::get('/{id}', [ColorController::class, 'insert'])->name('color.insert');
     Route::post('/store', [ColorController::class, 'store'])->name('color.store');
+    Route::get('/edit/{id}', [ColorController::class, 'edit'])->name('color.edit');
+    Route::post('/destroy', [ColorController::class, 'destroy'])->name('color.destroy');
+    Route::post('/update', [ColorController::class, 'update'])->name('color.update');
 });
 
 Route::prefix('vat')->group(function () {
     Route::middleware(['check.view.access'])->get('/', [VatController::class, 'index'])->name('vat.index');
     Route::get('/get', [VatController::class, 'get'])->name('vat.get');
-    Route::get('/edit/{id}', [VatController::class, 'edit'])->name('vat.edit');
     Route::get('/GetAllData', [VatController::class, 'GetAllData'])->name('vat.GetAllData');
     Route::get('/{id}', [VatController::class, 'show'])->name('vat.show');
     Route::post('/store', [VatController::class, 'store'])->name('vat.store');
     Route::post('/update', [VatController::class, 'update'])->name('vat.update');
+    Route::get('/edit/{id}', [VatController::class, 'edit'])->name('vat.edit');
     Route::post('/destroy', [VatController::class, 'destroy'])->name('vat.destroy');
 });
 

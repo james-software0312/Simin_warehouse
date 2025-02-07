@@ -366,7 +366,6 @@
             var query = $(this).val();
 
             if (query.length >= 2 && warehouseid) { // Minimum characters to trigger the search
-                console.log('>>>>>>>>>>>>>>>>');
                 $.ajax({
                     url: '{{ route("transaction.searchitem") }}',
                     method: 'GET',

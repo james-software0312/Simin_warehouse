@@ -85,7 +85,7 @@ class SettingsController extends Controller
     {
         // Set the ID for the settings to be updated
         $id = 1;
-
+        
         // Extract relevant data from the request
         $data = $request->only(['company', 'pagename', 'datetime', 'timezone',  'company_email', 'company_phone', 'company_address']);
 

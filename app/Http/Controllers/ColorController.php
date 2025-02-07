@@ -51,11 +51,11 @@ class ColorController extends Controller
                     }
 
                     // Delete Button
-                    if ($hasDeletePermission) {
-                        $actionHtml .= '<a data-bs-toggle="modal" data-bs-target="#DeleteModal" id="btndelete" data-deleteid="' . $data->id . '" class="btn btn-sm btn-danger d-flex align-items-center">
-                            <span class="material-symbols-rounded">delete</span> '.__('text.delete').'
-                        </a>&nbsp;';
-                    }
+                    // if ($hasDeletePermission) {
+                    //     $actionHtml .= '<a data-bs-toggle="modal" data-bs-target="#DeleteModal" id="btndelete" data-deleteid="' . $data->id . '" class="btn btn-sm btn-danger d-flex align-items-center">
+                    //         <span class="material-symbols-rounded">delete</span> '.__('text.delete').'
+                    //     </a>&nbsp;';
+                    // }
                     $actionHtml .= '</div>';
                     return $actionHtml;
                 })
@@ -72,4 +72,28 @@ class ColorController extends Controller
 
         return redirect()->route('color.index')->with('success', __('text.msg_color_created'));
     }
+
+    public function edit(Request $request) {
+        $id = $request->id;
+        $color = $this->colorService->getById($id);
+        return view('color.edit')->with([
+            "data" => $color
+        ]);
+     }
+
+     public function destroy(Request $request)
+     {
+         $id = $request->only('deleteid');
+         $this->colorService->delete($id);
+ 
+         return redirect()->route('color.index')->with('success', __('text.msg_color_deleted'));
+     }
+     public function update(Request $request)
+     {
+         $id   = $request->only(['editid']);
+         $data = $request->only(['name', 'description']);
+         $group = $this->colorService->update($id, $data);
+ 
+         return redirect()->route('color.index')->with('success', __('text.msg_color_updated'));
+     }
 }

@@ -223,11 +223,27 @@ $(function() {
 // Initialize jQuery Validation
 $('#adddataform').validate({
     rules: {
-        
+        name: {
+            required: true
+        },
+        phone: {
+            required: true
+        },
+        company: {
+            required: true, // Ensure company field is required
+            // minlength: 2    // You can add other rules like min length if needed
+        }
     },
     messages: {
         name: {
             required: '{!!__('text.field_required')!!}'
+        },
+        phone: {
+            required: '{!!__('text.field_required')!!}'
+        },
+        company: {
+            required: '{!!__('text.field_required')!!}', // Error message for company field
+            // minlength: '{!!__('text.company_min_length')!!}' // Optional min length message
         }
     },
     submitHandler: function(form) {

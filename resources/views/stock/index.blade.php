@@ -396,7 +396,7 @@
              rowCallback: function(row, data, index) {
                  // Add a click event to the row to redirect to the Edit screen
                 $(row).on('click', function() {
-                    if (!$(event.target).closest('td').hasClass('action')) {
+                    if (!$(event.target).closest('td').hasClass('action') && !$(event.target).is('input[type="checkbox"]')) {
                         // Redirect to the Edit screen
                         window.location.href = '{{ route("stock.edit", ":id") }}'.replace(':id', data.id);
                     }

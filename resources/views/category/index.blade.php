@@ -15,11 +15,11 @@
         <h2>{{ __('text.category') }}</h2>
     </div>
 	<div class="row">
+        <div class="col-md-6">
+            <div id="jstree"></div>
+        </div>
 		<div class="col-md-6">
 			<img src="" alt="" id="category_img" style="width: 100%">
-		</div>
-		<div class="col-md-6">
-			<div id="jstree"></div>
 		</div>
 	</div>
 

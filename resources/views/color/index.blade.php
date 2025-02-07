@@ -46,14 +46,14 @@
 </x-modal>
 
 <x-delete>
-    <form id="deletedataform" method="POST" action="{{ route('size.destroy') }}">
+    <form id="deletedataform" method="POST" action="{{ route('color.destroy') }}">
         @csrf
         <input type="hidden" name="deleteid" id="deleteid" value="">
     </form>
 </x-delete>
 
 <x-edit>
-    <form id="editdataform" method="POST" action="{{ route('size.update') }}">
+    <form id="editdataform" method="POST" action="{{ route('color.update') }}">
         @csrf
         <input type="hidden" name="editid" id="editid" value="">
 
@@ -101,7 +101,9 @@
                     }
                 });
             });
-
+            
+            var editRoute = "{!! route('color.edit', ['id' => '__id__']) !!}";
+            var deleteRoute = "{!! route('color.destroy', ['id' => '__id__']) !!}";
             $('#data').DataTable({
                 processing: true,
                 serverSide: true,
@@ -114,7 +116,11 @@
                     { data: 'id', name: 'id', orderable: false, searchable: false, visible: false },
                     { data: 'name', name: 'name' },
                     { data: 'description', name: 'description' },
-                    { data: 'action', name: 'action', orderable: false, searchable: false }
+                    { data: 'action', name: 'action', orderable: false, searchable: false, render: function(data, type, row) {
+                        var url = editRoute.replace('__id__', row.id);
+                        var url_d = deleteRoute.replace('__id__', row.id);
+                        return '<a href="' + url + '" class="btn btn-sm btn-success edit-btn" data-id="' + row.id + '">Edit</a>&nbsp;<a data-bs-toggle="modal" data-bs-target="#DeleteModal" id="btndelete" data-deleteid="'+ row.id+'" href="' + url_d + '" class="btn btn-sm btn-warning edit-btn" data-id="' + row.id + '">Delete</a>';
+                    }}
                 ],
                 buttons: [
                 {

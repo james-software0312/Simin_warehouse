@@ -102,7 +102,8 @@
                     }
                 });
             });
-
+            var editRoute = "{!! route('size.edit', ['id' => '__id__']) !!}";
+            var deleteRoute = "{!! route('size.destroy', ['id' => '__id__']) !!}";
             $('#data').DataTable({
                 processing: true,
                 serverSide: true,
@@ -115,7 +116,11 @@
                     { data: 'id', name: 'id', orderable: false, searchable: false, visible: false },
                     { data: 'name', name: 'name' },
                     { data: 'description', name: 'description' },
-                    { data: 'action', name: 'action', orderable: false, searchable: false }
+                    { data: 'action', name: 'action', orderable: false, searchable: false, render: function(data, type, row) {
+                        var url = editRoute.replace('__id__', row.id);
+                        var url_d = deleteRoute.replace('__id__', row.id);
+                        return '<a href="' + url + '" class="btn btn-sm btn-success edit-btn" data-id="' + row.id + '">Edit</a>&nbsp;<a data-bs-toggle="modal" data-bs-target="#DeleteModal" id="btndelete" data-deleteid="'+ row.id+'" href="' + url_d + '" class="btn btn-sm btn-warning edit-btn" data-id="' + row.id + '">Delete</a>';
+                    }}
                 ],
                 buttons: [
                 {

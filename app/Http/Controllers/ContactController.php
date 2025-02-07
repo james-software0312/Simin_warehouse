@@ -207,6 +207,9 @@ class ContactController extends Controller
 
     public function store(Request $request)
     {   
+        // $request->validate([
+        //     'company' => 'required',
+        // ]);
         $data = $request->only(['name', 'surname', 'company', 'address', 'city', 'postal_code', 'country', 'email','phone', 'vat_number','whatsapp','status','description']);
         $group = $this->contactService->create($data);
 

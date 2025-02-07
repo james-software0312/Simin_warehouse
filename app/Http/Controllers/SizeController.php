@@ -143,4 +143,12 @@ class SizeController extends Controller
 
         return redirect()->route('size.index')->with('success', __('text.msg_size_deleted'));
     }
+
+    public function edit(Request $request) {
+        $id = $request->id;
+        $size = $this->sizeService->getById($id);
+        return view('size.edit')->with([
+            "data" => $size
+        ]);
+     }
 }
