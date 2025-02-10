@@ -130,6 +130,7 @@ class StockItemService
             'slug' => Str::slug($data['name']),
             'color' => $data['color'],
             'size' => $data['size'],
+            'status' => ($data['is_visible'] == 1) ? 'publish' : 'draft'
         ];
 
         if ($image) {

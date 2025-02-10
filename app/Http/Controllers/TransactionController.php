@@ -1044,7 +1044,7 @@ class TransactionController extends Controller
         $unit = $request->input('unit');
         // get current qty
         $currentQty = $this->stockitemService->getitemcurrentQty($stockitemid);
-        $quantity = $unit == $currentQty['unitid'] ? $quantity : $quantity * $currentQty['unitconverter'];
+        // $quantity = $unit == $currentQty['unitid'] ? $quantity : $quantity * $currentQty['unitconverter'];
         if ($quantity > $currentQty['quantity']) {
             return response()->json(["avaiable" => false]);
         } else {

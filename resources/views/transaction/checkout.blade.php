@@ -376,7 +376,7 @@
                         console.log("-data",data)
 
                         $.each(data, function (index, item) {
-                            $('#searchResults').append('<li class="search-result" data-id="' + item.id + '" data-price="' + item.price + '" data-unitid="' + item.unitid + '" data-unitconverterto="' + item.unitconverterto + '"data-unitconverter="' + item.unitconverter + '" data-unitconverter1="' + item.unitconverter1 + '" data-itemquantity="' + item.quantity + '"><span data-name="'+item.name+'" class="itemname">' + item.name + '(' + item.quantity + ' ' + item.unitname + ')</span><br/><span data-code="'+item.code+'" class="itemcode">'+item.code+'</span></li>');
+                            $('#searchResults').append('<li class="search-result" data-id="' + item.id + '" data-price="' + item.price + '" data-unitid="' + item.unitid + '" data-unitconverterto="' + item.unitconverterto + '"data-unitconverter="' + item.unitconverter + '" data-unitconverter1="' + item.unitconverter1 + '" data-itemquantity="' + item.quantity + '"><span data-name="'+item.name+'" class="itemname">' + item.name + '(' + item.quantity + ' ' + "carton" + ')</span><br/><span data-code="'+item.code+'" class="itemcode">'+item.code+'</span></li>');
                             // Customize the display based on your model's structure
                         });
                     }
@@ -415,14 +415,16 @@
                 existingRow.find('.quantity-input').val(currentQuantity + (currentUnit == 1 ? Math.max(unitconverter,unitconverter1) : 1));
             } else {
                 // Item does not exist, add a new row
-                var quantityInput = '<div class="input-group" style="margin-right: 10px"><div class="input-group-text qty-minus">-</div><input id="quantity" required class="form-control quantity-input" name="quantity[]" value="' + quantity + '" style="text-align:center;"><div class="input-group-text qty-plus">+</div></div>';
+                var quantityInput = '<div class="input-group" style="margin-right: 10px"><div class="input-group-text qty-minus">-</div><input id="quantity" required class="form-control quantity-input" name="quantity[]" value="' + 1 + '" style="text-align:center;"><div class="input-group-text qty-plus">+</div></div>';
                 var itemCode = '<input type="hidden" name="stockitemid[]" value="' + itemId + '">';
                 var priceInput = '<label class="mobile-label">{!!__("text.sale_price")!!}</label><input required class="form-control price-input" name="price[]" type="number" min="0" step="0.01" value="' + price + '" disabled />';
                 var realpriceInput = '<label class="mobile-label">{!!__("text.real_price")!!}</label><input required class="form-control realprice-input" name="realprice[]" type="number" min="0" step="0.01" value="' + price + '" />';
                 var discountInput = '<label class="mobile-label">{!!__("text.discount")!!}</label><div class="d-flex align-items-center"><input id="discount" required class="form-control discount-input" name="discount[]" value="' + discount + '" style="margin-right: 5px" disabled /> {{ __("text.PLN") }}</div>';
                 // var unitInput = $("#unit_list").html();
-                var unitInput = `<select class="form-control unit-input" name="unit[]"><option value="${unitid}">${$("#unit_list").find("option[value="+unitid+"]").text()}</option><option value="${unitconverterto}">${$("#unit_list").find("option[value="+unitconverterto+"]").text()}</option></select>`;
-
+                // var unitInput = `<select class="form-control unit-input" name="unit[]"><option value="${unitid}">${$("#unit_list").find("option[value="+unitid+"]").text()}</option><option value="${unitconverterto}">${$("#unit_list").find("option[value="+unitconverterto+"]").text()}</option></select>`;
+                var unitInput = `<select class="form-control unit-input" name="unit[]">
+                        <option value="2" ${unitid == 2 || unitconverterto == 2 ? 'selected' : ''}>carton</option>
+                    </select>`;
                 var newRow = '<tr data-id="' + itemId + '" data-unitid="' + unitid + '" data-unitconverter="' + unitconverter + '" data-unitconverter1="' + unitconverter1 + '" data-price="' + price + '" data-unitid="' + unitid + '" data-unitconverterto="' + unitconverterto + '"><td class="mobile-inline"><div style="width: 95%"><span class="itemname">' + itemName + '</span><br/><span class="itemcode">' + itemCodeName + '</span></div><a href="#blank" class="remove-item mobile-label"><span class="material-symbols-rounded">delete</span></a></td><td style="display:flex;flex-direction:row">' + itemCode + quantityInput + '' + unitInput + '</td><td>' + priceInput + '</td><td class="realprice-value">' + realpriceInput + '</td><td class="discount-value">' + discountInput + '</td><td align="center">&nbsp;<a href="#blank" class="remove-item mobile-hide"><span class="material-symbols-rounded">delete</span></a></td></tr>';
 
                 $('#selectedItemsBody').append(newRow);
@@ -501,11 +503,12 @@
             var unitconverter1 = $(this).closest('tr').data('unitconverter1');
             var old_val = $(this).prev().val();
             var new_val = 0;
-            if (unitconverter > unitconverter1) {
-                new_val = old_val * 1 + unitconverter * 1;
-            } else {
-                new_val = old_val * 1 + unitconverter1 * 1;
-            }
+            new_val = 1 + parseInt(old_val);
+            // if (unitconverter > unitconverter1) {
+            //     new_val = old_val * 1 + unitconverter * 1;
+            // } else {
+            //     new_val = old_val * 1 + unitconverter1 * 1;
+            // }
             $(this).prev().val(new_val);
             $(this).prev().trigger('change');
         })
@@ -515,11 +518,12 @@
             var unitconverter1 = $(this).closest('tr').data('unitconverter1');
             var old_val = $(this).next().val();
             var new_val = 0;
-            if (unitconverter > unitconverter1) {
-                new_val = old_val * 1 - unitconverter * 1;
-            } else {
-                new_val = old_val * 1 - unitconverter1 * 1;
-            }
+            // if (unitconverter > unitconverter1) {
+            //     new_val = old_val * 1 - unitconverter * 1;
+            // } else {
+            //     new_val = old_val * 1 - unitconverter1 * 1;
+            // }
+            new_val = parseInt(old_val)- 1;
             if (new_val > 0) {
                 $(this).next().val(new_val);
                 $(this).next().trigger('change');
