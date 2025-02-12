@@ -356,12 +356,14 @@
 <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 
 <script type="module">
-
+    // console.log('123123123123', {{ $units }});
+    let unit = @json($units);
+    var real_unit;
+    console.log(unit);
     $(function() {
 
         //Search Item
         $('#item').on('input', function () {
-            console.log(123123123123);
             var warehouseid = $("#warehouse").val();
             var query = $(this).val();
 
@@ -376,7 +378,13 @@
                         console.log("-data",data)
 
                         $.each(data, function (index, item) {
-                            $('#searchResults').append('<li class="search-result" data-id="' + item.id + '" data-price="' + item.price + '" data-unitid="' + item.unitid + '" data-unitconverterto="' + item.unitconverterto + '"data-unitconverter="' + item.unitconverter + '" data-unitconverter1="' + item.unitconverter1 + '" data-itemquantity="' + item.quantity + '"><span data-name="'+item.name+'" class="itemname">' + item.name + '(' + item.quantity + ' ' + "carton" + ')</span><br/><span data-code="'+item.code+'" class="itemcode">'+item.code+'</span></li>');
+                            for(let i = 0; i < unit.length; i ++){
+                                if(unit[i]['id'] ==1) {
+                                    real_unit = unit[i]['name'];
+                                }
+                            }
+                        console.log(item);
+                            $('#searchResults').append('<li class="search-result" data-id="' + item.id + '" data-price="' + item.price + '" data-unitid="' + item.unitid + '" data-unitconverterto="' + item.unitconverterto + '"data-unitconverter="' + item.unitconverter + '" data-unitconverter1="' + item.unitconverter1 + '" data-itemquantity="' + item.quantity + '"><span data-name="'+item.name+'" class="itemname">' + item.name + '(' + item.single_quantity + ' ' + real_unit + ')</span><br/><span data-code="'+item.code+'" class="itemcode">'+item.code+'</span></li>');
                             // Customize the display based on your model's structure
                         });
                     }
@@ -385,6 +393,8 @@
                 $('#searchResults').empty();
             }
         });
+
+        //IN HERE table.
 
         // Handle click on a search result
         $('#searchResults').on('click', '.search-result', function () {
@@ -415,7 +425,7 @@
                 existingRow.find('.quantity-input').val(currentQuantity + (currentUnit == 1 ? Math.max(unitconverter,unitconverter1) : 1));
             } else {
                 // Item does not exist, add a new row
-                var quantityInput = '<div class="input-group" style="margin-right: 10px"><div class="input-group-text qty-minus">-</div><input id="quantity" required class="form-control quantity-input" name="quantity[]" value="' + 1 + '" style="text-align:center;"><div class="input-group-text qty-plus">+</div></div>';
+                var quantityInput = '<div class="input-group" style="margin-right: 10px"><div class="input-group-text qty-minus">-</div><input id="quantity" required class="form-control quantity-input" name="quantity[]" value="' + unitconverter + '" style="text-align:center;"><div class="input-group-text qty-plus">+</div></div>';
                 var itemCode = '<input type="hidden" name="stockitemid[]" value="' + itemId + '">';
                 var priceInput = '<label class="mobile-label">{!!__("text.sale_price")!!}</label><input required class="form-control price-input" name="price[]" type="number" min="0" step="0.01" value="' + price + '" disabled />';
                 var realpriceInput = '<label class="mobile-label">{!!__("text.real_price")!!}</label><input required class="form-control realprice-input" name="realprice[]" type="number" min="0" step="0.01" value="' + price + '" />';
@@ -423,7 +433,7 @@
                 // var unitInput = $("#unit_list").html();
                 // var unitInput = `<select class="form-control unit-input" name="unit[]"><option value="${unitid}">${$("#unit_list").find("option[value="+unitid+"]").text()}</option><option value="${unitconverterto}">${$("#unit_list").find("option[value="+unitconverterto+"]").text()}</option></select>`;
                 var unitInput = `<select class="form-control unit-input" name="unit[]">
-                        <option value="2" ${unitid == 2 || unitconverterto == 2 ? 'selected' : ''}>carton</option>
+                        <option value="2" ${unitid == 2 || unitconverterto == 2 ? 'selected' : ''}>${real_unit}</option>
                     </select>`;
                 var newRow = '<tr data-id="' + itemId + '" data-unitid="' + unitid + '" data-unitconverter="' + unitconverter + '" data-unitconverter1="' + unitconverter1 + '" data-price="' + price + '" data-unitid="' + unitid + '" data-unitconverterto="' + unitconverterto + '"><td class="mobile-inline"><div style="width: 95%"><span class="itemname">' + itemName + '</span><br/><span class="itemcode">' + itemCodeName + '</span></div><a href="#blank" class="remove-item mobile-label"><span class="material-symbols-rounded">delete</span></a></td><td style="display:flex;flex-direction:row">' + itemCode + quantityInput + '' + unitInput + '</td><td>' + priceInput + '</td><td class="realprice-value">' + realpriceInput + '</td><td class="discount-value">' + discountInput + '</td><td align="center">&nbsp;<a href="#blank" class="remove-item mobile-hide"><span class="material-symbols-rounded">delete</span></a></td></tr>';
 
@@ -503,7 +513,7 @@
             var unitconverter1 = $(this).closest('tr').data('unitconverter1');
             var old_val = $(this).prev().val();
             var new_val = 0;
-            new_val = 1 + parseInt(old_val);
+            new_val = unitconverter + parseInt(old_val);
             // if (unitconverter > unitconverter1) {
             //     new_val = old_val * 1 + unitconverter * 1;
             // } else {
@@ -523,7 +533,7 @@
             // } else {
             //     new_val = old_val * 1 - unitconverter1 * 1;
             // }
-            new_val = parseInt(old_val)- 1;
+            new_val = parseInt(old_val)- unitconverter;
             if (new_val > 0) {
                 $(this).next().val(new_val);
                 $(this).next().trigger('change');
@@ -542,7 +552,9 @@
             if ($("#discount_type2").prop("checked")) {
                 return alert("you can't input");
             }
-            $(this).closest("tr").find("input.discount-input").val($(this).val() - $(this).closest("tr").find("input.price-input").val())
+            let  real_discount = ($(this).val() - $(this).closest("tr").find("input.price-input").val()).toFixed(2)
+            console.log(">>>>>>>>>>>>>>>>>>>>>", ($(this).val() - $(this).closest("tr").find("input.price-input").val()).toFixed(3));
+            $(this).closest("tr").find("input.discount-input").val(real_discount)
             calculateDiscount();
         });
 
@@ -552,7 +564,7 @@
                 $("#selectedItemsTable tbody tr").each(function() {
                     total_discount += $(this).find('.discount-input').val() * $(this).find('.quantity-input').val();
                 })
-                $("#total_discount").val(total_discount);
+                $("#total_discount").val((total_discount).toFixed(2));
             }
         }
 

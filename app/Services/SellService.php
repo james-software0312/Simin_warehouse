@@ -63,7 +63,7 @@ class SellService
         return $data1;
     }
 
-    public function updatecheckout($data,  $warehouseid, $withInvoice, $confirmed, $quantity, $unit, $price, $discount, $itemids, $reference, $pre_order) 
+    public function updatecheckout($data,  $warehouseid, $withInvoice, $confirmed, $quantity, $unit, $price, $discount, $itemids, $reference, $pre_order)
     {
         // Use the reference to get the existing records
         $existingOrderRecord = SellOrderModel::where('reference', $reference)->first();
@@ -144,16 +144,16 @@ class SellService
                 ->leftJoin('unit', 'unit.id', '=', 'stockitem.unitid')
                 ->leftJoin('unit as sell_unit', 'sell_unit.id', '=', 'sell_order_detail.unitid')
                 ->select(
-                    'stockitem.id as stockitemid', 
-                    'stockitem.name', 
-                    'stockitem.code', 
-                    'stockitem.price as stock_price', 
-                    'stockitem.unitconverter', 
-                    'stockitem.unitconverter1', 
-                    'stockitem.unitconverterto', 
-                    'stockitem.unitid as stockunit', 
-                    'sell_order_detail.*', 
-                    'unit.name as stockunitname', 
+                    'stockitem.id as stockitemid',
+                    'stockitem.name',
+                    'stockitem.code',
+                    'stockitem.price as stock_price',
+                    'stockitem.unitconverter',
+                    'stockitem.unitconverter1',
+                    'stockitem.unitconverterto',
+                    'stockitem.unitid as stockunit',
+                    'sell_order_detail.*',
+                    'unit.name as stockunitname',
                     'sell_unit.name as sellorderunitname'
                 )
                 ->where('sell_order_detail.reference', $reference)
@@ -165,14 +165,14 @@ class SellService
         return SellOrderDetailModel::leftJoin('stockitem', 'stockitem.id' ,'=', 'sell_order_detail.stockitemid')
             ->leftJoin('unit as sell_unit', 'sell_unit.id', '=', 'sell_order_detail.unitid')
             ->select(
-                'sell_order_detail.*', 
-                'stockitem.id as stockitemid', 
-                'stockitem.name', 
-                'stockitem.code', 
-                'stockitem.unitconverter', 
-                'stockitem.unitconverter1', 
-                'stockitem.unitconverterto', 
-                'stockitem.unitid as stockunit', 
+                'sell_order_detail.*',
+                'stockitem.id as stockitemid',
+                'stockitem.name',
+                'stockitem.code',
+                'stockitem.unitconverter',
+                'stockitem.unitconverter1',
+                'stockitem.unitconverterto',
+                'stockitem.unitid as stockunit',
                 'sell_unit.name as sellunitname'
             )
             ->where('sell_order_detail.reference', $reference)
@@ -272,11 +272,11 @@ class SellService
             'contact.company as suppliercompany',
             'stock_base_unit.name as base_unit_name',
             'stock_converted_unit.name as converted_unit_name',
-            DB::raw('CASE 
-                WHEN wh_sell_order_detail.unitid = wh_stockitem.unitid THEN 
-                        (wh_sell_order_detail.quantity * wh_stockitem.unitconverter1 / wh_stockitem.unitconverter) 
-                    ELSE 
-                        (wh_sell_order_detail.quantity * wh_stockitem.unitconverter / wh_stockitem.unitconverter1) 
+            DB::raw('CASE
+                WHEN wh_sell_order_detail.unitid = wh_stockitem.unitid THEN
+                        (wh_sell_order_detail.quantity * wh_stockitem.unitconverter1 / wh_stockitem.unitconverter)
+                    ELSE
+                        (wh_sell_order_detail.quantity * wh_stockitem.unitconverter / wh_stockitem.unitconverter1)
                 END as converted_quantity')
         )
         ->where('sell_order_detail.reference', $ref)
@@ -306,18 +306,18 @@ class SellService
                     'sell_order.show_reference as show_reference',
                     'sell_order.discount_type',
                     'sell_order.created_at as order_created_at',
-                    'sell_order_detail.*', 
-                    'stockitem.id as stockitemid', 
-                    'stockitem.name', 
-                    'stockitem.code', 
-                    'stockitem.size', 
-                    'stockitem.itemsubtype', 
-                    'stockitem.vat', 
-                    'stockitem.unitconverter', 
-                    'stockitem.unitconverter1', 
-                    'stockitem.quantity as stock_qty', 
-                    'stockitem.unitid as stock_unitid', 
-                    'stock_base_unit.name as base_unit_name', 
+                    'sell_order_detail.*',
+                    'stockitem.id as stockitemid',
+                    'stockitem.name',
+                    'stockitem.code',
+                    'stockitem.size',
+                    'stockitem.itemsubtype',
+                    'stockitem.vat',
+                    'stockitem.unitconverter',
+                    'stockitem.unitconverter1',
+                    'stockitem.quantity as stock_qty',
+                    'stockitem.unitid as stock_unitid',
+                    'stock_base_unit.name as base_unit_name',
                     'stock_converted_unit.name as converted_unit_name',
                     'category.name as category_name',
                     'contact.name as contact_name',
@@ -355,8 +355,8 @@ class SellService
                 'stockitem.unitconverter1',
                 'stockitem.unitconverterto',
                 'stockitem.unitid as stockunitid',
-                'users.name as creator', 
-                'sell_order_detail.price', 
+                'users.name as creator',
+                'sell_order_detail.price',
                 'sell_order_detail.updated_at',
                 'sell_order_detail.unitid',
                 'unit.name as sell_unit_name',
@@ -368,7 +368,7 @@ class SellService
 
     }
 
-    
+
     /**
      * Get total count of items for different time periods and status.
      *
@@ -393,13 +393,13 @@ class SellService
             ->whereYear('sell_order.selldate',date('Y'))
             ->where('sell_order.confirmed', 1)
             ->first();
-        
+
         $res['Overall'] = $overallCount->total;
         $res['Year']    = $yearCount->total;
         $res['Month']   = $monthCount->total;
         return $res;
     }
-    
+
     /**
      * Get monthly data for transactions.
      *
@@ -419,7 +419,7 @@ class SellService
             return $group->count();
         });
     }
-    
+
     public function gettopstockbysale()
     {
         // Get the total count of items for each warehouse
@@ -437,10 +437,10 @@ class SellService
             ->orderByDesc('quantity')
             ->take(10)
             ->get(['id', 'name', 'quantity']);
-    
+
         return $data;
     }
-    
+
     public function getLastRef()
     {
         $lastReference = SellOrderModel::whereDate('selldate', date('Y-m-d'))
@@ -449,12 +449,12 @@ class SellService
         $lastNumber = 0;
         if ($lastReference) {
             $lastNumber = (int) substr($lastReference, -3);
-        }       
-            
+        }
+
         return $lastNumber;
-    
+
     }
-    
+
     /**
      * Get check-out transactions for reporting purposes.
      *
@@ -489,7 +489,7 @@ class SellService
         $order = SellOrderModel::find($id);
         if ($payment_type != 'pre_order')
             $sell_orders = SellOrderModel::where('selldate', '=', $date)->where('payment_type', '=', $payment_type)->where('pre_order', '=', false)->where("id", "<", $id)->get();
-        else 
+        else
             $sell_orders = SellOrderModel::where('selldate', '=', $date)->where('pre_order', '=', true)->where("id", "<", $id)->get();
         $prefix = $this->setShowRefPrefix($payment_type);
         $updated_show_ref =  $prefix . "/" . date('d/m/Y', strtotime($order->selldate)). "/" . sprintf('%04d', count($sell_orders) + 1);
@@ -529,7 +529,7 @@ class SellService
         } else if ($payment_type == 'cash_on_delivery') {
             $prefix = "WD";
         }
-        
+
         return $prefix;
     }
 
@@ -545,7 +545,7 @@ class SellService
 
         $dateObject = DateTime::createFromFormat('d/m/Y', $endTime);
         $end_date = $dateObject->format('Y-m-d');
-        
+
 
         return SellOrderDetailModel::leftJoin('sell_order', 'sell_order.reference', '=', 'sell_order_detail.reference')
         ->leftJoin('stockitem', 'stockitem.id', '=', 'sell_order_detail.stockitemid')
@@ -556,22 +556,22 @@ class SellService
             DB::raw('SUM(wh_sell_order_detail.price * wh_sell_order_detail.quantity) as total_amount'),
             DB::raw('SUM(wh_sell_order_detail.quantity) as total_qty'),
             DB::raw('SUM(
-                    CASE 
-                        WHEN wh_sell_order_detail.unitid = wh_stockitem.unitid and wh_sell_order_detail.unitid=1 THEN 
+                    CASE
+                        WHEN wh_sell_order_detail.unitid = wh_stockitem.unitid and wh_sell_order_detail.unitid=1 THEN
                             wh_sell_order_detail.quantity * wh_stockitem.unitconverter1 / wh_stockitem.unitconverter
-                                    WHEN wh_sell_order_detail.unitid != wh_stockitem.unitid and wh_sell_order_detail.unitid=1 THEN 
+                                    WHEN wh_sell_order_detail.unitid != wh_stockitem.unitid and wh_sell_order_detail.unitid=1 THEN
                             wh_sell_order_detail.quantity * wh_stockitem.unitconverter / wh_stockitem.unitconverter1
-                        ELSE 
+                        ELSE
                             wh_sell_order_detail.quantity
                     END
                 ) AS carton_qty'),
             DB::raw('SUM(
-                CASE 
-                    WHEN wh_sell_order_detail.unitid = wh_stockitem.unitid and wh_sell_order_detail.unitid=2 THEN 
+                CASE
+                    WHEN wh_sell_order_detail.unitid = wh_stockitem.unitid and wh_sell_order_detail.unitid=2 THEN
                         wh_sell_order_detail.quantity * wh_stockitem.unitconverter1 / wh_stockitem.unitconverter
-                                WHEN wh_sell_order_detail.unitid != wh_stockitem.unitid and wh_sell_order_detail.unitid=2 THEN 
+                                WHEN wh_sell_order_detail.unitid != wh_stockitem.unitid and wh_sell_order_detail.unitid=2 THEN
                         wh_sell_order_detail.quantity * wh_stockitem.unitconverter / wh_stockitem.unitconverter1
-                    ELSE 
+                    ELSE
                         wh_sell_order_detail.quantity
                 END
             ) AS pair_qty'),

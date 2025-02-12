@@ -10,7 +10,7 @@
             <span class="material-symbols-rounded">task_alt</span> {{ session('success') }}
         </div>
     @endif
-    
+
     <div class="">
         <h2>{{__('text.add_stock_item')}}</h2>
         <form id="adddataform" method="POST" action="{{ route('stock.store') }}" enctype="multipart/form-data">
@@ -115,7 +115,7 @@
                     <div class="col-md-6">
                         <div class="mb-3">
                             <label for="name" class="form-label">{{__('text.sub_type')}}</label>
-                            <input type="text" class="form-control" id="itemsubtype" name="itemsubtype" placeholder="{{__('text.sub_type')}}" required >
+                            <input type="text" class="form-control" id="itemsubtype" name="itemsubtype" placeholder="{{__('text.sub_type')}}" >
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -295,7 +295,7 @@
         //         }
         //     })
         // })
-        
+
         $('#adddataform').on('submit', function(e) {
         e.preventDefault();  // Prevent default form submission
 

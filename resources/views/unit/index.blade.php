@@ -10,11 +10,11 @@
     @endif
     <div class="mb-4 d-flex align-items-center justify-content-between">
         <h2>{{ __('text.unit') }}</h2>
-        <div class="text-end">
+        {{-- <div class="text-end">
             <button type="button" class="btn btn-primary d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#AddModal">
                 <span class="material-symbols-rounded">add</span>{{ __('text.add') }}
             </button>
-        </div>
+        </div> --}}
     </div>
     <div class="table-responsive-sm">
         <table class="table" id="data">
@@ -46,7 +46,7 @@
             <label for="description" class="form-label">{{ __('text.description') }}</label>
             <textarea id="description" class="form-control" name="description" placeholder="{{ __('text.description') }}"></textarea>
         </div>
-        
+
     </form>
 </x-modal>
 
@@ -73,7 +73,7 @@
             <label for="editdescription" class="form-label">{{ __('text.description') }}</label>
             <textarea id="editdescription" class="form-control" name="description" placeholder="{{ __('text.description') }}"></textarea>
         </div>
-        
+
     </form>
 </x-edit>
 
@@ -81,11 +81,11 @@
 @push('scripts')
 <script type="module">
         $(function() {
-            
+
 
             // Triggered when the "Edit" button is clicked
             $('#EditModal').on('show.bs.modal', function(event) {
-                
+
                 // Get the group ID from the data attribute
                 var button = $(event.relatedTarget);
                 var DataId = button.data('editid');
@@ -130,7 +130,10 @@
                     { data: 'action', name: 'action', orderable: false, searchable: false, render: function(data, type, row) {
                         var url = editRoute.replace('__id__', row.id);
                         var url_d = deleteRoute.replace('__id__', row.id);
-                        return '<a href="' + url + '" class="btn btn-sm btn-success edit-btn" data-id="' + row.id + '">Edit</a>&nbsp;<a data-bs-toggle="modal" data-bs-target="#DeleteModal" id="btndelete" data-deleteid="'+ row.id+'" href="' + url_d + '" class="btn btn-sm btn-warning edit-btn" data-id="' + row.id + '">Delete</a>';
+                        return '<a href="' + url + '" class="btn btn-sm btn-success edit-btn" data-id="' + row.id + '">Edit</a>'
+
+                        // IF YOU WANT TO DELETE;
+                        // &nbsp;<a data-bs-toggle="modal" data-bs-target="#DeleteModal" id="btndelete" data-deleteid="'+ row.id+'" href="' + url_d + '" class="btn btn-sm btn-warning edit-btn" data-id="' + row.id + '">Delete</a>;
                     }}
                 ],
                 buttons: [
@@ -162,7 +165,7 @@
             });
         });
 
-           
+
 
         // Initialize jQuery Validation
         $('#adddataform').validate({

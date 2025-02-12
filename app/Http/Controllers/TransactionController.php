@@ -475,14 +475,14 @@ class TransactionController extends Controller
             return DataTables::of($data)
 
             ->addColumn('action', function ($data) use ($hasEditPermission, $hasDeletePermission, $hasViewPermission, $hasSeeHiddenPermission) {
-                $data = $data->first();
+                // $data = $data->first();
                 $actionHtml = '
                     <div class="dropdown">
                         <button class="btn btn-secondary dropdown-toggle text-right px-0" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 100%">
                             '.__('text.action').'
                         </button>
                         <div class="dropdown-menu" style="right: 0" aria-labelledby="dropdownMenuButton">';
-                if ($hasEditPermission && !$data->confirmed && !$data->withinvoice) {
+                if ($hasEditPermission && !$data->confirmed && !$data->withinvoice && $data->reference) {
                     $actionHtml .= '<a href="' . route("transaction.checkoutedit", ['id' => $data->reference]) . '" class="dropdown-item d-flex align-items-center"><span class="material-symbols-rounded">edit</span> ' . __('text.edit') . '</a>';
                 }
 
@@ -680,23 +680,27 @@ class TransactionController extends Controller
      */
     public function storecheckout(Request $request)
     {
-        $quantity   = $request->input('quantity');
         $unit   = $request->input('unit');
         $price   = $request->input('price');
         $discount   = $request->input('discount');
         $itemid     = $request->input('stockitemid');
         $warehouseid     = $request->input('warehouse');
-
+        $quantity   = $request->input('quantity');
         $data = $request->only(['transactiondate', 'contactid','reference','description', 'discount_type', 'total_discount', 'payment_type', 'show_reference']);
 
         $withInvoice = $request->boolean('with_invoice');
         $confirmed = $request->boolean('confirmed');
         $pre_order = $request->boolean('pre_order');
-
         DB::beginTransaction();
         try {
             $transaction = $this->sellService->createcheckout($data, $warehouseid, $withInvoice, $confirmed, $quantity, $unit, $price, $discount, $itemid, $pre_order);
             $transaction = $this->sellService->getStockItemsByReference($data['reference']);
+            // $transaction['quantity'] /= $transaction['unitconverter'];
+            foreach($transaction as $tran){
+                $tran['quantity'] /=$tran['unitconverter'];
+
+            }
+            // dd($transaction);
             $this->stockitemService->updatestock($transaction, -1, 1);
             if (!$this->stockitemService->checkstock()) {
                 throw new \Exception('Process failed');
@@ -885,6 +889,7 @@ class TransactionController extends Controller
     public function destroy(Request $request)
     {
         $id     = $request->only('deleteid');
+        // dd($id);
         $status = $request->input('status');
         if ($status == 1) {
             $transaction = $this->transactionService->getByRef($id, $status);
@@ -1045,7 +1050,7 @@ class TransactionController extends Controller
         // get current qty
         $currentQty = $this->stockitemService->getitemcurrentQty($stockitemid);
         // $quantity = $unit == $currentQty['unitid'] ? $quantity : $quantity * $currentQty['unitconverter'];
-        if ($quantity > $currentQty['quantity']) {
+        if ($quantity > $currentQty['quantity']*$currentQty['unitconverter']) {
             return response()->json(["avaiable" => false]);
         } else {
             return response()->json(["avaiable" => true]);

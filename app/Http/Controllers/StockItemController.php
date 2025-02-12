@@ -170,6 +170,8 @@ class StockItemController extends Controller
         $hasEditPermission   = $request->hasEditPermission;
         $hasDeletePermission = $request->hasDeletePermission;
         $hasViewPermission   = $request->hasViewPermission;
+        $unit = $this->unitService->getAll();
+        // dd($unit[0]);
 
         if ($request->ajax()) {
             $data = $this->stockitemService->getAll();
@@ -231,15 +233,24 @@ class StockItemController extends Controller
                 $mainQty = '<span class="text-red">' . $this->settingsService->formatQuantity($data->single_quantity) . ' para</span>';
                 return $mainQty;
             })
-            ->addColumn('convertedQty', function($data) {
+            ->addColumn('convertedQty', function($data) use ($unit) {
                 $quantity = $data->single_quantity;
                 if($data->unitconverter > $data->unitconverter1 ) {
                     $quantity = round($data->single_quantity * $data->unitconverter1 / $data->unitconverter, 2);
                 } else {
                     $quantity = round($data->single_quantity * $data->unitconverter / $data->unitconverter1, 2);
                 }
-                return '<span class="text-primary">' . $this->settingsService->formatQuantity($quantity) . " " . ' karton</span>';
+                $real_unit = '';
+                foreach( $unit as $u) {
+                    if($u->id ==2) {
+                        // dd($u->name);
+                        $real_unit = $u->name;
+                    }
+                }
+                // return '<span class="text-primary">' . $this->settingsService->formatQuantity($quantity) . " " .'{{ __("text.carton") }}'. '</span>';
+                return '<span class="text-primary">' . $this->settingsService->formatQuantity($quantity) . ' ' . __('text.carton') . '</span>';
             })
+
             ->rawColumns(['item_photo', 'code','action', 'quantity', 'convertedQty'])
             ->filter(function ($query) use ($request) {
                 $query->Where('stockitem.is_delete', false);
@@ -343,11 +354,11 @@ class StockItemController extends Controller
         $data = $request->only(['code', 'categoryid', 'unitid','warehouseid','name','quantity','description', 'size', 'color', 'price', 'vat', 'itemsubtype', 'unitconverter', 'unitconverterto', 'unitconverter1', 'is_visible']);
         $group = $this->stockitemService->create($data, $image);
         if($group['success'] == false) {
-            
+
             return response()->json([
                 'success' => false,
                 'message' => $group['message'],
-            ]); 
+            ]);
         } else return response() -> json([
             'success' => true,
         ]);

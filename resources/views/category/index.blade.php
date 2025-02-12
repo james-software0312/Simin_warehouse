@@ -49,11 +49,18 @@
     </form>
 </x-delete>
 
+<x-deleteImage>
+    <form id="deleteimagedataform" method="POST" action="{{ route('category.deleteImage')}}">
+        @csrf
+        <input type="hidden" name="deleteimage_id" id="deleteimageid">
+    </form>
+</x-deleteImage>
+
 <x-edit>
     <form id="editdataform" method="POST" action="{{ route('category.update') }}" enctype="multipart/form-data">
         @csrf
         <input type="hidden" name="editid" id="editid" value="">
-        
+
         <div class="mb-3">
             <label for="editname" class="form-label">{{ __('text.name') }}</label>
             <input type="text" class="form-control" id="editname" name="name" placeholder="{{ __('text.name') }}" required>
@@ -107,7 +114,7 @@
                 items: function ($node) {
                     return {
                         CreateRoot: {
-                            label: "Create Root",
+                            label: "{{ __('text.Createroot') }}",
                             action: function () {
 								const modal = new bootstrap.Modal($('#AddModal'));
 								$("#parent_id").val(null);
@@ -115,7 +122,7 @@
                             }
                         },
                         Create: {
-                            label: "Create",
+                            label: "{{ __('text.Create') }}",
                             action: function () {
 								const modal = new bootstrap.Modal($('#AddModal'));
 								$("#parent_id").val($node.id);
@@ -123,7 +130,7 @@
                             }
                         },
                         Rename: {
-                            label: "Rename",
+                            label: "{{ __('text.Rename') }}",
                             action: function () {
 								$("#editid").val($node.id);
 								$("#editname").val($node.text);
@@ -132,11 +139,20 @@
                             }
                         },
                         Delete: {
-                            label: "Delete",
+                            label: "{{ __('text.Delete') }}",
                             action: function () {
 								console.log($node)
 								$("#delete_id").val($node.id);
                                 const modal = new bootstrap.Modal($('#DeleteModal'));
+								modal.show();
+                            }
+                        },
+                        Image_Delete: {
+                            label: "{{ __('text.Image_Delete') }}",
+                            action: function () {
+                                $("#deleteimageid").val($node.id);
+                                $("#category_img").html('');
+                                const modal = new bootstrap.Modal($('#DeleteImageModal'));
 								modal.show();
                             }
                         }
@@ -167,13 +183,13 @@
 		});
 		$('#editdataform').validate({
 			rules: {
-				
+
 			},
 			messages: {
 				name: {
 					required: '{!!__('text.field_required')!!}'
 				},
-				
+
 			},
 			submitHandler: function(form) {
 				form.submit();

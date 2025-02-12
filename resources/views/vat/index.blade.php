@@ -41,7 +41,7 @@
             <label for="description" class="form-label">{{ __('text.description') }}</label>
             <textarea id="description" class="form-control" name="description" placeholder="{{ __('text.description') }}"></textarea>
         </div>
-        
+
     </form>
 </x-modal>
 
@@ -56,7 +56,7 @@
     <form id="editdataform" method="POST" action="{{ route('vat.update') }}">
         @csrf
         <input type="hidden" name="editid" id="editid" value="">
-        
+
         <div class="mb-3">
             <label for="editname" class="form-label">{{ __('text.name') }}</label>
             <input type="number" class="form-control" id="editname" name="name" placeholder="{{ __('text.name') }}" required>
@@ -65,7 +65,7 @@
             <label for="editdescription" class="form-label">{{ __('text.description') }}</label>
             <textarea id="editdescription" class="form-control" name="description" placeholder="{{ __('text.description') }}"></textarea>
         </div>
-        
+
     </form>
 </x-edit>
 
@@ -73,11 +73,11 @@
 @push('scripts')
 <script type="module">
         $(function() {
-            
+
 
             // Triggered when the "Edit" button is clicked
             $('#EditModal').on('show.bs.modal', function(event) {
-                
+
                 // Get the group ID from the data attribute
                 var button = $(event.relatedTarget);
                 var DataId = button.data('editid');
@@ -152,14 +152,14 @@
             });
         });
 
-           
+
 
         // Initialize jQuery Validation
         $('#adddataform').validate({
             rules: {
-                
+
             },
-            
+
             messages: {
                 name: {
                     required: '{!!__('text.field_required')!!}'
@@ -171,7 +171,7 @@
         });
         $('#editdataform').validate({
             rules: {
-                
+
             },
             messages: {
                 name: {

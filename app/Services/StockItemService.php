@@ -116,7 +116,7 @@ class StockItemService
             return [
                 'success' => false,
                 'message' => 'Product name must unique',
-            ]; 
+            ];
         };
         $post = new StockItemModel();
         $post->fill($data);
@@ -277,7 +277,7 @@ class StockItemService
                 $newQuantity = $newQuantity ;
                 //newQuantity == 100;
             }
-            
+
             if($stockItem->unitconverter > $stockItem->unitconverter1 && $stockItem->unitid != $newUnitid){
                 $newSignleQuantity = $newSignleQuantity * $stockItem->unitconverter / $stockItem->unitconverter1;
                 //newSignleQuantity = 100;
@@ -292,7 +292,7 @@ class StockItemService
                 $contactid = 0;
                 if(isset($item->price)) $purchase_price = $item->price;
                 if(isset($item->contactid)) $contactid = $item->contactid;
-                
+
                 StockItemModel::where('code', $code)->where('warehouseid', $warehouseid)->update([ 'quantity' => $updatedQuantity, 'single_quantity' => $updatedSQuantity, 'purchase_price'=>$purchase_price, 'contactid'=>$contactid ]);
                 $stockitem =  StockItemModel::where('code', $code)->where('warehouseid', $warehouseid)->first();
                 SHProductModel::where('id', $stockitem->product_id)->update([

@@ -195,7 +195,7 @@
             <div class="modal-footer">
                 <button class="btn btn-primary d-flex align-items-center" id="printButton"><span
                         class="material-symbols-rounded">print</span> {{ __('text.print') }}</button>
-                <button type="button" class="btn btn-secondary d-flex align-items-center" data-bs-dismiss="modal"> 
+                <button type="button" class="btn btn-secondary d-flex align-items-center" data-bs-dismiss="modal">
                     <span class="material-symbols-rounded">
                         close
                     </span>{{ __('text.close') }}</button>
@@ -350,7 +350,7 @@ $(function() {
                     return `<div class="form-check form-switch"><input class="form-check-input pre_order" type="checkbox" data-reference='${row.reference}' role="switch" ${row.pre_order ? 'checked' : 'disabled'} ></div>`;
                 }
             },
-            
+
             {
                 data: 'withinvoice', name: 'withinvoice', render: function(data, type, row) {
                     return `<div class="form-check form-switch"><input class="form-check-input withinvoice" type="checkbox" data-reference='${row.reference}' role="switch" ${row.withinvoice ? 'checked disabled' : (row.confirmed ? '' : 'disabled')} ></div>`;
@@ -470,7 +470,7 @@ $(function() {
         var checkbox = $(this);  // Store the reference to the checkbox
         var isChecked = checkbox.is(':checked');
         if (confirm("{!!__('text.sure_confirm')!!}")) {
-    
+
             // You can access the row data using closest
             var rowData = $(this).data("reference");
             $.ajax({
@@ -529,7 +529,7 @@ $(function() {
         $('input[name=keyword]').val('');
         $('input[name=startdate]').val('');
         $('input[name=enddate]').val('');
-        
+
         checkoutlistTable.draw();
     });
 
@@ -571,8 +571,8 @@ $(function() {
         var keyword = $('input[name=keyword]').val();
         var startdate = $('input[name=startdate]').val();
         var enddate = $('input[name=enddate]').val();
-        var downloadUrl = `{!! route('transaction.sellexport') !!}?keyword=` + encodeURIComponent(keyword) + 
-                        `&startdate=` + encodeURIComponent(startdate) + 
+        var downloadUrl = `{!! route('transaction.sellexport') !!}?keyword=` + encodeURIComponent(keyword) +
+                        `&startdate=` + encodeURIComponent(startdate) +
                         `&enddate=` + encodeURIComponent(enddate);
 
         // Trigger a file download by changing the window location
@@ -643,10 +643,10 @@ $(function() {
                     checkoutlistTable.draw();
                     selected_orders = [];
                     $('#btn_delete').addClass('d-none');
-                }else{            
+                }else{
                     return alert(response.message)
                 }
-                
+
             },
             error: function(xhr) {
                 alert("Failed to retrieve the data.");

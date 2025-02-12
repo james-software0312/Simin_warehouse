@@ -62,6 +62,7 @@ Route::prefix('category')->group(function () {
     Route::post('/store', [CategoryController::class, 'store'])->name('category.store');
     Route::post('/update', [CategoryController::class, 'update'])->name('category.update');
     Route::post('/destroy', [CategoryController::class, 'destroy'])->name('category.destroy');
+    Route::post('/deleteImage', [CategoryController::class, 'deleteImage'])->name('category.deleteImage');
 });
 
 Route::prefix('shelf')->group(function () {

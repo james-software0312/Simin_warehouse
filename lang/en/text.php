@@ -255,6 +255,7 @@ return [
     'msg_category_created' => 'Category created successfully',
     'msg_category_updated' => 'Category updated successfully',
     'msg_category_deleted' => 'Category deleted successfully',
+    'msg_img_category_deleted' => 'The Image of Category deleted successfully',
     'msg_size_created' => 'Size created successfully',
     'msg_size_updated' => 'Size updated successfully',
     'msg_size_deleted' => 'Size deleted successfully',

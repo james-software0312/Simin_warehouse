@@ -421,11 +421,22 @@
                 $("#deletedataform").submit();
             });
 
+            $('#modalDeleteImageButton').on('click', function () {
+                $("#deleteimagedataform").submit();
+            });
+
 			$('#DeleteModal').on('show.bs.modal', function(event) {
 				var button = $(event.relatedTarget); // Button that triggered the modal
 				var deleteid = button.data('deleteid'); // Extract data from the button
 				// Set the value of the hidden input field
 				$('#deleteid').val(deleteid);
+			});
+			$('#DeleteImageModal').on('show.bs.modal', function(event) {
+				var button = $(event.relatedTarget); // Button that triggered the modal
+                console.log(">>>>>>>>>>>",button);
+				var deleteid = button.data('deleteid'); // Extract data from the button
+				// Set the value of the hidden input field
+				// $('#deleteimageid').val(deleteid);
 			});
 
 			$.validator.addMethod("uniqueemail", function(value, element) {

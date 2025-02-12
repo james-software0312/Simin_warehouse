@@ -62,7 +62,7 @@ class CategoryController extends Controller
             return DataTables::of($data)
                 ->addColumn('action', function ($data) use ($hasEditPermission, $hasDeletePermission) {
                     $actionHtml = '<div class="d-flex">';
-                    
+
                     // Edit Button
                     if ($hasEditPermission) {
                         $actionHtml .= '<a data-bs-toggle="modal" data-bs-target="#EditModal" id="btnedit" data-editid="' . $data->id . '" class="btn btn-sm btn-success d-flex align-items-center" data-toggle="modal" data-target="#edit">
@@ -205,7 +205,7 @@ class CategoryController extends Controller
             $image_large = 'large-' . $image_db;
             $image_thumb = 'thumb-' . $image_db;
             $image_p_grid = 'product-' . $image_db;
-            
+
             $folder_path = base_path(env('MEDIA_UPLOADER_PATH'));
             $imageInst = Image::read($image);
             $resize_large_image = $imageInst->resize(width: 740);
@@ -265,7 +265,7 @@ class CategoryController extends Controller
             $image_large = 'large-' . $image_db;
             $image_thumb = 'thumb-' . $image_db;
             $image_p_grid = 'product-' . $image_db;
-            
+
             $folder_path = base_path(env('MEDIA_UPLOADER_PATH'));
             $imageInst = Image::read($image);
             $resize_large_image = $imageInst->resize(width: 740);
@@ -293,6 +293,24 @@ class CategoryController extends Controller
         $SetData->each->update($insert_sh_category_data);
 
         return redirect()->route('category.index')->with('success', __('text.msg_category_updated'));
+    }
+
+    public function deleteImage(Request $request)
+    {
+        // Extract ID from the request.
+        $id = $request->input('deleteimage_id'); // Use input() to get a single value (not an array).
+
+        // Find the model by ID.
+        $SetData = SHProductCategoryModel::findOrFail($id); // Find the model by its ID.
+
+        // Set the image field to null.
+        $SetData->image = null;
+
+        // Save the changes to the model.
+        $SetData->save(); // This will persist the changes to the database.
+
+        // Redirect with success message.
+        return redirect()->route('category.index')->with('success', __('text.msg_img_category_deleted'));
     }
 
 }
