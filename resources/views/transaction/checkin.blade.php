@@ -14,13 +14,13 @@
     }
     @media (max-width: 768px) {
         #selectedItemsBody,
-        
+
         #selectedItemsBody tr,
         #selectedItemsBody td {
             display: block;
             width: 100%;
         }
-        
+
         #selectedItemsBody tr {
             margin-bottom: 15px; /* Space between rows */
         }
@@ -52,7 +52,7 @@
         .mobile-label {
             display: block;
         }
-        
+
         #selectedItemsBody td.mobile-inline {
             display: -webkit-inline-box;
         }
@@ -75,7 +75,7 @@
     @endif
     <div class="">
         <h2>{{__('text.checkin_items')}}</h2>
-        <form id="adddataform" method="POST" action="{{ route('transaction.storecheckin') }}" enctype="multipart/form-data"> 
+        <form id="adddataform" method="POST" action="{{ route('transaction.storecheckin') }}" enctype="multipart/form-data">
                 @csrf
                     <div class="row">
                         <div class="col-md-6">
@@ -103,9 +103,9 @@
                             <div class="mb-3">
                                 <label for="contact" class="form-label">{{__('text.supplier')}}</label>
                                 <select name="contactid" id="contact" class="form-control" required>
-                                    <option value="">{{__('text.select')}}...</option>
+                                    {{-- <option value="">{{__('text.select')}}...</option> --}}
                                 @foreach($contacts as $contact)
-                                    <option value="{{ $contact->id }}">{{ $contact->name }}</option>
+                                    <option value="{{ $contact->id }}" @if($loop->first) selected @endif>{{ $contact->name }}</option>
                                 @endforeach
                                 </select>
                                 <label for="contact" class="error"></label>
@@ -115,9 +115,9 @@
                             <div class="mb-3">
                                 <label for="warehouse" class="form-label">{{__('text.warehouse')}}</label>
                                 <select name="warehouse" id="warehouse" class="form-control" required>
-                                    <option value="">{{__('text.select')}}...</option>
+                                    {{-- <option value="">{{__('text.select')}}...</option> --}}
                                 @foreach($warehouses as $warehouse)
-                                    <option value="{{ $warehouse->id }}" @if($warehouse->is_primary) selected @endif>{{ $warehouse->name }}</option>
+                                    <option value="{{ $warehouse->id }}" @if($loop->first) selected @endif>{{ $warehouse->name }}</option>
                                 @endforeach
                                 </select>
                                 <label for="warehouse" class="error"></label>
@@ -133,8 +133,8 @@
                                     <ul id="searchResults"></ul>
                                     <div class="searchitemresult">
                                         <small id="searchresultmsg" class="text-left mb-0">{{__('text.search_results')}}...</small>
-                                        
-                                        <table id="selectedItemsTable" width="100%" class="d-none" style="display: inline"> 
+
+                                        <table id="selectedItemsTable" width="100%" class="d-none" style="display: inline">
                                             <thead>
                                                 <tr>
                                                     <th width="40%"><small>{{__('text.item_name')}}</small></th>
@@ -159,7 +159,7 @@
                                         </table>
                                         <input type="hidden" name="itemselecteds" id="itemselecteds" required/>
                                         <label for="quantity" class="error"></label>
-                                        
+
                                     </div>
                                     <small id="noitem" for="noitem" class="text-red d-none">{{__('text.no_item_selected')}}.</small>
                                 </div>
@@ -207,9 +207,9 @@
 
 @push('scripts')
 <script type="module">
-    
+
     $(function() {
-        
+
         //Search Item
         $('#item').on('input', function () {
             var warehouseid = $("#warehouse").val();
@@ -261,7 +261,7 @@
                 var subtotal_priceInput = '<label class="mobile-label">{!!__("text.total_price")!!}</label><input id="subtotal_price" required class="form-control subtotal_price-input" name="subtotal_price[]" type="number" min="0" step="0.01" value="' + price + '">';
                 // var unitInput = `<select class="form-control" name="unit[]"><option value="${unitid}">${$("#unit_list").find("option[value="+unitid+"]").text()}</option><option value="${unitconverterto}">${$("#unit_list").find("option[value="+unitconverterto+"]").text()}</option></select>`;
                 var unitInput = $("#unit_list").html()
-                
+
                 var itemCode = '<input type="hidden" name="stockitemid[]" value="' + itemId + '">';
                 var newRow = '<tr data-id="' + itemId + '"><td class="mobile-inline"><div style="width: 95%"><span class="itemname">' + itemName + '</span><br/><span class="itemcode">' + itemCodeName + '</span></div><a href="#blank" class="remove-item mobile-label"><span class="material-symbols-rounded">delete</span></a></td><td style="display:flex;flex-direction:row">' + itemCode + quantityInput + '<div class="unitInput"  style="width:100%">' + unitInput + '</div></td><td>' + priceInput + '</td><td>' + subtotal_priceInput + '</td><td align="center">&nbsp;<a href="#blank" class="remove-item mobile-hide"><span class="material-symbols-rounded">delete</span></a></td></tr>';
                 $('#selectedItemsBody').append(newRow);
@@ -303,7 +303,7 @@
         rules: {
             reference: {
                 required: true,
-                uniquecode:true 
+                uniquecode:true
             }
         },
         messages: {
@@ -327,7 +327,7 @@
             if ($('#selectedItemsBody tr').length === 0) {
                 // Display a required message (you can customize this based on your needs)
                 $("#noitem").removeClass('d-none');
-                
+
                 return false; // Prevent form submission
             }else{
                 $("#noitem").addClass('d-none');
@@ -342,7 +342,7 @@
                 uniquecodeedit:true
             },
         },
-        
+
         submitHandler: function (form) {
             form.submit();
         }
@@ -363,7 +363,7 @@
                 let quantity = parseFloat($(this).find('input[name="quantity[]"]').val());
                 let price = parseFloat($(this).find('input[name="price[]"]').val());
 
-                // Add to total quantity and price                    
+                // Add to total quantity and price
         let subtotal = quantity * price;
                 $(this).find('input[name="subtotal_price[]"]').val(subtotal);
                 totalQuantity += quantity;

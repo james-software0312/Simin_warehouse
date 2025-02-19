@@ -464,6 +464,7 @@ class StockItemController extends Controller
         $hasDeletePermission = $request->hasDeletePermission;
         $hasViewPermission   = $request->hasViewPermission;
         $hasSeeHiddenPermission = $request->hasSeeHiddenPermission;
+        // $hasSeeHiddenPermission = true;
 
         if ($request->ajax()) {
             if ($hasSeeHiddenPermission) {
@@ -471,6 +472,8 @@ class StockItemController extends Controller
             } else {
                 $data = $this->hiddenService->getStockItemHistory($request->stockitemid);
             }
+
+
 
             return DataTables::of($data)
             ->addColumn('price', function($data) use($hasSeeHiddenPermission) {

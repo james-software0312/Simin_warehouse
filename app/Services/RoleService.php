@@ -78,17 +78,17 @@ class RoleService
      * @param int $userid The ID of the user for whom permissions are updated.
      * @return void
      */
-    public function update($warehouse, $unit, $stock, $purchase, $transaction, $category, 
+    public function update($warehouse, $unit, $stock, $purchase, $transaction, $category,
                             $shelf, $customer, $supplier, $activity, $settings, $reports, $user, $userid, $size, $vat)
     {
         $modules = compact(
             'warehouse', 'unit', 'stock', 'purchase', 'transaction', 'category', 'shelf', 'customer', 'supplier', 'activity', 'settings', 'reports', 'user', 'size', 'vat'
         );
-        
+        // dd($modules);
         foreach ($modules as $module => $data) {
             // Assuming you have a method like 'updateData' in your model
             RoleModel::where('userid', $userid)->where('module', $module)->update(['permission' => $data]);
-    
+
             // You might want to add some validation and error handling here
         }
     }

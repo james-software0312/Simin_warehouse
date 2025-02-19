@@ -4,18 +4,18 @@
 @section('content')
 
 <div class="body-inner">
-    
+
     <div class="alert alert-success alert-dismissible fade show  align-items-center row" role="alert">
-        <div class="col-md-4 d-flex     align-items-center">                
+        <div class="col-md-4 d-flex     align-items-center">
             <img src="{{$photo}}" class="photodetail img-fluid" width="40" style="height: 40px;" />  &nbsp;&nbsp;&nbsp;
-            <span class="me-4" style="font-size: large;"><strong>{{$data->name}}</strong></span> 
+            <span class="me-4" style="font-size: large;"><strong>{{$data->name}}</strong></span>
         </div>
         <div class="col-md-4">
-            <span class="me-4"><strong>{{__('text.category')}}:</strong></span> 
+            <span class="me-4"><strong>{{__('text.category')}}:</strong></span>
             <span class="me-4"> {{ $data->category }} </span>
         </div>
         <div class="col-md-4">
-            <span class="me-4"><strong>{{__('text.sub_type')}}:</strong></span> 
+            <span class="me-4"><strong>{{__('text.sub_type')}}:</strong></span>
             <span class="me-4"> {{ $data->itemsubtype }} </span>
         </div>
     </div>
@@ -235,12 +235,18 @@ $(function() {
     $('#data').DataTable({
         processing: true,
         serverSide: true,
-        ajax: "{!! route('transaction.getHistory') !!}?stockitemid={{ $stockitemid }}",
+        // ajax: "{!! route('transaction.getHistory') !!}?stockitemid={{ $stockitemid }}",
+        ajax: {
+            url: '{!! route('stock.getHistory') !!}',
+            data: function(d) {
+                d.stockitemid = {{ $stockitemid }};
+            },
+        },
         dom: '<"d-flex align-items-md-center flex-column flex-md-row justify-content-md-between pb-3"Bf>rt<"pt-3 d-flex align-items-md-center flex-column flex-md-row justify-content-md-between"lp><"clear">',
         language: {
             url: langUrl // Polish language JSON file
         },
-        
+
         columns: [{
                 data: 'id',
                 name: 'id',
@@ -263,7 +269,7 @@ $(function() {
                     } else if (data == 'movement_in') {
                         return '<span class="bg-neutral-80 text-white p-1 rounded">{{ __("text.movement_in") }}</span>';
                     } else if (data == 'movement_out') {
-                        
+
                         return '<span class="bg-orange text-white p-1 rounded">{{ __("text.movement_out") }}</span>';
                     } else {
                         return 'Unknown';
@@ -343,3 +349,7 @@ $('#editdataform').validate({
 </script>
 @endpush
 @endsection
+
+
+
+

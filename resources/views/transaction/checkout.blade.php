@@ -103,9 +103,9 @@
                     <div class="mb-3">
                         <label for="warehouse" class="form-label">{{__('text.warehouse')}}</label>
                         <select name="warehouse" id="warehouse" class="form-control" required>
-                            <option value="">{{__('text.select')}}...</option>
+                            {{-- <option value="">{{__('text.select')}}...</option> --}}
                         @foreach($warehouses as $warehouse)
-                            <option value="{{ $warehouse->id }}" @if($warehouse->is_primary) selected @endif>{{ $warehouse->name }}</option>
+                            <option value="{{ $warehouse->id }}" @if($loop->first) selected @endif>{{ $warehouse->name }}</option>
                         @endforeach
                         </select>
                         <label for="warehouse" class="error"></label>
@@ -115,9 +115,9 @@
                     <div class="mb-3">
                         <label for="contact" class="form-label">{{ __('text.customer') }}</label>
                         <select name="contactid" id="contact" class="form-control" required>
-                            <option value="">{{ __('text.select') }}</option>
+                            {{-- <option value="">{{ __('text.select') }}</option> --}}
                             @foreach($contacts as $contact)
-                                <option value="{{ $contact->id }}">{{ $contact->name }}</option>
+                                <option value="{{ $contact->id }}" @if($loop->first) selected @endif>{{ $contact->name }}</option>
                             @endforeach
                         </select>
                         <label for="contact" class="error"></label>
@@ -153,6 +153,7 @@
                                     <!-- Selected items will be added here dynamically -->
                                 </tbody>
                             </table>
+
                             <input type="hidden" name="itemselecteds" id="itemselecteds" required/>
                             <label for="quantity" class="error"></label>
                         </div>
@@ -422,10 +423,10 @@
                 var currentQuantity = parseInt(existingRow.find('.quantity-input').val());
                 // existingRow.find('.quantity-input').val(currentQuantity + 1);
                 var currentUnit = parseInt(existingRow.find('.unit-input').val());
-                existingRow.find('.quantity-input').val(currentQuantity + (currentUnit == 1 ? Math.max(unitconverter,unitconverter1) : 1));
+                // existingRow.find('.quantity-input').val(currentQuantity + (currentUnit == 1 ? Math.max(unitconverter,unitconverter1) : 1));
             } else {
                 // Item does not exist, add a new row
-                var quantityInput = '<div class="input-group" style="margin-right: 10px"><div class="input-group-text qty-minus">-</div><input id="quantity" required class="form-control quantity-input" name="quantity[]" value="' + unitconverter + '" style="text-align:center;"><div class="input-group-text qty-plus">+</div></div>';
+                var quantityInput = '<div class="input-group" style="margin-right: 10px"><input type="hidden" name="unitconverter[]" id="unitconverter" value="'+unitconverter+'"><div class="input-group-text qty-minus" style = "cursor: pointer;" >-</div><input disabled id="quantity" required class="form-control quantity-input" name="quantity[]" value="' + unitconverter + '" style="text-align:center;"><div class="input-group-text qty-plus" style = "cursor: pointer;">+</div></div>';
                 var itemCode = '<input type="hidden" name="stockitemid[]" value="' + itemId + '">';
                 var priceInput = '<label class="mobile-label">{!!__("text.sale_price")!!}</label><input required class="form-control price-input" name="price[]" type="number" min="0" step="0.01" value="' + price + '" disabled />';
                 var realpriceInput = '<label class="mobile-label">{!!__("text.real_price")!!}</label><input required class="form-control realprice-input" name="realprice[]" type="number" min="0" step="0.01" value="' + price + '" />';
@@ -480,13 +481,14 @@
                         );
                         calculateDiscount();
                     } else {
-                        element.val(1);
+                        element.val(element.closest('tr').data('unitconverter'));
                         alert("{!!__('text.not_available_qty')!!}");
                     }
                 }
             })
         })
         $('#selectedItemsTable').on('change', '.quantity-input', function () {
+            console.log($(this).val());
             // this quantity value is available.
             var element = $(this);
             $.ajax({
@@ -501,7 +503,7 @@
                     if (data.avaiable) {
                         calculateDiscount();
                     } else {
-                        element.val(1);
+                        element.val(element.closest('tr').data('unitconverter'));
                         alert("{!!__('text.not_available_qty')!!}");
                     }
                 }
@@ -521,6 +523,7 @@
             // }
             $(this).prev().val(new_val);
             $(this).prev().trigger('change');
+            console.log($(this).prev().val(), $(this).prev().attr('name') );
         })
 
         $("#selectedItemsTable").on('click', '.qty-minus', function() {
@@ -642,6 +645,7 @@
                 }else{
                     $("#total_discount").prop("disabled", false);
                     $(".price-input").prop("disabled", false);
+                    $(".quantity-input").prop("disabled", false);
                     $(".discount-input").prop("disabled", false);
                     $("#noitem").addClass('d-none');
                     form.submit();

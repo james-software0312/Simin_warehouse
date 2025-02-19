@@ -9,9 +9,11 @@ use Spatie\Activitylog\LogOptions;
 
 class TransactionModel extends Model
 {
+
     use HasFactory;
     use LogsActivity;
-    
+
+
     protected static $logAttributes = ['stockitemid', 'contactid', 'warehouseid', 'reference','status','transactiondate','quantity','description', 'price', 'unitid', 'hidden_amount', 'creator'];
     protected $table = 'transaction';
 

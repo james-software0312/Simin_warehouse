@@ -137,9 +137,9 @@ class StockItemService
             $image_dimension = getimagesize($image);
             $image_width = $image_dimension[0];
             $image_height = $image_dimension[1];
-            $image_dimension_for_db = $image_width . ' x ' . $image_height . ' pixels';
+            // $image_dimension_for_db = $image_width . ' x ' . $image_height . ' pixels';
+            $image_dimension_for_db = 1200 . ' x ' . '1600 pixels';
             $image_size_for_db = $image->getSize();
-
             $image_extenstion = $image->getClientOriginalExtension();
             $image_name_with_ext = $image->getClientOriginalName();
 
@@ -157,8 +157,10 @@ class StockItemService
             $resize_large_image = $imageInst->resize(width: 740);
             $resize_grid_image = $imageInst->resize(width: 350);
             $resize_p_grid_image = $imageInst->resize(width: 230);
-            $resize_thumb_image = $imageInst->resize(width: 150, height: 150);
-            $image->move($folder_path, $image_db);
+            $resize_thumb_image = $imageInst->resize(width: 150);
+            // $image->move($folder_path, $image_db);
+            $imageInst =$imageInst->resize(width: 262.50, height:300);
+            $imageInst->save($folder_path. $image_db);
             $newMediaUpload = SHMediaUploadModel::create([
                 'title' => $image_name_with_ext,
                 'size' => formatBytes($image_size_for_db),

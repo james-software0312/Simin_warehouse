@@ -10,6 +10,7 @@ use DataTables;
 
 class ColorController extends Controller
 {
+    
     protected $colorService;
 
     public function __construct(ColorService $colorService)

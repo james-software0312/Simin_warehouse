@@ -89,8 +89,8 @@
     </form>
 </x-edit>
 
-    
-    
+
+
 
 <div class="modal fade" id="AssignModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <!-- Modal content -->
@@ -106,10 +106,10 @@
                     </button>
                 </div>
                 <!-- Modal body -->
-                
+
                     <div class="modal-body">
                         <div class="row">
-                            <div class="col-md-4">  
+                            <div class="col-md-4">
                                 <p class="mb-2"><strong>{{__('text.stock')}}</strong></p>
                                 <div class="d-flex align-items-center">
                                     <input id="stockview" name="stock[]" type="checkbox" value="1" class="me-2">
@@ -150,10 +150,10 @@
                                     <input id="purchasedelete" name="purchase[]" type="checkbox" value="4" class="me-2">
                                     <label for="purchasedelete">{{__('text.delete')}}</label>
                                 </div>
-                                <div class="d-flex align-items-center">
+                                {{-- <div class="d-flex align-items-center">
                                     <input id="purchaseseehidden" name="purchase[]" type="checkbox" value="6" class="me-2">
                                     <label for="purchaseseehidden">{{__('text.see_hidden')}}</label>
-                                </div>
+                                </div> --}}
                             </div>
                             <div class="col-md-4">
                                 <p class="mb-2"><strong>{{__('text.checkout')}}</strong></p>
@@ -173,10 +173,10 @@
                                     <input id="transactiondelete" name="transaction[]" type="checkbox" value="4" class="me-2">
                                     <label for="transactiondelete">{{__('text.delete')}}</label>
                                 </div>
-                                <div class="d-flex align-items-center">
+                                {{-- <div class="d-flex align-items-center">
                                     <input id="transactionseehidden" name="transaction[]" type="checkbox" value="6" class="me-2">
                                     <label for="transactionseehidden">{{__('text.see_hidden')}}</label>
-                                </div>
+                                </div> --}}
                             </div>
                         </div>
 
@@ -355,6 +355,10 @@
                                     <input id="userassign" name="user[]" type="checkbox" value="5" class="me-2">
                                     <label for="userassign">{{__('text.assign')}}</label>
                                 </div>
+                                <div class="d-flex align-items-center">
+                                    <input id="userseehidden" name="user[]" type="checkbox" value="6" class="me-2">
+                                    <label for="userseehidden">{{__('text.see_hidden')}}</label>
+                                </div>
                             </div>
                             <div class="col-md-4">
                                 <p class="mb-2"><strong>{{__('text.activity_log')}}</strong></p>
@@ -362,16 +366,16 @@
                                     <input id="activityview" name="activity[]" type="checkbox" value="1" class="me-2">
                                     <label for="activityview" class="font-small">{{__('text.view')}}</label>
                                 </div>
-                                
+
                             </div>
                             <div class="col-md-4">
                                 <p class="mb-2"><strong>{{__('text.settings')}}</strong></p>
-                                
+
                                 <div class="d-flex align-items-center">
                                     <input id="settingsedit" name="settings[]" type="checkbox" value="3" class="me-2">
                                     <label for="settingsedit">{{__('text.edit')}}</label>
                                 </div>
-                                
+
                             </div>
                             <div class="col-md-4">
                                 <p class="mb-2"><strong>{{__('text.reports')}}</strong></p>
@@ -379,13 +383,13 @@
                                     <input id="reportsview" name="reports[]" type="checkbox" value="1" class="me-2">
                                     <label for="reportsview" class="font-small">{{__('text.view')}}</label>
                                 </div>
-                            
+
                             </div>
                             <input type="hidden" name="userid" id="userid">
                         </div>
                     </div>
-                
-                <!-- Modal footer --> 
+
+                <!-- Modal footer -->
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary d-flex align-items-center" data-bs-dismiss="modal"> <span class="material-symbols-rounded">close</span>{{__('text.close')}}</button>
                     <button type="submit" class="btn btn-primary d-flex align-items-center" id="modalsaveassign"><span class="material-symbols-rounded">check</span> {{__('text.submit')}}</button>
@@ -452,7 +456,7 @@
 
 
         $('#AssignModal').on('show.bs.modal', function(event) {
-                
+
                 // Get the group ID from the data attribute
                 var button = $(event.relatedTarget);
                 var DataId = button.data('asignid');
@@ -466,7 +470,7 @@
                     dataType: 'json',
                     success: function(data) {
                         // Populate the form fields with the retrieved data
-                       
+
                         //set userid
                         $("#userid").val(DataId);
 
@@ -481,7 +485,7 @@
                                 $('#' + permission.module + 'editqty').prop('checked', permission.permission.includes('7'));
                             }
                         });
-                       
+
                     },
                     error: function() {
                         // Handle errors if needed
@@ -491,7 +495,7 @@
 
         // Triggered when the "Edit" button is clicked
         $('#EditModal').on('show.bs.modal', function(event) {
-                
+
                 // Get the group ID from the data attribute
                 var button = $(event.relatedTarget);
                 var Id = button.data('editid');
@@ -503,7 +507,7 @@
                     type: 'GET',
                     dataType: 'json',
                     success: function(data) {
-                       
+
                         // Populate the form fields with the retrieved data
                         $('#editid').val(data.id);
                         $('#editname').val(data.name);
@@ -514,7 +518,7 @@
                     }
                 });
             });
-           
+
 
         // Initialize jQuery Validation
         $('#adddataform').validate({

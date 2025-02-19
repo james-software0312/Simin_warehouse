@@ -119,7 +119,8 @@
                                 <td class="text-right">{{$item['base_unit_name'] == 'karton' ? $item['item_base_quantity'] : $item['item_converted_quantity']}}</td>
                                 <td class="text-right">{{$item['item_unitconverter']}}</td>
                                 <td class="text-right">{{$item['base_unit_name'] != 'karton' ? $item['item_base_quantity'] : $item['item_converted_quantity']}}</td>
-                                <td >{{$item['base_unit_name']}}</td>
+                                <td >Para</td>
+                                {{-- <td >{{$item['base_unit_name']}}</td> --}}
                                 <td class="text-right">{{ $item_price }}</td>
                                 <td class="text-right">{{ ($item_price * $item['item_base_quantity']  )}}</td>
                                 <td class="text-right">{{ $order['discount_type'] == 'peritem' ?format_price($item['discount']) : ''}}</td>

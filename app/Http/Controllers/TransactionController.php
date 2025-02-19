@@ -345,6 +345,7 @@ class TransactionController extends Controller
 
             })
             ->addColumn('transactiondate', function($data){
+                // dd($data);
                     //get setting
                     $setting = $this->settingsService->getdataById(1);
                     $dateformat = date($setting['datetime'], strtotime($data->transactiondate));
@@ -680,12 +681,18 @@ class TransactionController extends Controller
      */
     public function storecheckout(Request $request)
     {
+        // $count = count($request);
         $unit   = $request->input('unit');
         $price   = $request->input('price');
         $discount   = $request->input('discount');
+        // dd($request->input('unitconverter'));
         $itemid     = $request->input('stockitemid');
         $warehouseid     = $request->input('warehouse');
         $quantity   = $request->input('quantity');
+        $unitconverter = $request->input('unitconverter');
+
+        // $id = StockItemModel::where('id', $request)
+        // dd($quantity);
         $data = $request->only(['transactiondate', 'contactid','reference','description', 'discount_type', 'total_discount', 'payment_type', 'show_reference']);
 
         $withInvoice = $request->boolean('with_invoice');
@@ -693,13 +700,13 @@ class TransactionController extends Controller
         $pre_order = $request->boolean('pre_order');
         DB::beginTransaction();
         try {
-            $transaction = $this->sellService->createcheckout($data, $warehouseid, $withInvoice, $confirmed, $quantity, $unit, $price, $discount, $itemid, $pre_order);
+            $transaction = $this->sellService->createcheckout($data, $warehouseid, $withInvoice, $confirmed, $quantity, $unit, $price, $discount, $itemid, $pre_order, $unitconverter);
             $transaction = $this->sellService->getStockItemsByReference($data['reference']);
             // $transaction['quantity'] /= $transaction['unitconverter'];
-            foreach($transaction as $tran){
-                $tran['quantity'] /=$tran['unitconverter'];
+            // foreach($transaction as $tran){
+            //     $tran['quantity'] /=$tran['unitconverter'];
 
-            }
+            // }
             // dd($transaction);
             $this->stockitemService->updatestock($transaction, -1, 1);
             if (!$this->stockitemService->checkstock()) {

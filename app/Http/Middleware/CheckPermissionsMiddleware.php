@@ -13,8 +13,14 @@ class CheckPermissionsMiddleware
         $userId = Auth::id();
         $moduleName = $request->segment(1); // Assuming the module is the first segment in the URL
         if(DB::connection()->getDatabaseName()){
-            $requiredPermissions = $this->getRequiredPermissions($userId, $moduleName);
-        
+            $requiredHasSeePermissions = $this->getRequiredPermissions($userId, 'user');
+            if($moduleName == "purchase" || $moduleName == "transaction"){
+
+                $requiredPermissions = $this->getRequiredPermissions($userId, 'user');
+            } else {
+                $requiredPermissions = $this->getRequiredPermissions($userId, $moduleName);
+            }
+
             // Check if the user has the required permissions
             $hasViewPermission = in_array(1, $requiredPermissions);
             $hasCreatePermission = in_array(2, $requiredPermissions);
@@ -56,7 +62,7 @@ class CheckPermissionsMiddleware
         $permissions = RoleModel::where('userid', $userId)
             ->where('module', $moduleName)
             ->first();
-        
+
         return $permissions ? explode(',', $permissions->permission) : [];
     }
 

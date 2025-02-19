@@ -122,9 +122,9 @@
                         <div class="mb-3">
                             <label for="warehouse" class="form-label">{{__('text.warehouse')}}</label>
                             <select name="warehouseid" id="warehouse" class="form-control select2-enable warehousedata" required>
-                                <option value="">{{__('text.select')}}...</option>
+                                {{-- <option value="">{{__('text.select')}}...</option> --}}
                             @foreach($warehouses as $warehouse)
-                                <option value="{{ $warehouse->id }}" @if($warehouse->is_primary) selected @endif>{{ $warehouse->name }}</option>
+                                <option value="{{ $warehouse->id }}"@if($loop->first) selected @endif>{{ $warehouse->name }}</option>
                             @endforeach
                             </select>
                             <label for="warehouse" class="error"></label>

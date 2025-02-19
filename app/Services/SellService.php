@@ -20,13 +20,13 @@ class SellService
         return SellOrderModel::all();
     }
 
-    public function createcheckout($data, $warehouseid, $withInvoice, $confirmed, $quantity, $unit, $price, $discount, $itemids, $pre_order)
+    public function createcheckout($data, $warehouseid, $withInvoice, $confirmed, $quantity, $unit, $price, $discount, $itemids, $pre_order, $unitconverter)
     {
         $count = count($itemids);
         try {
             for ($i = 0; $i < $count; $i++) {
                 $itemid = $itemids[$i];
-                $singleQuantity = $quantity[$i];
+                $singleQuantity = $quantity[$i]/$unitconverter[$i];
                 // Rest of your code
                $data1 = SellOrderDetailModel::create([
                     'stockitemid' => $itemid,

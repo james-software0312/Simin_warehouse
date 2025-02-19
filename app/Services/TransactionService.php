@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Auth;
 
 
 class TransactionService
-{   
+{
 
     /**
      * Get all transactions.
@@ -132,10 +132,10 @@ class TransactionService
                 ->leftJoin('contact', 'contact.id', '=', 'transaction.contactid')
                 ->leftJoin('unit as transaction_unit', 'transaction_unit.id', '=', 'transaction.unitid')
                 ->select(
-                    DB::raw("'".$stockitemid."' as stockitem_id"), 
-                    'stockitem.name', 
-                    'stockitem.unitid as stockunitid', 
-                    'stockitem.unitconverter','contact.name as supplier', 
+                    DB::raw("'".$stockitemid."' as stockitem_id"),
+                    'stockitem.name',
+                    'stockitem.unitid as stockunitid',
+                    'stockitem.unitconverter','contact.name as supplier',
                     'transaction.*',
                     'transaction_unit.name as transactionunitname'
                 )
@@ -166,7 +166,7 @@ class TransactionService
                 ->where('transaction.reference', $reference)
                 ->get();
     }
-    
+
 
      /**
      * Get check-in transactions for reporting purposes.
@@ -183,17 +183,17 @@ class TransactionService
         ->leftJoin('users', 'users.id', '=', 'transaction.creator')
         ->select(
             'transaction.*',
-            'stockitem.name', 
-            'stockitem.code', 
-            'stockitem.size', 
-            'stockitem.unitid as stock_unitid', 
-            'stockitem.unitconverter', 
-            'stockitem.unitconverter1', 
-            'stockitem.unitconverterto', 
-            'stock_base_unit.name as stock_base_unit_name', 
-            'stock_converted_unit.name as stock_converted_unit_name', 
+            'stockitem.name',
+            'stockitem.code',
+            'stockitem.size',
+            'stockitem.unitid as stock_unitid',
+            'stockitem.unitconverter',
+            'stockitem.unitconverter1',
+            'stockitem.unitconverterto',
+            'stock_base_unit.name as stock_base_unit_name',
+            'stock_converted_unit.name as stock_converted_unit_name',
             'contact.name as supplier',
-            'category.name as category', 
+            'category.name as category',
             'users.name as user_name'
         )
         ->where('transaction.status', 1)
@@ -250,23 +250,23 @@ class TransactionService
         ->select(
             'stockitem.name',
             'stockitem.code',
-            'stockitem.unitid as stockitem_unitid', 
-            'stockitem.unitconverter', 
+            'stockitem.unitid as stockitem_unitid',
+            'stockitem.unitconverter',
             'stockitem.unitconverter1',
-            'contact.name as supplier', 
-            'contact.email as supplieremail', 
+            'contact.name as supplier',
+            'contact.email as supplieremail',
             'contact.company as suppliercompany',
-            'transaction.*', 
+            'transaction.*',
             'transaction_order.show_reference',
             'transaction_order.id as order_id',
-            'stock_base_unit.name as stock_base_unit_name', 
-            'stock_converted_unit.name as stock_converted_unit_name', 
+            'stock_base_unit.name as stock_base_unit_name',
+            'stock_converted_unit.name as stock_converted_unit_name',
             // Conditional logic for converted_quantity
-            DB::raw('CASE 
-                WHEN wh_transaction.unitid = wh_stockitem.unitid THEN 
-                    (wh_transaction.quantity * wh_stockitem.unitconverter1 / wh_stockitem.unitconverter) 
-                ELSE 
-                    (wh_transaction.quantity * wh_stockitem.unitconverter / wh_stockitem.unitconverter1) 
+            DB::raw('CASE
+                WHEN wh_transaction.unitid = wh_stockitem.unitid THEN
+                    (wh_transaction.quantity * wh_stockitem.unitconverter1 / wh_stockitem.unitconverter)
+                ELSE
+                    (wh_transaction.quantity * wh_stockitem.unitconverter / wh_stockitem.unitconverter1)
             END as converted_quantity')
         )
         ->where('transaction.status', $status)
@@ -296,7 +296,7 @@ class TransactionService
             ->whereYear('transactiondate',date('Y'))
             ->where('status', $status)
             ->first();
-        
+
         $res['Overall'] = $overallCount->total;
         $res['Year']    = $yearCount->total;
         $res['Month']   = $monthCount->total;
@@ -335,7 +335,7 @@ class TransactionService
     public function createcheckin($data, $warehouseid, $quantity, $price, $itemids, $unit, $confirmed)
     {
         // TransactionModel::create($data);
-        
+
         $count = count($itemids);
         for ($i = 0; $i < $count; $i++) {
             $itemid = $itemids[$i];
@@ -382,8 +382,8 @@ class TransactionService
      */
     public function createcheckout($data, $quantity, $itemids)
     {
-       
-        
+
+
         $count = count($itemids);
         for ($i = 0; $i < $count; $i++) {
             $itemid = $itemids[$i];
@@ -420,16 +420,16 @@ class TransactionService
         // Use the reference to get the existing records
         $existingRecords = TransactionModel::where('reference', $reference)->get();
         $existingOrderRecord = TransactionOrderModel::where('reference', $reference)->first();
-        
+
         // Create an associative array to map existing records by stockitemid
         $existingRecordsMap = $existingRecords->keyBy('stockitemid');
 
         // Identify items to delete
         $itemsToDelete = $existingRecords->pluck('stockitemid')->diff($itemids);
-        
+
         // Delete records for items that are no longer present
         TransactionModel::where('reference', $reference)->whereIn('stockitemid', $itemsToDelete)->delete();
-        
+
         // Loop through each item and update or add as needed
         foreach ($itemids as $index => $itemid) {
             $singleQuantity = $quantity[$index];
@@ -469,7 +469,7 @@ class TransactionService
             'show_reference' => $data['show_reference'],
             'confirmed' => $confirmed,
         ]);
-        
+
         return $data;
     }
 
@@ -657,9 +657,9 @@ class TransactionService
      * @return bool
      */
     public function CheckCode($code){
-       
+
         return TransactionModel::where('reference', $code)->exists();
-       
+
     }
 
     public function hidetransaction($data) {
@@ -685,31 +685,31 @@ class TransactionService
             ->leftJoin('unit as stock_converted_unit', 'stock_converted_unit.id', '=', 'stockitem.unitconverterto')
             ->leftJoin('transaction_order', 'transaction_order.reference', '=', 'transaction.reference')
             ->select(
-                'transaction.id', 
-                'transaction_order.show_reference as reference', 
-                'transaction.transactiondate as date', 
-                'transaction.quantity', 
-                'transaction.price', 
-                DB::raw("'purchase' as type"), 
-                'wh_transaction.description', 
-                'wh_transaction.hidden_amount', 
-                'wh_transaction.unitid', 
-                'wh_stockitem.unitid as stockitemunitid', 
-                'wh_contact.name as contactname', 
-                'stock_base_unit.name as base_unit_name', 
-                'stock_converted_unit.name as converted_unit_name', 
+                'transaction.id',
+                'transaction_order.show_reference as reference',
+                'transaction.transactiondate as date',
+                'transaction.quantity',
+                'transaction.price',
+                DB::raw("'purchase' as type"),
+                'transaction.description',
+                'transaction.hidden_amount',
+                'transaction.unitid',
+                'stockitem.unitid as stockitemunitid',
+                'contact.name as contactname',
+                'stock_base_unit.name as base_unit_name',
+                'stock_converted_unit.name as converted_unit_name',
                 'transaction.created_at',
-                DB::raw('CASE 
-                WHEN wh_transaction.unitid = wh_stockitem.unitid THEN 
-                        (wh_transaction.quantity * wh_stockitem.unitconverter1 / wh_stockitem.unitconverter) 
-                    ELSE 
-                        (wh_transaction.quantity * wh_stockitem.unitconverter / wh_stockitem.unitconverter1) 
+                DB::raw('CASE
+                WHEN wh_transaction.unitid = wh_stockitem.unitid THEN
+                        (wh_transaction.quantity * wh_stockitem.unitconverter1 / wh_stockitem.unitconverter)
+                    ELSE
+                        (wh_transaction.quantity * wh_stockitem.unitconverter / wh_stockitem.unitconverter1)
                 END as converted_quantity'),
-                DB::raw('CASE 
-                WHEN wh_transaction.unitid = wh_stockitem.unitid THEN 
-                        (wh_transaction.hidden_amount * wh_stockitem.unitconverter1 / wh_stockitem.unitconverter) 
-                    ELSE 
-                        (wh_transaction.hidden_amount * wh_stockitem.unitconverter / wh_stockitem.unitconverter1) 
+                DB::raw('CASE
+                WHEN wh_transaction.unitid = wh_stockitem.unitid THEN
+                        (wh_transaction.hidden_amount * wh_stockitem.unitconverter1 / wh_stockitem.unitconverter)
+                    ELSE
+                        (wh_transaction.hidden_amount * wh_stockitem.unitconverter / wh_stockitem.unitconverter1)
                 END as converted_hidden_amount')
             )
             // ->where('transaction.stockitemid', $id)
@@ -722,33 +722,36 @@ class TransactionService
                         ->orWhere('transaction_order.show_reference', 'LIKE', '%' . $keyword . '%');
             });
         }
-    
+
+
+        // return $purchases->get();
+
         $sales = SellOrderDetailModel::leftJoin('sell_order', 'sell_order.reference', '=', 'sell_order_detail.reference')
             ->leftJoin('stockitem', 'stockitem.id', '=', 'sell_order_detail.stockitemid')
             ->leftJoin('contact', 'contact.id', '=', 'sell_order_detail.contactid')
             ->leftJoin('unit as stock_base_unit', 'stock_base_unit.id', '=', 'stockitem.unitid')
             ->leftJoin('unit as stock_converted_unit', 'stock_converted_unit.id', '=', 'stockitem.unitconverterto')
-            ->select('sell_order_detail.id', 
-                'sell_order.show_reference as reference', 
-                'sell_order_detail.selldate as date', 
-                'sell_order_detail.quantity', 
-                'sell_order_detail.price', 
-                DB::raw("'sell' as type"), 
-                'wh_sell_order_detail.description', 
-                DB::raw('0 as hidden_amount'), 
-                'wh_sell_order_detail.unitid', 
-                'wh_stockitem.unitid as stockitemunitid', 
-                'wh_contact.name as contactname', 
-                'stock_base_unit.name as base_unit_name', 
-                'stock_converted_unit.name as converted_unit_name', 
+            ->select('sell_order_detail.id',
+                'sell_order.show_reference as reference',
+                'sell_order_detail.selldate as date',
+                'sell_order_detail.quantity',
+                'sell_order_detail.price',
+                DB::raw("'sell' as type"),
+                'sell_order_detail.description',
+                DB::raw('0 as hidden_amount'),
+                'sell_order_detail.unitid',
+                'stockitem.unitid as stockitemunitid',
+                'contact.name as contactname',
+                'stock_base_unit.name as base_unit_name',
+                'stock_converted_unit.name as converted_unit_name',
                 'sell_order_detail.created_at',
-                DB::raw('CASE 
-                WHEN wh_sell_order_detail.unitid = wh_stockitem.unitid THEN 
-                        (wh_sell_order_detail.quantity * wh_stockitem.unitconverter1 / wh_stockitem.unitconverter) 
-                    ELSE 
-                        (wh_sell_order_detail.quantity * wh_stockitem.unitconverter / wh_stockitem.unitconverter1) 
+                DB::raw('CASE
+                WHEN wh_sell_order_detail.unitid = wh_stockitem.unitid THEN
+                        (wh_sell_order_detail.quantity * wh_stockitem.unitconverter1 / wh_stockitem.unitconverter)
+                    ELSE
+                        (wh_sell_order_detail.quantity * wh_stockitem.unitconverter / wh_stockitem.unitconverter1)
                 END as converted_quantity'),
-                DB::raw('0 as converted_hidden_amount'), 
+                DB::raw('0 as converted_hidden_amount'),
             )
             ->where('stockitem.code', $stockItem->code)
             // ->where('sell_order_detail.stockitemid', $id)
@@ -760,40 +763,40 @@ class TransactionService
                         ->orWhere('sell_order.show_reference', 'LIKE', '%' . $keyword . '%');
             });
         }
-        
+
         $movements = MovementModel::leftJoin('stockitem', 'stockitem.id', '=', 'movement.stockitemid')
             ->leftJoin('warehouse as source_warehouse', 'source_warehouse.id', '=', 'movement.source_warehouse_id')
             ->leftJoin('warehouse as target_warehouse', 'target_warehouse.id', '=', 'movement.target_warehouse_id')
             ->leftJoin('unit as stock_base_unit', 'stock_base_unit.id', '=', 'stockitem.unitid')
             ->leftJoin('unit as stock_converted_unit', 'stock_converted_unit.id', '=', 'stockitem.unitconverterto')
             ->select(
-                'movement.id', 
-                'movement.reference', 
-                'movement.movement_date as date', 
-                'movement.quantity', 
-                'movement.price', 
-                // DB::raw("'movement' as type"), 
-                DB::raw("IF(wh_movement.source_warehouse_id != '".$stockItem->warehouseid."' , 'movement_in', 'movement_out') as type"), 
-                'wh_movement.description', 
-                DB::raw('0 as hidden_amount'), 
-                'wh_movement.unitid', 
-                'wh_stockitem.unitid as stockitemunitid', 
-                DB::raw("IF(wh_movement.source_warehouse_id != '".$stockItem->warehouseid."' , wh_source_warehouse.name, wh_target_warehouse.name) as contactname"), 
-                'stock_base_unit.name as base_unit_name', 
-                'stock_converted_unit.name as converted_unit_name', 
+                'movement.id',
+                'movement.reference',
+                'movement.movement_date as date',
+                'movement.quantity',
+                'movement.price',
+                // DB::raw("'movement' as type"),
+                DB::raw("IF(wh_movement.source_warehouse_id != '".$stockItem->warehouseid."' , 'movement_in', 'movement_out') as type"),
+                'movement.description',
+                DB::raw('0 as hidden_amount'),
+                'movement.unitid',
+                'stockitem.unitid as stockitemunitid',
+                DB::raw("IF(wh_movement.source_warehouse_id != '".$stockItem->warehouseid."' , wh_source_warehouse.name, wh_target_warehouse.name) as contactname"),
+                'stock_base_unit.name as base_unit_name',
+                'stock_converted_unit.name as converted_unit_name',
                 'movement.created_at',
-                DB::raw('CASE 
-                WHEN wh_movement.unitid = stockitem.unitid THEN 
-                        (wh_movement.quantity * wh_stockitem.unitconverter1 / wh_stockitem.unitconverter) 
-                    ELSE 
-                        (wh_movement.quantity * wh_stockitem.unitconverter / wh_stockitem.unitconverter1) 
+                DB::raw('CASE
+                WHEN wh_movement.unitid = wh_stockitem.unitid THEN
+                        (wh_movement.quantity * wh_stockitem.unitconverter1 / wh_stockitem.unitconverter)
+                    ELSE
+                        (wh_movement.quantity * wh_stockitem.unitconverter / wh_stockitem.unitconverter1)
                 END as converted_quantity'),
-                DB::raw('0 as converted_hidden_amount'), 
+                DB::raw('0 as converted_hidden_amount'),
             )
             ->where(function($query) use ($stockItem) {
                 $query->Where('movement.source_warehouse_id', $stockItem->warehouseid)
                         ->orWhere('movement.target_warehouse_id', $stockItem->warehouseid);
-            })            
+            })
             ->where('movement.code', $stockItem->code);
         if ($keyword) {
             $movements->where(function ($query) use ($keyword, $stockItem) {
@@ -801,13 +804,12 @@ class TransactionService
                         ->orWhere('movement.reference', 'LIKE', '%' . $keyword . '%');
             });
         }
-
         $history = $purchases->union($sales)->union($movements)
             ->orderBy('date', 'DESC')
             ->orderBy('created_at', 'DESC');
         return $history;
     }
-   
+
     public function getCheckinDetail($filter)
     {
         $query = TransactionModel::leftJoin('stockitem', 'stockitem.id' ,'=', 'transaction.stockitemid')
@@ -816,17 +818,17 @@ class TransactionService
                 ->leftJoin('category', 'category.id', '=', 'stockitem.categoryid')
                 ->leftJoin('contact', 'contact.id', '=', 'transaction.contactid')
                 ->select(
-                    'transaction.*', 
-                    'stockitem.id as stockitemid', 
-                    'stockitem.name', 
-                    'stockitem.code', 
-                    'stockitem.size', 
-                    'stockitem.itemsubtype', 
-                    'stockitem.vat', 
-                    'stockitem.unitconverter', 
-                    'stockitem.unitconverter1', 
-                    'stockitem.unitid as stock_unitid', 
-                    'stock_base_unit.name as base_unit_name', 
+                    'transaction.*',
+                    'stockitem.id as stockitemid',
+                    'stockitem.name',
+                    'stockitem.code',
+                    'stockitem.size',
+                    'stockitem.itemsubtype',
+                    'stockitem.vat',
+                    'stockitem.unitconverter',
+                    'stockitem.unitconverter1',
+                    'stockitem.unitid as stock_unitid',
+                    'stock_base_unit.name as base_unit_name',
                     'stock_converted_unit.name as converted_unit_name',
                     'category.name as category_name',
                     'contact.name as contact_name',
@@ -841,7 +843,7 @@ class TransactionService
 
             $query->whereBetween('transaction.transactiondate', [$startDate, $endDate]);
         }
-        
+
         return $query->get();
     }
 
@@ -858,8 +860,8 @@ class TransactionService
                 'stockitem.unitconverter1',
                 'stockitem.unitconverterto',
                 'stockitem.unitid as stockunitid',
-                'users.name as creator', 
-                'transaction.price', 
+                'users.name as creator',
+                'transaction.price',
                 'transaction.updated_at',
                 'transaction.unitid',
                 'unit.name as sell_unit_name',
@@ -871,7 +873,7 @@ class TransactionService
             ->get();
 
     }
-    
+
     /**
      * Check if a transaction with the given warehouse ID exists.
      *
@@ -886,8 +888,8 @@ class TransactionService
         $lastNumber = 0;
         if ($lastReference) {
             $lastNumber = (int) substr($lastReference, -3);
-        }       
-            
+        }
+
         return $lastNumber;
     }
 
@@ -899,7 +901,7 @@ class TransactionService
     public function getNewShowReference($date)
     {
         $transactions = TransactionOrderModel::where('transactiondate', '=', $date)->get();
-        
+
         $prefix = 'PZ';
         $new_show_ref =  $prefix . "/" . date('d/m/Y', strtotime($date)). "/" . sprintf('%04d', count($transactions) + 1);
         return $new_show_ref;
@@ -926,3 +928,4 @@ class TransactionService
         }
     }
 }
+

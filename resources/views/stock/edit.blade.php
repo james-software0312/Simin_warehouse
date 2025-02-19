@@ -88,7 +88,7 @@
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="edititemsubtype" class="form-label">{{__('text.sub_type')}}</label>
-                                <input type="text" class="form-control" id="edititemsubtype" name="itemsubtype" placeholder="{{__('text.sub_type')}}" value="{{$data->itemsubtype}}" required >
+                                <input type="text" class="form-control" id="edititemsubtype" name="itemsubtype" placeholder="{{__('text.sub_type')}}" value="{{$data->itemsubtype}}" >
                             </div>
                         </div>
                     </div>

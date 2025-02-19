@@ -57,102 +57,103 @@ class HiddenService
             ->leftJoin('unit as stock_base_unit', 'stock_base_unit.id', '=', 'stockitem.unitid')
             ->leftJoin('unit as stock_converted_unit', 'stock_converted_unit.id', '=', 'stockitem.unitconverterto')
             ->select(
-                'transaction.id', 
-                'transaction.reference', 
-                'transaction.transactiondate as date', 
-                'transaction.quantity', 
-                'transaction.price', 
-                DB::raw("'purchase' as type"), 
-                'transaction.description', 
-                'transaction.hidden_amount', 
-                'transaction.unitid', 
-                'stockitem.unitid as stockitemunitid', 
-                'contact.name as contactname', 
-                'stock_base_unit.name as base_unit_name', 
-                'stock_converted_unit.name as converted_unit_name', 
+                'transaction.id',
+                'transaction.reference',
+                'transaction.transactiondate as date',
+                'transaction.quantity',
+                'transaction.price',
+                DB::raw("'purchase' as type"),
+                'transaction.description',
+                'transaction.hidden_amount',
+                'transaction.unitid',
+                'stockitem.unitid as stockitemunitid',
+                'contact.name as contactname',
+                'stock_base_unit.name as base_unit_name',
+                'stock_converted_unit.name as converted_unit_name',
                 'transaction.created_at',
-                DB::raw('CASE 
-                WHEN wh_transaction.unitid = wh_stockitem.unitid THEN 
-                        (wh_transaction.quantity * wh_stockitem.unitconverter1 / wh_stockitem.unitconverter) 
-                    ELSE 
-                        (wh_transaction.quantity * wh_stockitem.unitconverter / wh_stockitem.unitconverter1) 
+                DB::raw('CASE
+                WHEN wh_transaction.unitid = wh_stockitem.unitid THEN
+                        (wh_transaction.quantity * wh_stockitem.unitconverter1 / wh_stockitem.unitconverter)
+                    ELSE
+                        (wh_transaction.quantity * wh_stockitem.unitconverter / wh_stockitem.unitconverter1)
                 END as converted_quantity'),
-                DB::raw('CASE 
-                WHEN wh_transaction.unitid = wh_stockitem.unitid THEN 
-                        (wh_transaction.hidden_amount * wh_stockitem.unitconverter1 / wh_stockitem.unitconverter) 
-                    ELSE 
-                        (wh_transaction.hidden_amount * wh_stockitem.unitconverter / wh_stockitem.unitconverter1) 
+                DB::raw('CASE
+                WHEN wh_transaction.unitid = wh_stockitem.unitid THEN
+                        (wh_transaction.hidden_amount * wh_stockitem.unitconverter1 / wh_stockitem.unitconverter)
+                    ELSE
+                        (wh_transaction.hidden_amount * wh_stockitem.unitconverter / wh_stockitem.unitconverter1)
                 END as converted_hidden_amount')
             )
             // ->where('transaction.stockitemid', $id);
             ->where('stockitem.code', $stockItem->code)
             ->where('transaction.warehouseid', $stockItem->warehouseid);
-    
+            // dd($purchases);
+
         $sales = SellOrderDetailModel::leftJoin('sell_order', 'sell_order.reference', '=', 'sell_order_detail.reference')
             ->leftJoin('stockitem', 'stockitem.id', '=', 'sell_order_detail.stockitemid')
             ->leftJoin('contact', 'contact.id', '=', 'sell_order_detail.contactid')
             ->leftJoin('unit as stock_base_unit', 'stock_base_unit.id', '=', 'stockitem.unitid')
             ->leftJoin('unit as stock_converted_unit', 'stock_converted_unit.id', '=', 'stockitem.unitconverterto')
-            ->select('sell_order_detail.id', 
-                'sell_order_detail.reference', 
-                'sell_order_detail.selldate as date', 
-                'sell_order_detail.quantity', 
-                'sell_order_detail.price', 
-                DB::raw("'sell' as type"), 
-                'sell_order_detail.description', 
-                DB::raw('0 as hidden_amount'), 
-                'sell_order_detail.unitid', 
-                'stockitem.unitid as stockitemunitid', 
-                'contact.name as contactname', 
-                'stock_base_unit.name as base_unit_name', 
-                'stock_converted_unit.name as converted_unit_name', 
+            ->select('sell_order_detail.id',
+                'sell_order_detail.reference',
+                'sell_order_detail.selldate as date',
+                'sell_order_detail.quantity',
+                'sell_order_detail.price',
+                DB::raw("'sell' as type"),
+                'sell_order_detail.description',
+                DB::raw('0 as hidden_amount'),
+                'sell_order_detail.unitid',
+                'stockitem.unitid as stockitemunitid',
+                'contact.name as contactname',
+                'stock_base_unit.name as base_unit_name',
+                'stock_converted_unit.name as converted_unit_name',
                 'sell_order_detail.created_at',
-                DB::raw('CASE 
-                WHEN wh_sell_order_detail.unitid = wh_stockitem.unitid THEN 
-                        (wh_sell_order_detail.quantity * wh_stockitem.unitconverter1 / wh_stockitem.unitconverter) 
-                    ELSE 
-                        (wh_sell_order_detail.quantity * wh_stockitem.unitconverter / wh_stockitem.unitconverter1) 
+                DB::raw('CASE
+                WHEN wh_sell_order_detail.unitid = wh_stockitem.unitid THEN
+                        (wh_sell_order_detail.quantity * wh_stockitem.unitconverter1 / wh_stockitem.unitconverter)
+                    ELSE
+                        (wh_sell_order_detail.quantity * wh_stockitem.unitconverter / wh_stockitem.unitconverter1)
                 END as converted_quantity'),
-                DB::raw('0 as converted_hidden_amount'), 
+                DB::raw('0 as converted_hidden_amount'),
             )
             // ->where('sell_order_detail.stockitemid', $id)
             ->where('stockitem.code', $stockItem->code)
             ->where('sell_order_detail.warehouseid', $stockItem->warehouseid)
             ->where('sell_order.hidden', false)
             ->where('sell_order.confirmed', true);
-        
+
         $movements = MovementModel::leftJoin('stockitem', 'stockitem.id', '=', 'movement.stockitemid')
             ->leftJoin('warehouse as source_warehouse', 'source_warehouse.id', '=', 'movement.source_warehouse_id')
             ->leftJoin('warehouse as target_warehouse', 'target_warehouse.id', '=', 'movement.target_warehouse_id')
             ->leftJoin('unit as stock_base_unit', 'stock_base_unit.id', '=', 'stockitem.unitid')
             ->leftJoin('unit as stock_converted_unit', 'stock_converted_unit.id', '=', 'stockitem.unitconverterto')
             ->select(
-                'movement.id', 
-                'movement.reference', 
-                'movement.movement_date as date', 
-                'movement.quantity', 
-                'movement.price', 
-                DB::raw("'movement' as type"), 
-                'movement.description', 
-                DB::raw('0 as hidden_amount'), 
-                'movement.unitid', 
-                'stockitem.unitid as stockitemunitid', 
-                DB::raw("IF(wh_movement.source_warehouse_id != '".$stockItem->warehouseid."' , wh_source_warehouse.name, wh_target_warehouse.name) as contactname"), 
-                'stock_base_unit.name as base_unit_name', 
-                'stock_converted_unit.name as converted_unit_name', 
+                'movement.id',
+                'movement.reference',
+                'movement.movement_date as date',
+                'movement.quantity',
+                'movement.price',
+                DB::raw("'movement' as type"),
+                'movement.description',
+                DB::raw('0 as hidden_amount'),
+                'movement.unitid',
+                'stockitem.unitid as stockitemunitid',
+                DB::raw("IF(wh_movement.source_warehouse_id != '".$stockItem->warehouseid."' , wh_source_warehouse.name, wh_target_warehouse.name) as contactname"),
+                'stock_base_unit.name as base_unit_name',
+                'stock_converted_unit.name as converted_unit_name',
                 'movement.created_at',
-                DB::raw('CASE 
-                WHEN wh_movement.unitid = wh_stockitem.unitid THEN 
-                        (wh_movement.quantity * wh_stockitem.unitconverter1 / wh_stockitem.unitconverter) 
-                    ELSE 
-                        (wh_movement.quantity * wh_stockitem.unitconverter / wh_stockitem.unitconverter1) 
+                DB::raw('CASE
+                WHEN wh_movement.unitid = wh_stockitem.unitid THEN
+                        (wh_movement.quantity * wh_stockitem.unitconverter1 / wh_stockitem.unitconverter)
+                    ELSE
+                        (wh_movement.quantity * wh_stockitem.unitconverter / wh_stockitem.unitconverter1)
                 END as converted_quantity'),
-                DB::raw('0 as converted_hidden_amount'), 
+                DB::raw('0 as converted_hidden_amount'),
             )
             ->where(function($query) use ($stockItem) {
                 $query->Where('movement.source_warehouse_id', $stockItem->warehouseid)
                         ->orWhere('movement.target_warehouse_id', $stockItem->warehouseid);
-            })            
+            })
             ->where('movement.code', $stockItem->code);
         $history = $purchases->union($sales)->union($movements)
             ->orderBy('date', 'DESC')
@@ -160,7 +161,7 @@ class HiddenService
         return $history;
     }
 
-    public function hideSell($reference, $select_purchases) 
+    public function hideSell($reference, $select_purchases)
     {
         $sell = SellOrderModel::where("reference", $reference)->first();
         $sell->hidden = true;
@@ -198,17 +199,17 @@ class HiddenService
     {
         $sale_order_items = SellOrderDetailModel::leftJoin('stockitem', 'stockitem.id', '=', 'sell_order_detail.stockitemid')
                 ->select(
-                    'stockitem.unitid as stock_unitid', 
+                    'stockitem.unitid as stock_unitid',
                     'stockitem.unitconverter',
                     'stockitem.unitconverter1',
                     'stockitem.unitconverterto',
-                    'sell_order_detail.unitid as order_unitid', 
-                    'sell_order_detail.quantity', 
+                    'sell_order_detail.unitid as order_unitid',
+                    'sell_order_detail.quantity',
                 )
                 ->where('reference', $reference)->get();
-        
+
     }
-    
+
         /**
      * Delete transactions by reference.
      *
