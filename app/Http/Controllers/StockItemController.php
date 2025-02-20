@@ -348,7 +348,8 @@ class StockItemController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'photo' => 'image|mimes:jpeg,png,jpg,gif,webp|max:2048'
+            'photo' => 'image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            // 'categoryid' => 'required'
         ]);
         $image = $request->file('photo');
 
@@ -635,7 +636,8 @@ class StockItemController extends Controller
             if($data->photo ==''){
                 $photo =  asset('public/storage/items/item-placeholder.png');
             }else{
-                $photo =  asset('public/storage/items/'.$data->photo);
+                // $photo =  asset('public/storage/items/'.$data->photo);
+                $photo = env('MEDIA_UPLOADER_URL') . $data->image_path;
             }
         }
         return view('stock.sellpricehistory')->with(['stockitemid' => $id, 'data' => $data, 'photo' => $photo]);
@@ -650,6 +652,7 @@ class StockItemController extends Controller
                 $photo =  asset('public/storage/items/item-placeholder.png');
             }else{
                 $photo =  asset('public/storage/items/'.$data->photo);
+                $photo = env('MEDIA_UPLOADER_URL') . $data->image_path;
             }
         }
         return view('stock.purchasepricehistory')->with(['stockitemid' => $id, 'data' => $data, 'photo' => $photo]);
@@ -664,7 +667,8 @@ class StockItemController extends Controller
             if($data->photo ==''){
                 $photo =  asset('public/storage/items/item-placeholder.png');
             }else{
-                $photo =  asset('public/storage/items/'.$data->photo);
+                // $photo =  asset('public/storage/items/'.$data->photo);
+                $photo = env('MEDIA_UPLOADER_URL') . $data->image_path;
             }
         }
         return view('stock.pricehistory')->with(['stockitemid' => $id, 'data' => $data, 'photo' => $photo]);

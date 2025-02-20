@@ -158,7 +158,7 @@ class StockItemService
             $resize_large_image = $imageInst->resize(width: 740);
             $resize_grid_image = $imageInst->resize(width: 350);
             $resize_p_grid_image = $imageInst->resize(width: 230);
-            $resize_thumb_image = $imageInst->resize(width: 150);
+            $resize_thumb_image = $imageInst->resize(width: 150, height: 150);
             $image->move($folder_path, $image_db);
             // $imageInst =$imageInst->resize(width: 262.50, height:300);
             $imageInst->save($folder_path. $image_db);
@@ -335,7 +335,6 @@ class StockItemService
         // Find the stock item by ID
         $SetData = StockItemModel::findOrFail($id);
         $sh_product = SHProductModel::where('id', $SetData[0]->product_id)->firstOrFail();
-        $sh_product['image'] = $newMediaUpload->id;
         $sh_product->fill($data);
         $sh_product->save();
         if ($data['price'] != $SetData[0]->price) { // update stockitem history
@@ -349,6 +348,8 @@ class StockItemService
 
         // Update the image if provided
         if ($image) {
+            $sh_product['image'] = $newMediaUpload->id;
+            $sh_product->save();
             // $photoName = time() . '.' . $image->getClientOriginalName();
             // $photoPath = $image->storeAs('public/items', $photoName);
             $dataUpdate->each->update(['photo' => $newMediaUpload->id]);

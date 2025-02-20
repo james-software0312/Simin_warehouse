@@ -201,8 +201,8 @@
                     <div class="mb-3">
                         <label for="payment_type" class="form-label">{{ __('text.payment_type') }}</label>
                         <select name="payment_type" id="payment_type" class="form-control" required>
+                            <option value="cash" selected>{{ __('text.cash') }}</option>
                             <option value="bank_transfer">{{ __('text.bank_transfer') }}</option>
-                            <option value="cash">{{ __('text.cash') }}</option>
                             {{-- <option value="pre_order">{{ __('text.pre_order') }}</option> --}}
                             <option value="cash_on_delivery">{{ __('text.cash_on_delivery') }}</option>
                         </select>
@@ -690,20 +690,35 @@
                     var currentQuantity = parseInt(existingRow.find('.quantity-input').val());
                     // existingRow.find('.quantity-input').val(currentQuantity + 1);
                     var currentUnit = parseInt(existingRow.find('.unit-input').val());
-                    existingRow.find('.quantity-input').val(currentQuantity + (currentUnit == 1 ? Math.max(unitconverter,unitconverter1) : 1));
+                    // existingRow.find('.quantity-input').val(currentQuantity + (currentUnit == 1 ? Math.max(unitconverter,unitconverter1) : 1));
                 } else {
                     // Item does not exist, add a new row
-                    var quantityInput = '<div class="input-group" style="margin-right: 10px"><div class="input-group-text qty-minus">-</div><input id="quantity" required class="form-control quantity-input" name="quantity[]" type="number" min="1" value="' + quantity + '" style="text-align:center;"><div class="input-group-text qty-plus">+</div></div>';
-                    var itemCode = '<input type="hidden" name="stockitemid[]" value="' + itemId + '">';
-                    var priceInput = '<label class="mobile-label">{!!__("text.sale_price")!!}</label><input required class="form-control price-input" name="price[]" type="number" min="0" step="0.01" value="' + price + '" disabled />';
-                    var realpriceInput = '<label class="mobile-label">{!!__("text.real_price")!!}</label><input required class="form-control realprice-input" name="realprice[]" type="number" min="0" step="0.01" value="' + price + '" />';
-                    var discountInput = '<label class="mobile-label">{!!__("text.discount")!!}</label><div class="d-flex align-items-center"><input id="discount" required class="form-control discount-input" name="discount[]" value="' + discount + '" style="margin-right: 5px" disabled /> {{ __("text.PLN") }}</div>';
-                    // var unitInput = $("#unit_list").html();
-                    var unitInput = `<select class="form-control unit-input" name="unit[]"><option value="${unitid}">${$("#unit_list").find("option[value="+unitid+"]").text()}</option><option value="${unitconverterto}">${$("#unit_list").find("option[value="+unitconverterto+"]").text()}</option></select>`;
+                    var quantityInput = '<div class="input-group" style="margin-right: 10px"><input type="hidden" name="unitconverter[]" id="unitconverter" value="'+unitconverter+'"><div class="input-group-text qty-minus" style = "cursor: pointer;" >-</div><input disabled id="quantity" required class="form-control quantity-input" name="quantity[]" value="' + unitconverter + '" style="text-align:center;"><div class="input-group-text qty-plus" style = "cursor: pointer;">+</div></div>';
+                var itemCode = '<input type="hidden" name="stockitemid[]" value="' + itemId + '">';
+                var priceInput = '<label class="mobile-label">{!!__("text.sale_price")!!}</label><input required class="form-control price-input" name="price[]" type="number" min="0" step="0.01" value="' + price + '" disabled />';
+                var realpriceInput = '<label class="mobile-label">{!!__("text.real_price")!!}</label><input required class="form-control realprice-input" name="realprice[]" type="number" min="0" step="0.01" value="' + price + '" />';
+                var discountInput = '<label class="mobile-label">{!!__("text.discount")!!}</label><div class="d-flex align-items-center"><input id="discount" required class="form-control discount-input" name="discount[]" value="' + discount + '" style="margin-right: 5px" disabled /> {{ __("text.PLN") }}</div>';
+                // var unitInput = $("#unit_list").html();
+                // var unitInput = `<select class="form-control unit-input" name="unit[]"><option value="${unitid}">${$("#unit_list").find("option[value="+unitid+"]").text()}</option><option value="${unitconverterto}">${$("#unit_list").find("option[value="+unitconverterto+"]").text()}</option></select>`;
+                var unitInput = `<select class="form-control unit-input" name="unit[]">
+                        <option value="2" ${unitid == 2 || unitconverterto == 2 ? 'selected' : ''}>${real_unit}</option>
+                    </select>`;
+                var newRow = '<tr data-id="' + itemId + '" data-unitid="' + unitid + '" data-unitconverter="' + unitconverter + '" data-unitconverter1="' + unitconverter1 + '" data-price="' + price + '" data-unitid="' + unitid + '" data-unitconverterto="' + unitconverterto + '"><td class="mobile-inline"><div style="width: 95%"><span class="itemname">' + itemName + '</span><br/><span class="itemcode">' + itemCodeName + '</span></div><a href="#blank" class="remove-item mobile-label"><span class="material-symbols-rounded">delete</span></a></td><td style="display:flex;flex-direction:row">' + itemCode + quantityInput + '' + unitInput + '</td><td>' + priceInput + '</td><td class="realprice-value">' + realpriceInput + '</td><td class="discount-value">' + discountInput + '</td><td align="center">&nbsp;<a href="#blank" class="remove-item mobile-hide"><span class="material-symbols-rounded">delete</span></a></td></tr>';
 
-                    var newRow = '<tr data-id="' + itemId + '" data-unitid="' + unitid + '" data-unitconverter="' + unitconverter + '" data-unitconverter1="' + unitconverter1 + '" data-price="' + price + '" data-unitid="' + unitid + '" data-unitconverterto="' + unitconverterto + '"><td class="mobile-inline"><div style="width: 95%"><span class="itemname">' + itemName + '</span><br/><span class="itemcode">' + itemCodeName + '</span></div><a href="#blank" class="remove-item mobile-label"><span class="material-symbols-rounded">delete</span></a></td><td style="display:flex;flex-direction:row">' + itemCode + quantityInput + unitInput + '</td><td>' + priceInput + '</td><td class="realprice-value">' + realpriceInput + '</td><td class="discount-value">' + discountInput + '</td><td align="center">&nbsp;<a href="#blank" class="remove-item mobile-hide"><span class="material-symbols-rounded">delete</span></a></td></tr>';
+                $('#selectedItemsBody').append(newRow);
 
-                    $('#selectedItemsBody').append(newRow);
+
+                    // var quantityInput = '<div class="input-group" style="margin-right: 10px"><input type="hidden" name="unitconverter[]" id="unitconverter" value="'+unitconverter+'"><div class="input-group-text qty-minus">-</div><input id="quantity" required class="form-control quantity-input" name="quantity[]" type="number" min="1" value="' + quantity + '" style="text-align:center;"><div class="input-group-text qty-plus">+</div></div>';
+                    // var itemCode = '<input type="hidden" name="stockitemid[]" value="' + itemId + '">';
+                    // var priceInput = '<label class="mobile-label">{!!__("text.sale_price")!!}</label><input required class="form-control price-input" name="price[]" type="number" min="0" step="0.01" value="' + price + '" disabled />';
+                    // var realpriceInput = '<label class="mobile-label">{!!__("text.real_price")!!}</label><input required class="form-control realprice-input" name="realprice[]" type="number" min="0" step="0.01" value="' + price + '" />';
+                    // var discountInput = '<label class="mobile-label">{!!__("text.discount")!!}</label><div class="d-flex align-items-center"><input id="discount" required class="form-control discount-input" name="discount[]" value="' + discount + '" style="margin-right: 5px" disabled /> {{ __("text.PLN") }}</div>';
+                    // // var unitInput = $("#unit_list").html();
+                    // var unitInput = `<select class="form-control unit-input" name="unit[]"><option value="${unitid}">${$("#unit_list").find("option[value="+unitid+"]").text()}</option><option value="${unitconverterto}">${$("#unit_list").find("option[value="+unitconverterto+"]").text()}</option></select>`;
+
+                    // var newRow = '<tr data-id="' + itemId + '" data-unitid="' + unitid + '" data-unitconverter="' + unitconverter + '" data-unitconverter1="' + unitconverter1 + '" data-price="' + price + '" data-unitid="' + unitid + '" data-unitconverterto="' + unitconverterto + '"><td class="mobile-inline"><div style="width: 95%"><span class="itemname">' + itemName + '</span><br/><span class="itemcode">' + itemCodeName + '</span></div><a href="#blank" class="remove-item mobile-label"><span class="material-symbols-rounded">delete</span></a></td><td style="display:flex;flex-direction:row">' + itemCode + quantityInput + unitInput + '</td><td>' + priceInput + '</td><td class="realprice-value">' + realpriceInput + '</td><td class="discount-value">' + discountInput + '</td><td align="center">&nbsp;<a href="#blank" class="remove-item mobile-hide"><span class="material-symbols-rounded">delete</span></a></td></tr>';
+
+                    // $('#selectedItemsBody').append(newRow);
                 }
                 initDiscuount();
             }
