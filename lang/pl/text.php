@@ -151,7 +151,7 @@ return [
     'size' => 'Rozmiar',
     'sub_type' => 'Podkategoria',
     'converter' => 'Przelicznik',
-    'color' => 'kolor',
+    'color' => 'Kolor',
     'Color' => 'Kolor',
     'rate' => 'Stawka podatku',
     'related_unit' => 'Jednostka',

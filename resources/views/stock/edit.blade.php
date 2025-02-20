@@ -267,7 +267,7 @@
                                 text: item.title,
                                 parent: item.parent_id === null ? "#" : item.parent_id,
                                 state: {
-                                    opened: true, // Opens the node
+                                    opened: false, // Opens the node
                                     selected: item.id === {!!$data->categoryid!!} // Replace 3 with the ID of the category to select
                                 }
                             }));

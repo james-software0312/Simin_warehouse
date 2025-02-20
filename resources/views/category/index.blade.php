@@ -100,7 +100,7 @@
                                 image: item.path,
                                 parent: item.parent_id === null ? "#" : item.parent_id,
                                 state: {
-                                    opened: true // This opens all layers initially
+                                    opened: false // This opens all layers initially
                                 }
                             }));
                             callback(transformedData);

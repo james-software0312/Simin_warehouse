@@ -215,7 +215,10 @@
                             const transformedData = data.map(item => ({
                                 id: item.id,
                                 text: item.title,
-                                parent: item.parent_id === null ? "#" : item.parent_id
+                                parent: item.parent_id === null ? "#" : item.parent_id,
+                                state: {
+                                    opened: false // Ensure nodes are collapsed by default
+                                }
                             }));
                             callback(transformedData);
                         }

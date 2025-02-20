@@ -22,6 +22,7 @@ use App\Exports\SellExport;
 use App\Exports\CheckinExport;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Auth;
+use App\Models\SHMediaUploadModel;
 use Illuminate\Support\Facades\DB;
 use DateTime;
 
@@ -1340,6 +1341,7 @@ class TransactionController extends Controller
        $warehouseid = $request->get('warehouseid');
        $data = $this->stockitemService->getItem($code, $warehouseid);
        $data_code = call_user_func_array([new DNS2D(), 'getBarcodePNG'], [$code, "QRCODE"]);
+       $img_path = SHMediaUploadModel::where('id',$data->photo)->first();
        $dataURL = "data:image/png;base64," . ($data_code);
         if(!$data){
             return response()->json(['success' => false,  'dataURL' => $dataURL, ]);
@@ -1347,7 +1349,8 @@ class TransactionController extends Controller
        if($data->photo ==''){
            $photo =  asset('public/storage/items/item-placeholder.png');
        }else{
-           $photo =  asset('public/storage/items/'.$data->photo);
+        //    $photo =  asset('public/storage/items/'.$data->photo);
+           $photo =  env('MEDIA_UPLOADER_URL').$img_path->path;
        }
 
         return response()->json(['success' => true, 'dataURL' => $dataURL, 'data' => $data, 'photo' => $photo]);

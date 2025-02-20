@@ -160,7 +160,7 @@ class StockItemService
             $resize_p_grid_image = $imageInst->resize(width: 230);
             $resize_thumb_image = $imageInst->resize(width: 150);
             $image->move($folder_path, $image_db);
-            $imageInst =$imageInst->resize(width: 262.50, height:300);
+            // $imageInst =$imageInst->resize(width: 262.50, height:300);
             $imageInst->save($folder_path. $image_db);
             $newMediaUpload = SHMediaUploadModel::create([
                 'title' => $image_name_with_ext,
@@ -179,6 +179,50 @@ class StockItemService
             $post->photo = $newMediaUpload->id;
             $insert_sh_product_data['image'] = $newMediaUpload->id;
         }
+
+        // if ($image) {
+        //     $image_dimension = getimagesize($image);
+        //     $image_width = $image_dimension[0];
+        //     $image_height = $image_dimension[1];
+        //     $image_dimension_for_db = $image_width . ' x ' . $image_height . ' pixels';
+        //     $image_size_for_db = $image->getSize();
+
+        //     $image_extenstion = $image->getClientOriginalExtension();
+        //     $image_name_with_ext = $image->getClientOriginalName();
+
+        //     $image_name = pathinfo($image_name_with_ext, PATHINFO_FILENAME);
+        //     $image_name = strtolower(Str::slug($image_name));
+
+        //     $image_db = $image_name . time() . '.' . $image_extenstion;
+        //     $image_grid = 'grid-' . $image_db;
+        //     $image_large = 'large-' . $image_db;
+        //     $image_thumb = 'thumb-' . $image_db;
+        //     $image_p_grid = 'product-' . $image_db;
+
+        //     $folder_path = base_path(env('MEDIA_UPLOADER_PATH'));
+        //     $imageInst = Image::read($image);
+        //     $resize_large_image = $imageInst->resize(width: 740);
+        //     $resize_grid_image = $imageInst->resize(width: 350);
+        //     $resize_p_grid_image = $imageInst->resize(width: 230);
+        //     $resize_thumb_image = $imageInst->resize(width: 150, height: 150);
+        //     $image->move($folder_path, $image_db);
+        //     $newMediaUpload = SHMediaUploadModel::create([
+        //         'title' => $image_name_with_ext,
+        //         'size' => formatBytes($image_size_for_db),
+        //         'path' => $image_db,
+        //         'dimensions' => $image_dimension_for_db,
+        //         'user_id' => Auth::user()->id
+        //     ]);
+
+        //     if ($image_width > 150) {
+        //         $resize_thumb_image->save($folder_path . $image_thumb);
+        //         $resize_grid_image->save($folder_path . $image_grid);
+        //         $resize_large_image->save($folder_path . $image_large);
+        //         $resize_p_grid_image->save($folder_path . $image_p_grid);
+        //     }
+        //     $post->photo = $newMediaUpload->id;
+        //     $insert_sh_product_data['image'] = $newMediaUpload->id;
+        // }
         $sh_product = SHProductModel::create($insert_sh_product_data);
         $post->product_id = $sh_product->id;
         $post->save();
@@ -202,9 +246,96 @@ class StockItemService
      */
     public function update($id, $data, $image)
     {
+        if ($image) {
+            $image_dimension = getimagesize($image);
+            $image_width = $image_dimension[0];
+            $image_height = $image_dimension[1];
+            // $image_dimension_for_db = $image_width . ' x ' . $image_height . ' pixels';
+            $image_dimension_for_db = 1200 . ' x ' . '1600 pixels';
+            $image_size_for_db = $image->getSize();
+            $image_extenstion = $image->getClientOriginalExtension();
+            $image_name_with_ext = $image->getClientOriginalName();
+
+            $image_name = pathinfo($image_name_with_ext, PATHINFO_FILENAME);
+            $image_name = strtolower(Str::slug($image_name));
+
+            $image_db = $image_name . time() . '.' . $image_extenstion;
+            $image_grid = 'grid-' . $image_db;
+            $image_large = 'large-' . $image_db;
+            $image_thumb = 'thumb-' . $image_db;
+            $image_p_grid = 'product-' . $image_db;
+
+            $folder_path = base_path(env('MEDIA_UPLOADER_PATH'));
+            // dd($image_name_with_ext);
+            $imageInst = Image::read($image);
+            $resize_large_image = $imageInst->resize(width: 740);
+            $resize_grid_image = $imageInst->resize(width: 350);
+            $resize_p_grid_image = $imageInst->resize(width: 230);
+            $resize_thumb_image = $imageInst->resize(width: 150);
+            $image->move($folder_path, $image_db);
+            // $imageInst =$imageInst->resize(width: 262.50, height:300);
+            $imageInst->save($folder_path. $image_db);
+            $newMediaUpload = SHMediaUploadModel::create([
+                'title' => $image_name_with_ext,
+                'size' => formatBytes($image_size_for_db),
+                'path' => $image_db,
+                'dimensions' => $image_dimension_for_db,
+                'user_id' => Auth::user()->id
+            ]);
+
+            if ($image_width > 150) {
+                $resize_thumb_image->save($folder_path . $image_thumb);
+                $resize_grid_image->save($folder_path . $image_grid);
+                $resize_large_image->save($folder_path . $image_large);
+                $resize_p_grid_image->save($folder_path . $image_p_grid);
+            }
+        }
+
+        // if ($image) {
+        //     $image_dimension = getimagesize($image);
+        //     $image_width = $image_dimension[0];
+        //     $image_height = $image_dimension[1];
+        //     $image_dimension_for_db = $image_width . ' x ' . $image_height . ' pixels';
+        //     $image_size_for_db = $image->getSize();
+
+        //     $image_extenstion = $image->getClientOriginalExtension();
+        //     $image_name_with_ext = $image->getClientOriginalName();
+
+        //     $image_name = pathinfo($image_name_with_ext, PATHINFO_FILENAME);
+        //     $image_name = strtolower(Str::slug($image_name));
+
+        //     $image_db = $image_name . time() . '.' . $image_extenstion;
+        //     $image_grid = 'grid-' . $image_db;
+        //     $image_large = 'large-' . $image_db;
+        //     $image_thumb = 'thumb-' . $image_db;
+        //     $image_p_grid = 'product-' . $image_db;
+
+        //     $folder_path = base_path(env('MEDIA_UPLOADER_PATH'));
+        //     $imageInst = Image::read($image);
+        //     $resize_large_image = $imageInst->resize(width: 740);
+        //     $resize_grid_image = $imageInst->resize(width: 350);
+        //     $resize_p_grid_image = $imageInst->resize(width: 230);
+        //     $resize_thumb_image = $imageInst->resize(width: 150, height: 150);
+        //     $image->move($folder_path, $image_db);
+        //     $newMediaUpload = SHMediaUploadModel::create([
+        //         'title' => $image_name_with_ext,
+        //         'size' => formatBytes($image_size_for_db),
+        //         'path' => $image_db,
+        //         'dimensions' => $image_dimension_for_db,
+        //         'user_id' => Auth::user()->id
+        //     ]);
+
+        //     if ($image_width > 150) {
+        //         $resize_thumb_image->save($folder_path . $image_thumb);
+        //         $resize_grid_image->save($folder_path . $image_grid);
+        //         $resize_large_image->save($folder_path . $image_large);
+        //         $resize_p_grid_image->save($folder_path . $image_p_grid);
+        //     }
+        // }
         // Find the stock item by ID
         $SetData = StockItemModel::findOrFail($id);
         $sh_product = SHProductModel::where('id', $SetData[0]->product_id)->firstOrFail();
+        $sh_product['image'] = $newMediaUpload->id;
         $sh_product->fill($data);
         $sh_product->save();
         if ($data['price'] != $SetData[0]->price) { // update stockitem history
@@ -218,9 +349,9 @@ class StockItemService
 
         // Update the image if provided
         if ($image) {
-            $photoName = time() . '.' . $image->getClientOriginalName();
-            $photoPath = $image->storeAs('public/items', $photoName);
-            $dataUpdate->each->update(['photo' => $photoName]);
+            // $photoName = time() . '.' . $image->getClientOriginalName();
+            // $photoPath = $image->storeAs('public/items', $photoName);
+            $dataUpdate->each->update(['photo' => $newMediaUpload->id]);
         }
 
         return $dataUpdate;
@@ -574,13 +705,25 @@ class StockItemService
      * @return \Illuminate\Database\Eloquent\Collection
      */
     public function getItem($code, $warehouseid){
+        // dd(StockItemModel::leftJoin('category', 'stockitem.categoryid', '=', 'category.id')
+        // ->leftJoin('unit', 'stockitem.unitid', '=', 'unit.code')
+        // ->leftJoin('warehouse', 'stockitem.warehouseid', '=', 'warehouse.id')
+        // ->select('stockitem.*', 'unit.name as unit',
+        //         'warehouse.name as warehouse', 'category.name as category',
+        //         'unit.code as codeunit',
+        //         'warehouse.id as warehouseid', 'category.code as codecategory')
+        // ->where('stockitem.code', $code )
+        // ->where('stockitem.is_delete', false)
+        // ->where('stockitem.quantity', '>', 0)
+        // ->where('stockitem.warehouseid', $warehouseid )
+        // ->first());
         return StockItemModel::leftJoin('category', 'stockitem.categoryid', '=', 'category.id')
             ->leftJoin('unit', 'stockitem.unitid', '=', 'unit.code')
             ->leftJoin('warehouse', 'stockitem.warehouseid', '=', 'warehouse.id')
             ->select('stockitem.*', 'unit.name as unit',
                     'warehouse.name as warehouse', 'category.name as category',
                     'unit.code as codeunit',
-                    'warehouse.id as warehouseid', 'category.code as codecategory')
+                    'warehouse.id as warehouseid', )
             ->where('stockitem.code', $code )
             ->where('stockitem.is_delete', false)
             ->where('stockitem.quantity', '>', 0)
