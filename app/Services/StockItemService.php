@@ -153,12 +153,13 @@ class StockItemService
             $image_p_grid = 'product-' . $image_db;
 
             $folder_path = base_path(env('MEDIA_UPLOADER_PATH'));
+            // dd($image_name_with_ext);
             $imageInst = Image::read($image);
             $resize_large_image = $imageInst->resize(width: 740);
             $resize_grid_image = $imageInst->resize(width: 350);
             $resize_p_grid_image = $imageInst->resize(width: 230);
             $resize_thumb_image = $imageInst->resize(width: 150);
-            // $image->move($folder_path, $image_db);
+            $image->move($folder_path, $image_db);
             $imageInst =$imageInst->resize(width: 262.50, height:300);
             $imageInst->save($folder_path. $image_db);
             $newMediaUpload = SHMediaUploadModel::create([
@@ -299,7 +300,7 @@ class StockItemService
                 $stockitem =  StockItemModel::where('code', $code)->where('warehouseid', $warehouseid)->first();
                 SHProductModel::where('id', $stockitem->product_id)->update([
                     'contact_id' =>$contactid,
-                    'sale_price' => $stockitem->purchase_price,
+                    // 'sale_price' => $stockitem->purchase_price,
                 ]);
             }else{
                 StockItemModel::where('code', $code)->where('warehouseid', $warehouseid)->update(['quantity' => $updatedQuantity, 'single_quantity' => $updatedSQuantity]);

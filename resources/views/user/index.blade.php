@@ -219,7 +219,7 @@
                                     <label for="categorydelete">{{__('text.delete')}}</label>
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            {{-- <div class="col-md-4">
                                 <p class="mb-2"><strong>{{__('text.shelf')}}</strong></p>
                                 <div class="d-flex align-items-center">
                                     <input id="shelfview" name="shelf[]" type="checkbox" value="1" class="me-2">
@@ -237,7 +237,7 @@
                                     <input id="shelfdelete" name="shelf[]" type="checkbox" value="4" class="me-2">
                                     <label for="shelfdelete">{{__('text.delete')}}</label>
                                 </div>
-                            </div>
+                            </div> --}}
                             <div class="col-md-4">
                                 <p class="mb-2"><strong>{{__('text.unit')}}</strong></p>
                                 <div class="d-flex align-items-center">

@@ -17,6 +17,7 @@ use Milon\Barcode\DNS2D;
 use Milon\Barcode\DNS1D;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Models\SHMediaUploadModel;
 use DateTime;
 
 class StockItemController extends Controller
@@ -446,12 +447,17 @@ class StockItemController extends Controller
     {
 
         $data = $this->stockitemService->getById($request->id);
+        $img_path = SHMediaUploadModel::where('id',$data->photo)->first();
 
         if ($data) {
             if($data->photo ==''){
                 $photo =  asset('public/storage/items/item-placeholder.png');
+                // $photo =  'https://web.eska.tech/website/assets/uploads/media-uploader/item-placeholder.png';
             }else{
-                $photo =  asset('public/storage/items/'.$data->photo);
+
+                $photo = env('MEDIA_UPLOADER_URL') . $img_path->path;
+                // $photo =  asset('public/storage/items/'.$data->photo);
+                // $photo =  'https://web.eska.tech/website/assets/uploads/media-uploader/'.$data->photo;
             }
         }
         return view('stock.history')->with(['stockitemid' => $request->id, 'data' => $data, 'photo' => $photo]);
@@ -472,8 +478,6 @@ class StockItemController extends Controller
             } else {
                 $data = $this->hiddenService->getStockItemHistory($request->stockitemid);
             }
-
-
 
             return DataTables::of($data)
             ->addColumn('price', function($data) use($hasSeeHiddenPermission) {

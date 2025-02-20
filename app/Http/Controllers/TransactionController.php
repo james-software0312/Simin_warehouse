@@ -1289,16 +1289,16 @@ class TransactionController extends Controller
             })
             ->addColumn('price', function($data) {
                 $price = 0;
-                if ($data->sell_unit_name != 'karton') {
-                    $price = $data->price;
-                } else {
-                    if ($data->unitid == $data->stockunitid) {
-                        $price = $data->price * ($data->unitconverter / $data->unitconverter1);
-                    } else {
-                        $price = $data->price * ($data->unitconverter1 / $data->unitconverter);
-                    }
-                }
-                return number_format($price, 2)  . __('text.PLN');
+                // if ($data->sell_unit_name != 'karton') {
+                //     $price = $data->price;
+                // } else {
+                //     if ($data->unitid == $data->stockunitid) {
+                //         $price = $data->price * ($data->unitconverter / $data->unitconverter1);
+                //     } else {
+                //         $price = $data->price * ($data->unitconverter1 / $data->unitconverter);
+                //     }
+                // }
+                return number_format($data->price, 2)  . __('text.PLN');
             })
             ->toJson();
     }
