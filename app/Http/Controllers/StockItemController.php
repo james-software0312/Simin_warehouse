@@ -186,7 +186,7 @@ class StockItemController extends Controller
                 }
                 return '<div>
                 <div class="barcodecode text-center">
-                <img src="' . $photo . '"alt="barcode" width="50"  />
+                <img src="' . $photo . '"alt="barcode" width="50"  height = "50" />
                 </div>';
             })
             ->addColumn('code', function($data) {

@@ -155,10 +155,10 @@ class StockItemService
             $folder_path = base_path(env('MEDIA_UPLOADER_PATH'));
             // dd($image_name_with_ext);
             $imageInst = Image::read($image);
-            $resize_large_image = $imageInst->resize(width: 740);
-            $resize_grid_image = $imageInst->resize(width: 350);
-            $resize_p_grid_image = $imageInst->resize(width: 230);
-            $resize_thumb_image = $imageInst->resize(width: 150, height: 150);
+            $resize_large_image = $imageInst->resize(width: 150, height: 150 );
+            $resize_grid_image = $imageInst->resize(width: 350, height: 466.67);
+            $resize_p_grid_image = $imageInst->resize(width: 230, height: 306.67);
+            $resize_thumb_image = $imageInst->resize(width: 740, height: 740);
             $image->move($folder_path, $image_db);
             // $imageInst =$imageInst->resize(width: 262.50, height:300);
             // $imageInst->save($folder_path. $image_db);
@@ -171,9 +171,9 @@ class StockItemService
             ]);
 
             if ($image_width > 150) {
+                $resize_large_image->save($folder_path . $image_large);
                 $resize_thumb_image->save($folder_path . $image_thumb);
                 $resize_grid_image->save($folder_path . $image_grid);
-                $resize_large_image->save($folder_path . $image_large);
                 $resize_p_grid_image->save($folder_path . $image_p_grid);
             }
             $post->photo = $newMediaUpload->id;
@@ -268,9 +268,9 @@ class StockItemService
             $folder_path = base_path(env('MEDIA_UPLOADER_PATH'));
             // dd($image_name_with_ext);
             $imageInst = Image::read($image);
-            $resize_large_image = $imageInst->resize(width: 740);
-            $resize_grid_image = $imageInst->resize(width: 350);
-            $resize_p_grid_image = $imageInst->resize(width: 230);
+            $resize_large_image = $imageInst->resize(width: 740, height: 986.67 );
+            $resize_grid_image = $imageInst->resize(width: 350, height: 466.67);
+            $resize_p_grid_image = $imageInst->resize(width: 230, height: 306.67);
             $resize_thumb_image = $imageInst->resize(width: 150 , height: 150);
             $image->move($folder_path, $image_db);
             // $imageInst =$imageInst->resize(width: 262.50, height:300);
