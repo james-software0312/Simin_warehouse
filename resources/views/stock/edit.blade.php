@@ -47,7 +47,7 @@
                 <div class="col-md-4 row">
                     <div class="col-md-12">
                         <div class="mb-3 text-center">
-                            <img src="{{$photo}}" class="photodetail img-fluid" width="250" />
+                            <img src="{{$photo}}" class="photodetail img-fluid"  />
                         </div>
                     </div>
                 </div>

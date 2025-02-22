@@ -624,7 +624,6 @@ class TransactionController extends Controller
                     $item['converted_quantity'] = $this->settingsService->formatQuantity($item['converted_quantity']);
                     $detail[] = $item;
                 }
-
                 return response()->json(['dataURL' => $dataURL, 'data' => $detail, 'created_at' => $created_at,  'transactiondate' => $transactiondate, 'sellOrder' => $sellOrder]);
             }
         }else{
@@ -1196,6 +1195,7 @@ class TransactionController extends Controller
             'references' => $references
         ];
         $data = $this->sellService->getSellDetail($filter);
+        // dd($data);
         $excel_data = [];
         $reference = "";
         $setting = $this->settingsService->getdataById(1);
@@ -1241,6 +1241,7 @@ class TransactionController extends Controller
             ];
             $excel_data[$item->reference]["stock_items"][] = $stock_item_data;
         }
+        // dd($excel_data);
         return view('transaction.checkoutprint')->with([
             'data' => $excel_data,
             'setting' => $setting
@@ -1289,7 +1290,7 @@ class TransactionController extends Controller
                 return  $data->reference;
             })
             ->addColumn('price', function($data) {
-                $price = 0;
+                $price = $data->price*$data->unitconverter*$data->quantity;
                 // if ($data->sell_unit_name != 'karton') {
                 //     $price = $data->price;
                 // } else {
@@ -1317,15 +1318,16 @@ class TransactionController extends Controller
             })
             ->addColumn('price', function($data) {
                 $price = 0;
-                if ($data->sell_unit_name != 'karton') {
-                    $price = $data->price;
-                } else {
-                    if ($data->unitid == $data->stockunitid) {
-                        $price = $data->price * ($data->unitconverter / $data->unitconverter1);
-                    } else {
-                        $price = $data->price * ($data->unitconverter1 / $data->unitconverter);
-                    }
-                }
+                $price = $data->price*$data->unitconverter*$data->quantity;
+                // if ($data->sell_unit_name != 'karton') {
+                //     $price = $data->price;
+                // } else {
+                //     if ($data->unitid == $data->stockunitid) {
+                //         $price = $data->price * ($data->unitconverter / $data->unitconverter1);
+                //     } else {
+                //         $price = $data->price * ($data->unitconverter1 / $data->unitconverter);
+                //     }
+                // }
                 return number_format($price, 2)  . __('text.PLN');
             })
             ->toJson();

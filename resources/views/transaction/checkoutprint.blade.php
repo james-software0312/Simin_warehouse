@@ -34,6 +34,9 @@
             .noline {
                 white-space: nowrap;
             }
+            td{
+                text-align: center;
+            }
 
         }
     </style>
@@ -41,6 +44,7 @@
 <body>
     @foreach($data as $order)
     <div class="container order" style="margin-top: 10px; padding: 10px 0px;max-width: 100%;">
+        {{-- {{ $data }} --}}
         <div class="row">
             <div class="col-6">
                 <div class="logo-wrapper">
@@ -106,8 +110,8 @@
                                 $total_carton += $item['base_unit_name'] == 'karton' ? $item['item_base_quantity'] : $item['item_converted_quantity'];
                                 $total_pair += $item['base_unit_name'] == 'para' ? $item['item_base_quantity'] : $item['item_converted_quantity'];
                                 $item_price = $item['sale_price'] + ($order['discount_type'] == 'peritem' ?$item['discount'] : 0);
-                                $total_sale_price_without_vat += $item_price * $item['item_base_quantity'];
-                                $total_sale_price_with_vat += $item_price * $item['item_base_quantity'] * (1 + $item['item_vat'] / 100);
+                                $total_sale_price_without_vat += $item_price * $item['item_converted_quantity'];
+                                $total_sale_price_with_vat += $item_price * $item['item_converted_quantity'] * (1 + $item['item_vat'] / 100);
                             ?>
                             <tr style="font-size: 27px">
                                 <td>{{$index + 1}}</td>
@@ -116,14 +120,14 @@
                                 {{-- <td>{{$item['item_category']}}</td> --}}
                                 <td>{{$item['item_name']}}</td>
                                 <td class="noline">{{$item['item_size']}}</td>
-                                <td class="text-right">{{$item['base_unit_name'] == 'karton' ? $item['item_base_quantity'] : $item['item_converted_quantity']}}</td>
-                                <td class="text-right">{{$item['item_unitconverter']}}</td>
-                                <td class="text-right">{{$item['base_unit_name'] != 'karton' ? $item['item_base_quantity'] : $item['item_converted_quantity']}}</td>
+                                <td class="text-center">{{$item['base_unit_name'] == 'karton' ? $item['item_base_quantity'] : $item['item_converted_quantity']}}</td>
+                                <td class="text-center">{{$item['item_unitconverter']}}</td>
+                                <td class="text-center">{{$item['base_unit_name'] != 'karton' ? $item['item_base_quantity'] : $item['item_converted_quantity']}}</td>
                                 <td >Para</td>
                                 {{-- <td >{{$item['base_unit_name']}}</td> --}}
-                                <td class="text-right">{{ $item_price }}</td>
-                                <td class="text-right">{{ ($item_price * $item['item_base_quantity']  )}}</td>
-                                <td class="text-right">{{ $order['discount_type'] == 'peritem' ?format_price($item['discount']) : ''}}</td>
+                                <td class="text-center">{{ $item_price }}</td>
+                                <td class="text-center">{{ ($item_price * $item['item_converted_quantity']  )}}</td>
+                                <td class="text-center">{{ $order['discount_type'] == 'peritem' ?format_price($item['discount']) : ''}}</td>
                             </tr>
                         @endforeach
                         <?php

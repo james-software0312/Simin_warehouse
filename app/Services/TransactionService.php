@@ -859,6 +859,7 @@ class TransactionService
                 'stockitem.unitconverter',
                 'stockitem.unitconverter1',
                 'stockitem.unitconverterto',
+                'stockitem.quantity',
                 'stockitem.unitid as stockunitid',
                 'users.name as creator',
                 'transaction.price',

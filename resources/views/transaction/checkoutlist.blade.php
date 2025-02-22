@@ -260,6 +260,7 @@ $(function() {
         var button = $(event.relatedTarget);
         var DataId = button.data('btndetail');
         // Use an AJAX request to fetch the data for the given group
+        console.log('/transaction/selldetail/' + DataId);
         $.ajax({
             url: '/transaction/selldetail/' + DataId, // Replace with your actual route
             type: 'GET',
@@ -580,7 +581,7 @@ $(function() {
     })
 
     $("#btn_print").on('click', function() {
-        // console.log(selected_orders)
+        console.log(selected_orders)
         if (selected_orders.length == 0) {
             return alert('{!!__('text.no_selected')!!}')
         }

@@ -66,7 +66,7 @@
                 </div>
 
                 <div class="col-md-2">
-                    <label for="supplier" class="form-label">{{__('text.supplier')}}</label>
+                    <label for="supplier" class="form-label">{{__('text.warehouses')}}</label>
                     <select name="supplier" id="supplier" class="form-control">
                         <option value="">{{__('text.select')}}</option>
                         @foreach($warehouses as $item)
@@ -272,6 +272,7 @@
                     type: 'GET',
                     dataType: 'json',
                     success: function(data) {
+                        console.log(data);
                         // Populate the form fields with the retrieved data
 
                         $('.qrcodedetail').attr('src', data.dataURL);
@@ -374,7 +375,7 @@
                     className: 'btn btn-sm btn-fill btn-info ',
                     title: 'Stock Data',
                     exportOptions: {
-                        columns: [1, 2, 3, 4, 5, 6, 7]
+                        columns: [1, 2, 3, 4, 5]
                     }
                 },
                 {
@@ -384,7 +385,7 @@
                     title: 'Stock Data',
                     orientation: 'landscape',
                     exportOptions: {
-                        columns: [1, 2, 3, 4, 5, 6, 7]
+                        columns: [1, 2, 3, 4, 5]
                     },
                     customize: function(doc) {
                         doc.styles.tableHeader.alignment = 'left';

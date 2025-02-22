@@ -324,6 +324,7 @@ class StockItemController extends Controller
     public function show($id)
     {
         $data = $this->stockitemService->getById($id);
+        // dd($data);
 
         if ($data) {
             $code = call_user_func_array([new DNS2D(), 'getBarcodePNG'], [$data->code, "QRCODE"]);
@@ -331,7 +332,8 @@ class StockItemController extends Controller
             if($data->photo ==''){
                 $photo =  asset('public/storage/items/item-placeholder.png');
             }else{
-                $photo =  asset('public/storage/items/'.$data->photo);
+                // $photo =  asset('public/storage/items/'.$data->photo);
+                $photo = env('MEDIA_UPLOADER_URL') . $data->image_path;
             }
 
             return response()->json(['dataURL' => $dataURL, 'data' => $data, 'photo' => $photo]);
@@ -349,7 +351,7 @@ class StockItemController extends Controller
     {
         $validatedData = $request->validate([
             'photo' => 'image|mimes:jpeg,png,jpg,gif,webp|max:2048',
-            // 'categoryid' => 'required'
+            'categoryid' => 'required'
         ]);
         $image = $request->file('photo');
 
@@ -472,7 +474,7 @@ class StockItemController extends Controller
         $hasViewPermission   = $request->hasViewPermission;
         $hasSeeHiddenPermission = $request->hasSeeHiddenPermission;
         // $hasSeeHiddenPermission = true;
-
+        dd($hasSeeHiddenPermission);
         if ($request->ajax()) {
             if ($hasSeeHiddenPermission) {
                 $data = $this->transactionService->getStockItemHistory($request->stockitemid, $request->input('search')['value']);
@@ -485,12 +487,12 @@ class StockItemController extends Controller
                 $ret = "";
                 if ($data->type != "sell") {
                     if ($hasSeeHiddenPermission) {
-                        $ret = $data->price * $data->quantity . __('text.PLN');
+                        $ret = $data->price * $data->quantity. __('text.PLN');
                     } else {
                         $ret = "--";
                     }
                 } else {
-                    $ret = ($data->price - $data->discount) * $data->quantity . __('text.PLN');
+                    $ret = ($data->price - $data->discount) * $data->quantity. __('text.PLN');
                 }
                 return $ret;
             })

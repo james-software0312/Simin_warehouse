@@ -352,6 +352,7 @@ class SellService
                 'sell_order.reference',
                 'sell_order.show_reference',
                 'stockitem.unitconverter',
+                'stockitem.quantity',
                 'stockitem.unitconverter1',
                 'stockitem.unitconverterto',
                 'stockitem.unitid as stockunitid',

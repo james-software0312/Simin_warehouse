@@ -12,9 +12,10 @@ class CheckPermissionsMiddleware
     {
         $userId = Auth::id();
         $moduleName = $request->segment(1); // Assuming the module is the first segment in the URL
+        // dd($moduleName);
         if(DB::connection()->getDatabaseName()){
             $requiredHasSeePermissions = $this->getRequiredPermissions($userId, 'user');
-            if($moduleName == "purchase" || $moduleName == "transaction"){
+            if($moduleName == "purchase" || $moduleName == "transaction"  || $moduleName == "stock"){
 
                 $requiredPermissions = $this->getRequiredPermissions($userId, 'user');
             } else {
