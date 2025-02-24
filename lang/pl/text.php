@@ -243,6 +243,7 @@ return [
     'yes' => 'Tak',
     'total' => 'Suma',
     'PLN' => ' zł',
+    'category_field_required' => 'Pole kategorii jest wymagane',
     'msg_warehouse_created' => 'Magazyn został pomyślnie utworzony',
     'msg_warehouse_updated' => 'Magazyn został pomyślnie zaktualizowany',
     'msg_warehouse_deleted' => 'Magazyn został pomyślnie usunięty',
@@ -324,5 +325,7 @@ return [
     'purchase_already_confirmed' => 'Ten dokument jest już potwierdzony',
     'purchase_sure_confirm' => 'Czy na pewno chcesz potwierdzić ten dokument?',
     'field_required' => 'To pole jest wymagane',
-    'carton' => 'Karton'
+    'carton' => 'Karton',
+    'not_available_units' => "Jednostki nie mogą być takie same",
+    'converter_val_error' => "Jednym z konwerterów musi być 1",
 ];

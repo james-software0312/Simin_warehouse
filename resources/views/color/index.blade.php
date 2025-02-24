@@ -80,7 +80,6 @@
                 // Get the group ID from the data attribute
                 var button = $(event.relatedTarget);
                 var DataId = button.data('editid');
-                console.log(123123123);
 
                 // Use an AJAX request to fetch the data for the given group
                 $.ajax({
@@ -101,7 +100,7 @@
                     }
                 });
             });
-            
+
             var editRoute = "{!! route('color.edit', ['id' => '__id__']) !!}";
             var deleteRoute = "{!! route('color.destroy', ['id' => '__id__']) !!}";
             $('#data').DataTable({

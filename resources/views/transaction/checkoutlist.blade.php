@@ -260,10 +260,10 @@ $(function() {
         var button = $(event.relatedTarget);
         var DataId = button.data('btndetail');
         // Use an AJAX request to fetch the data for the given group
-        console.log('/transaction/selldetail/' + DataId);
         $.ajax({
-            url: '/warehouse/transaction/selldetails/' + DataId, // Replace with your actual route
-            type: 'GET',
+            url: "{{ route('transaction.sellshow', ':id') }}".replace(':id', DataId),
+            // url: '/transaction/selldetails/' + DataId, // Replace with your actual route
+            // type: 'GET',
             dataType: 'json',
             data: {
                 status: 2

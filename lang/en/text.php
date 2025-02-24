@@ -320,7 +320,6 @@ return [
     'field_required' => 'This field is required',
     'carton' => 'Carton',
     'date_range' => 'Date Range',
-
     'category_field_required' => 'Category field is required',
     'image' => 'Image'
 ];
