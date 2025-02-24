@@ -89,7 +89,8 @@
 	        </div>
         	<div class="logo-wrapper pb-4">
 
-				<img width="80" src="{{ asset('public/storage/settings/').'/'.$globalsettings->logo }}" class="img-fluid" />
+				{{-- <img width="80" src="{{ asset('public/storage/settings/').'/'.$globalsettings->logo }}" class="img-fluid" /> --}}
+				<img width="80" src="{{ env('MEDIA_UPLOADER_URL') . $globalsettings->logo }}"  class="img-fluid" />
 
         	</div>
 

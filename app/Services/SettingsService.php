@@ -6,6 +6,7 @@ namespace App\Services;
 
 use App\Models\SettingsModel;
 use App\Models\ConfigurationModel;
+use Illuminate\Support\Str;
 
 class SettingsService
 {
@@ -45,13 +46,19 @@ class SettingsService
      * @return \App\Models\SettingsModel
      */
     public function updatewithimage($id, $logo)
-    {   
+    {
         $datasetting = SettingsModel::findOrFail($id);
 
         if ($logo) {
-            $logoName = $logo->getClientOriginalName();
-            $logoPath = $logo->storeAs('public/settings', $logoName);
-            $datasetting->update(['logo' => $logoName]);
+            $logo_name_with_ext = $logo->getClientOriginalName();
+            $logo_extenstion = $logo->getClientOriginalExtension();
+            $logoName = pathinfo($logo_name_with_ext, PATHINFO_FILENAME);
+            $logoName = strtolower(Str::slug($logoName));
+            $logo_db = $logoName . time() . '.' . $logo_extenstion;
+            $folder_path = base_path(env('MEDIA_UPLOADER_PATH'));
+            // $logoPath = $logo->storeAs('public/settings', $logoName);
+            $logo->move($folder_path, $logo_db);
+            $datasetting->update(['logo' => $logo_db]);
         }
 
         return $datasetting;

@@ -42,7 +42,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="row">
                     <div class="col-md-6">
                         <div class="mb-3">
@@ -128,7 +128,7 @@
                                     {{ __('text.upload_image') }}
                                 </button>
                             </div>
-                            <img id="logo-preview" width="300" src="{{ asset('public/storage/settings/'.$data->logo) }}" alt="Uploaded Logo">
+                            <img id="logo-preview" width="300" src="{{  $photo  }}" alt="Uploaded Logo">
                         </div>
                     </div>
                 </div>
@@ -258,7 +258,7 @@ function UploadLogo() {
 
 // Initialize jQuery Validation
 $('#updatedataform').validate({
-   
+
     submitHandler: function(form) {
         form.submit();
     }

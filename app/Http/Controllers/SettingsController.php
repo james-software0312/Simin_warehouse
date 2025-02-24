@@ -26,9 +26,10 @@ class SettingsController extends Controller
         $data = $this->settingsService->getdataById($id);
         // Convert data to JSON for use in the view
         $getdata = response()->json($data);
+        $photo = env('MEDIA_UPLOADER_URL') . $data->logo;
 
         // Render the settings index view with the retrieved data
-        return view('setting.index', ['data' => $data]);
+        return view('setting.index', ['data' => $data, 'photo' =>  $photo ]);
     }
 
     /**
@@ -42,7 +43,7 @@ class SettingsController extends Controller
         // Extract relevant data from the request
         $data = $request->only([
             'company', 'pagename', 'website', 'datetime', 'company_email', 'company_phone', 'company_address',
-            'timezone', 'logo',  
+            'timezone', 'logo',
         ]);
 
         // Create new settings using the extracted data
@@ -85,7 +86,7 @@ class SettingsController extends Controller
     {
         // Set the ID for the settings to be updated
         $id = 1;
-        
+
         // Extract relevant data from the request
         $data = $request->only(['company', 'pagename', 'datetime', 'timezone',  'company_email', 'company_phone', 'company_address']);
 
