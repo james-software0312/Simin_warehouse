@@ -116,7 +116,7 @@ $(function() {
 
         // Use an AJAX request to fetch the data for the given group
         $.ajax({
-            url: '/shelf/' + DataId, // Replace with your actual route
+            url: '/warehouse/shelf/' + DataId, // Replace with your actual route
             type: 'GET',
             dataType: 'json',
             success: function(data) {

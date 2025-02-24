@@ -481,6 +481,7 @@ class StockItemService
      */
     public function getstockreport()
     {
+
         return StockItemModel::leftJoin('category', 'stockitem.categoryid', '=', 'category.id')
             ->leftJoin('unit', 'stockitem.unitid', '=', 'unit.code')
             ->leftJoin('warehouse', 'stockitem.warehouseid', '=', 'warehouse.id')

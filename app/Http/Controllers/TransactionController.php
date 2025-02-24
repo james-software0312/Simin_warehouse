@@ -23,6 +23,7 @@ use App\Exports\CheckinExport;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Auth;
 use App\Models\SHMediaUploadModel;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use DateTime;
 
@@ -310,9 +311,6 @@ class TransactionController extends Controller
             ];
             $data = $this->transactionService->getcheckin();
             $sum_data = $this->transactionService->getcheckinsum($filter);
-            // var_dump($sum_data[0]->total_quantity);
-            // var_dump($sum_data[0]->total_price);
-            // die();
             return DataTables::of($data)
             ->addColumn('action', function ($data) use ($hasEditPermission, $hasDeletePermission, $hasViewPermission) {
 
@@ -359,7 +357,8 @@ class TransactionController extends Controller
                 return $data->total_price . __('text.PLN');
             })
             ->addColumn('creator', function($data) {
-                return Auth::user()->name;
+                $user = User::where('id', $data->creator)->first();
+                return $user->name;
             })
             ->addColumn('stockitems', function($data) use ($hasSeeHiddenPermission) {
                 $stockitems = $this->transactionService->getStockItemsByReference($data->reference);
@@ -430,6 +429,7 @@ class TransactionController extends Controller
         if ($request->ajax()) {
             // $data = $this->transactionService->getcheckin();
             $data = $this->transactionService->getcheckinItemsForHide($request->input('stockitemid'));
+            // dd($data);
 
             return DataTables::of($data)
             ->addColumn('action', function($data) {
@@ -1290,7 +1290,8 @@ class TransactionController extends Controller
                 return  $data->reference;
             })
             ->addColumn('price', function($data) {
-                $price = $data->price*$data->unitconverter*$data->quantity;
+                // $price = $data->price*$data->unitconverter*$data->quantity;
+                $price = $data->price;
                 // if ($data->sell_unit_name != 'karton') {
                 //     $price = $data->price;
                 // } else {
@@ -1318,7 +1319,8 @@ class TransactionController extends Controller
             })
             ->addColumn('price', function($data) {
                 $price = 0;
-                $price = $data->price*$data->unitconverter*$data->quantity;
+                $price = $data->price;
+                // $price = $data->price*$data->unitconverter*$data->quantity;
                 // if ($data->sell_unit_name != 'karton') {
                 //     $price = $data->price;
                 // } else {

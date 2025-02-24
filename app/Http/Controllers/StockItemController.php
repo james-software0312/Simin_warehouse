@@ -450,9 +450,9 @@ class StockItemController extends Controller
     {
 
         $data = $this->stockitemService->getById($request->id);
-        $img_path = SHMediaUploadModel::where('id',$data->photo)->first();
 
         if ($data) {
+            $img_path = SHMediaUploadModel::where('id',$data->photo)->first();
             if($data->photo ==''){
                 $photo =  asset('public/storage/items/item-placeholder.png');
                 // $photo =  'https://web.eska.tech/website/assets/uploads/media-uploader/item-placeholder.png';
@@ -462,6 +462,8 @@ class StockItemController extends Controller
                 // $photo =  asset('public/storage/items/'.$data->photo);
                 // $photo =  'https://web.eska.tech/website/assets/uploads/media-uploader/'.$data->photo;
             }
+        }else{
+            return redirect()->route('stock.index')->with('error', __('Stock Item is not found.'));
         }
         return view('stock.history')->with(['stockitemid' => $request->id, 'data' => $data, 'photo' => $photo]);
     }
@@ -473,8 +475,6 @@ class StockItemController extends Controller
         $hasDeletePermission = $request->hasDeletePermission;
         $hasViewPermission   = $request->hasViewPermission;
         $hasSeeHiddenPermission = $request->hasSeeHiddenPermission;
-        // $hasSeeHiddenPermission = true;
-        dd($hasSeeHiddenPermission);
         if ($request->ajax()) {
             if ($hasSeeHiddenPermission) {
                 $data = $this->transactionService->getStockItemHistory($request->stockitemid, $request->input('search')['value']);
@@ -487,12 +487,14 @@ class StockItemController extends Controller
                 $ret = "";
                 if ($data->type != "sell") {
                     if ($hasSeeHiddenPermission) {
-                        $ret = $data->price * $data->quantity. __('text.PLN');
+                        // $ret = $data->price * $data->quantity. __('text.PLN');
+                        $ret = $data->price. __('text.PLN');
                     } else {
                         $ret = "--";
                     }
                 } else {
-                    $ret = ($data->price - $data->discount) * $data->quantity. __('text.PLN');
+                    // $ret = ($data->price - $data->discount) * $data->quantity. __('text.PLN');
+                    $ret = ($data->price - $data->discount). __('text.PLN');
                 }
                 return $ret;
             })

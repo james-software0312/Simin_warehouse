@@ -11,15 +11,15 @@
     <input type="hidden" value="{{$sellReference}}" id="sell_reference" />
     <div class="mb-4">
         <h2>{{ __('text.hide') }} {{$sellOrder->reference}}</h2>
-            
+
         <div class="items-wrapper">
             @foreach($sellitems as $sellitem)
             <div class="mb-3 item">
                 <div class="row" style="background-color: #e9e9e9; padding: 10px 0">
                     <div class="col-md-6">
                         <p style="font-weight: bold; margin-bottom: 0">
-                            {{$sellitem->name}}({{$sellitem->code}}), 
-                            sold quantity: 
+                            {{$sellitem->name}}({{$sellitem->code}}),
+                            sold quantity:
                                 <span id="total_amount_{{$sellitem->stockitemid}}" class="total-amount">
                                     {{$sellitem->quantity}}
                                 </span> {{$sellitem->sellunitname}}
@@ -185,7 +185,7 @@ $(function() {
         })
         if (!exist) {
             var newChild = `<div class="row py-2 my-1 selected-purchase" style="border-bottom: 1px solid #c3c3c3" data-transactionid="${transactionid}" >\n
-                
+
                 <div class="col-md-3 qty" style="word-wrap: break-word; font-size: 14px">${quantity}</div>
                 <div class="col-md-2 hidden-qty" style="word-wrap: break-word; font-size: 14px">${hiddenamount}</div>
                 <div class="col-md-2" style="word-wrap: break-word; font-size: 14px"><input type="number" class="form-control input-selected-purchase-hidden" data-stockitemid="${stockitemid}" value="0"/></div>
@@ -193,7 +193,7 @@ $(function() {
                             <span class="material-symbols-rounded">delete</span>
                         </button></div>
                 </div>`;
-            
+
             $(`#selected_purchase_list_${stockitemid}`).append(newChild);
         }
     }
@@ -231,6 +231,7 @@ $(function() {
         // check all numbers are matched.
         var matched = true;
         $(".items-wrapper .item").each(function() {
+            console.log($(this).find(".total-amount").text().trim() * 1, '=====', $(this).find(".hidden-amount").text().trim() * 1 );
             if ($(this).find(".total-amount").text().trim() * 1 != $(this).find(".hidden-amount").text().trim() * 1) {
                 matched = false;
             }
@@ -247,7 +248,7 @@ $(function() {
                     })
                 }
             });
-    
+
             $.ajax({
                 url: '{!!route("transaction.savecheckouthidden")!!}',
                 type: 'GET',

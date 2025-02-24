@@ -53,7 +53,7 @@
                     <select name="category" id="category" class="form-control">
                         <option value="">{{__('text.select')}}</option>
                         @foreach($categories as $item)
-                        <option value='{{$item->id}}'>{{$item->name}}</option>
+                        <option value='{{$item->id}}'>{{$item->title}}</option>
                         @endforeach
                     </select>
                 </div>
@@ -81,7 +81,7 @@
                     <th>No</th>
                     <th>{{ __('text.reference') }}</th>
                     <th>{{ __('text.customer') }}</th>
-                    <th>{{ __('text.category') }}</th>
+                    {{-- <th>{{ __('text.category') }}</th> --}}
                     <th>{{ __('text.code') }}</th>
                     <th>{{ __('text.size') }}</th>
                     <th>{{ __('excel.carton') }}</th>
@@ -141,10 +141,10 @@
                     data: 'customer',
                     name: 'customer'
                 },
-                {
-                    data: 'category',
-                    name: 'category'
-                },
+                // {
+                //     data: 'category',
+                //     name: 'category'
+                // },
                 {
                     data: 'code',
                     name: 'code'
@@ -203,7 +203,7 @@
             $('input[name=enddate]').val('');
             $('#customer').val('').trigger('change');
             $('#warehouse').val('').trigger('change');
-            $('#category').val('').trigger('change');
+            // $('#category').val('').trigger('change');
             tabledatareport.draw();
         });
     });
@@ -224,8 +224,8 @@
         var keyword = $('input[name=keyword]').val();
         var startdate = $('input[name=startdate]').val();
         var enddate = $('input[name=enddate]').val();
-        var downloadUrl = `{!! route('transaction.checkinexport') !!}?keyword=` + encodeURIComponent(keyword) + 
-                        `&startdate=` + encodeURIComponent(startdate) + 
+        var downloadUrl = `{!! route('transaction.checkinexport') !!}?keyword=` + encodeURIComponent(keyword) +
+                        `&startdate=` + encodeURIComponent(startdate) +
                         `&enddate=` + encodeURIComponent(enddate);
 
         // Trigger a file download by changing the window location

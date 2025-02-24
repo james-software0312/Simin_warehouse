@@ -108,7 +108,7 @@
 <!-- Define the modal content and title -->
 
 <x-delete>
-    <form id="deletedataform" method="POST" action="{{ route('transaction.destroy')}}">
+    <form id="deletedataform" method="POST" action="{{ route('checkout.transaction.destroy')}}">
         @csrf
         <input type="hidden" name="deleteid" id="deleteid" value="">
         <input type="hidden" name="status" id="status" value="2">
@@ -262,7 +262,7 @@ $(function() {
         // Use an AJAX request to fetch the data for the given group
         console.log('/transaction/selldetail/' + DataId);
         $.ajax({
-            url: '/transaction/selldetail/' + DataId, // Replace with your actual route
+            url: '/warehouse/transaction/selldetails/' + DataId, // Replace with your actual route
             type: 'GET',
             dataType: 'json',
             data: {

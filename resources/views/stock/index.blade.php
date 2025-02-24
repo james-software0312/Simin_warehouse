@@ -162,7 +162,7 @@
                 <div class="modal-body overflow-scroll">
                     <div class="">
                         <table width="100%">
-                            <tr>
+                            {{-- <tr>
                                 <td valign="top" colspan="2">
                                     <center>
                                     <img src="" alt="barcode" width="100"  class="qrcodedetail"/>
@@ -171,6 +171,14 @@
                                     </center>
                                 </td>
 
+                            </tr> --}}
+                            <tr>
+                                <td valign="top" width="20%">
+                                    <p class="me-4"><strong>{{__('text.name')}}:</strong></p>
+                                </td>
+                                <td valign="top">
+                                    <p class="namedetail"></p>
+                                </td>
                             </tr>
                             <tr>
                                 <td valign="top" width="20%">
@@ -278,6 +286,7 @@
                         $('.qrcodedetail').attr('src', data.dataURL);
                         $('.photodetail').attr('src', data.photo);
                         $('.codedetail').html(data.data.code);
+                        $('.namedetail').html(data.data.name);
                         $('.categorydetail').html(data.data.category);
                         $('.quantitydetail').html(data.data.quantity);
                         $('.unitdetail').html(data.data.unit);

@@ -79,7 +79,7 @@
             <div class="col-12" style="padding:auto 0px">
                 <table class="table table-bordered" style="padding:auto 0px">
                     <thead>
-                        <tr style="font-size: 20px;">
+                        <tr style="font-size: 16px;">
                             <th>{{__('excel.no')}}</th>
                             <th>{{__('excel.product_sub_type')}}</th>
                             <th>k</th>
@@ -113,7 +113,7 @@
                                 $total_sale_price_without_vat += $item_price * $item['item_converted_quantity'];
                                 $total_sale_price_with_vat += $item_price * $item['item_converted_quantity'] * (1 + $item['item_vat'] / 100);
                             ?>
-                            <tr style="font-size: 27px">
+                            <tr style="font-size: 16px">
                                 <td>{{$index + 1}}</td>
                                 <td>{{$item['item_subtype']}}</td>
                                 <td>{{ $item['stock_qty'] == 0 ? 'K':'' }}</td>
@@ -136,7 +136,7 @@
                         ?>
                     </tbody>
                     <tfoot>
-                        <tr style="font-size: 27px">
+                        <tr style="font-size: 16px">
                             <th></th>
                             <th></th>
                             <th></th>
@@ -153,7 +153,7 @@
             <div class="col-6"></div>
             <div class="col-6">
                 <table class="table table-bordered">
-                    <tbody style="font-size: 27px">
+                    <tbody style="font-size: 16px">
                         @if($order['discount_type'] == 'peritem')
                             <tr>
                                 <th>{{__('excel.total_price_with_vat_after_discount')}} </th>

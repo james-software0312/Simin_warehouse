@@ -89,7 +89,7 @@ class TransactionService
             DB::raw('SUM(wh_transaction.quantity * wh_transaction.price) as total_price'),
         )
         ->where('transaction.status', 1)
-        ->where('transaction_order.creator', Auth::user()->id)
+        // ->where('transaction_order.creator', Auth::user()->id)
         ->groupBy('transaction.reference')
         ->orderBy('transaction.transactiondate','DESC')
         ->orderBy('transaction.created_at','DESC');
@@ -104,8 +104,8 @@ class TransactionService
             DB::raw('SUM(wh_transaction.quantity) as total_quantity'),
             DB::raw('SUM(wh_transaction.quantity * wh_transaction.price) as total_price'),
         )
-        ->where('transaction.status', 1)
-        ->where('creator', Auth::user()->id);
+        ->where('transaction.status', 1);
+        // ->where('creator', Auth::user()->id);
 
         if (!empty($filter['keyword'])) {
             $query->where('contact.name', 'like', "%{$filter['keyword']}%");
@@ -142,7 +142,7 @@ class TransactionService
                 // ->where('transaction.stockitemid', $stockitemid)
                 ->where('stockitem.code', $stockItem->code)
                 ->where('transaction.warehouseid', $stockItem->warehouseid)
-                ->where('transaction.creator', Auth::user()->id)
+                // ->where('transaction.creator', Auth::user()->id)
                 ->orderBy('transaction.transactiondate', 'DESC')
                 ->orderBy('transaction.created_at', 'DESC')
                 ->get();

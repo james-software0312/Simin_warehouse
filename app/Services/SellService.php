@@ -8,6 +8,7 @@ use App\Models\SellOrderDetailModel;
 use App\Models\SellHideHistoryModel;
 use App\Models\StockItemModel;
 use App\Models\TransactionModel;
+use App\Models\SHProductCategoryModel;
 use DB;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -466,9 +467,12 @@ class SellService
         return SellOrderDetailModel::leftJoin('sell_order', 'sell_order.reference', '=', 'sell_order_detail.reference')
         ->leftJoin('stockitem', 'stockitem.id', '=', 'sell_order_detail.stockitemid')
         ->leftJoin('contact', 'contact.id', '=', 'sell_order_detail.contactid')
-        ->leftJoin('category', 'stockitem.categoryid', '=', 'category.code')
+        ->leftJoin('category', 'stockitem.categoryid', '=', 'category.id')
         ->leftJoin('unit', 'unit.id', '=', 'sell_order_detail.unitid')
-        ->select('stockitem.name','contact.name as customer','category.name as category', 'sell_order_detail.*',DB::raw('SUM(wh_sell_order_detail.quantity) as totalquantity'),'stockitem.unitconverter1','stockitem.unitconverter','stockitem.size' ,'stockitem.code','unit.name as unit_name')
+        ->leftJoin('transaction', 'transaction.stockitemid', '=','sell_order_detail.stockitemid')
+        ->select('stockitem.name','contact.name as customer',
+            'category.name as category',
+            'sell_order_detail.*',DB::raw('SUM(wh_sell_order_detail.quantity) as totalquantity'),'stockitem.unitconverter1','stockitem.unitconverter','stockitem.size' ,'stockitem.code','unit.name as unit_name')
         ->where('sell_order.confirmed', true)
         ->groupBy('sell_order_detail.reference')
         ->orderBy('sell_order_detail.selldate','DESC');

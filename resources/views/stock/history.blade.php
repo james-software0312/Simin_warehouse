@@ -76,7 +76,7 @@
 
 
 
-<x-delete>
+{{-- <x-delete>
     <form id="deletedataform" method="POST" action="{{ route('transaction.destroy')}}">
         @csrf
         <input type="hidden" name="deleteid" id="deleteid" value="">
@@ -84,7 +84,7 @@
 
 
     </form>
-</x-delete>
+</x-delete> --}}
 
 
 

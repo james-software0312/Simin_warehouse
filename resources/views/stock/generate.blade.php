@@ -10,9 +10,15 @@
 <tr>
 	<td align="center">
         <p><strong>{{$data->name}}</strong></p>
-        <div class="d-flex" style="display: flex; gap:4px;    align-items: flex-end">
+        <div class="d-flex" style="display: flex; gap:4px;    align-items: flex-end; position: relative;">
             <img src="{{$dataurl}}" width="100" />
-            <p class="mt-2" style="transform: rotate(270deg); transform-origin: left top; width:60px; ">{{$data->size}}</p>
+            <p class="mt-2" style=" transform: rotate(270deg);
+    padding: 0;
+    margin: 0;
+    width: max-content;
+    position: absolute;
+    right: 0;
+    top: 50%;">{{$data->size}}</p>
             {{-- <p>{{$data->category}}</p> --}}
             {{-- <p class="mt-2"><small>{{$data->code}}</small></p> --}}
 

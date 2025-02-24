@@ -35,7 +35,7 @@ class ReportsController extends Controller
 
 
     // Constructor to inject services and apply middleware
-    public function __construct(StockItemService $stockitemService, 
+    public function __construct(StockItemService $stockitemService,
                                 CategoryService $categoryService,
                                 UnitService $unitService,
                                 WarehouseService $warehouseService,
@@ -64,10 +64,10 @@ class ReportsController extends Controller
         return view('reports.index');
     }
 
-    
+
     // Render the home view for overall statistics
     public function home(){
-       
+
         // getting current year, month, date informations.
         // current date data
         $current_date_data = $this->sellService->getSumPrice(date('d/m/Y'), date('d/m/Y'));
@@ -109,7 +109,7 @@ class ReportsController extends Controller
             $current_year['carton_qty'] += $data->carton_qty;
             $current_year['pair_qty'] += $data->pair_qty;
         }
-        
+
         // $totalallitem           = $this->stockitemService->totalallitem();
         $totalcheckins          = $this->transactionService->totalallitem(1);
         // $totalcheckouts         = $this->sellService->totalallitem();
@@ -195,8 +195,8 @@ class ReportsController extends Controller
         $totalcontacts      = $this->contactService->totalitem();
         $totalallitem       = $this->stockitemService->totalallitem();
         $stockmonthlydata   = $this->stockitemService->monthlydata();
-       
-        
+
+
         // Get all months from January to December
         $allMonths = collect([
             '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'
@@ -207,7 +207,7 @@ class ReportsController extends Controller
             return $stockmonthlydata->has($month) ? $stockmonthlydata[$month] : 0;
         });
 
-    
+
         return view('reports.stock')->with([
             'totalitem' => $totalitem,
             'dataTotal' => $dataTotal->values(),
@@ -220,12 +220,12 @@ class ReportsController extends Controller
     }
 
      // Render the warehouse view for warehouse statistics
-    public function warehouse(){  
+    public function warehouse(){
 
         $warehouses             = $this->warehouseService->getAll();
         $totalwarehouses        = $this->warehouseService->totalitem();
         $getstockbywarehouse    = $this->stockitemService->getstockbywarehouse();
-        
+
         return view('reports.warehouse')->with([
             'totalwarehouses' => $totalwarehouses,
             'warehouses' => $warehouses,
@@ -234,12 +234,12 @@ class ReportsController extends Controller
     }
 
      // Render the category view for category statistics
-    public function category(){  
+    public function category(){
 
         $categories             = $this->categoryService->getAll();
         $totalcategories        = $this->categoryService->totalitem();
         $getstockbycategory     = $this->stockitemService->getstockbycategory();
-        
+
         return view('reports.category')->with([
             'totalcategories' => $totalcategories,
             'categories' => $categories,
@@ -280,7 +280,7 @@ class ReportsController extends Controller
         $dataTotal = $allMonths->map(function($month) use ($monthlydata) {
             return $monthlydata->has($month) ? $monthlydata[$month] : 0;
         });
-    
+
         return view('reports.checkin')->with([
             'totalallitem' => $totalallitem,
             'dataTotal' => $dataTotal->values(),
@@ -297,6 +297,7 @@ class ReportsController extends Controller
         $customers    = $this->contactService->getcustomer();
         $warehouses = $this->warehouseService->getAll();
         $categories = $this->categoryService->getAll();
+        // dd($warehouses);
         return view('reports.checkout')->with([
             'customers' => $customers,
             'warehouses' => $warehouses,
@@ -326,7 +327,7 @@ class ReportsController extends Controller
             return $monthlydata->has($month) ? $monthlydata[$month] : 0;
         });
 
-    
+
         return view('reports.checkout')->with([
             'totalallitem' => $totalallitem,
             'dataTotal' => $dataTotal->values(),
@@ -343,14 +344,14 @@ class ReportsController extends Controller
     public function getstockreport(Request $request)
     {
         if ($request->ajax()) {
-            
+
 
             $data = $this->stockitemService->getstockreport();
 
             return DataTables::of($data)
             ->addColumn('code', function($data) {
                 return '<div>
-                
+
                 <p class="mb-0">'.$data->code.'</p>
                 </div>';
             })->filter(function ($query) use ($request) {
@@ -376,12 +377,12 @@ class ReportsController extends Controller
 
             ->rawColumns(['code'])
             ->addColumn('transactiondate', function($data){
-                //get setting 
+                //get setting
                 $setting = $this->settingsService->getdataById(1);
                 $dateformat = date($setting['datetime'], strtotime($data->transactiondate));
                 return $dateformat;
         })
-            
+
             ->make(true);
         }
 
@@ -393,15 +394,15 @@ class ReportsController extends Controller
     {
         if ($request->ajax()) {
             $data = $this->transactionService->getcheckinreport();
-            
+
             return DataTables::of($data)
             ->addColumn('code', function($data) {
                 return '<div>
-                
+
                 <p class="mb-0">'.$data->code.'</p>
                 </div>';
             })->filter(function ($query) use ($request) {
-				
+
 				if (!empty($request->get('category'))) {
 					$query->where('stockitem.categoryid', '=', $request->get('category'));
 				}
@@ -421,7 +422,7 @@ class ReportsController extends Controller
                 if (!empty($request->get('warehouse'))) {
 					$query->where('transaction.warehouseid', '=', $request->get('warehouse'));
 				}
-               
+
 				if (!empty($request->get('startdate')) && !empty($request->get('enddate'))) {
                     $startDate = date('Y-m-d', strtotime($request->get('startdate')));
                     $endDate = date('Y-m-d', strtotime($request->get('enddate')));
@@ -485,7 +486,7 @@ class ReportsController extends Controller
             })
             ->rawColumns(['code', 'carton_qunatity', 'pair_quantity'])
             ->addColumn('transactiondate', function($data){
-                //get setting 
+                //get setting
                 $setting = $this->settingsService->getdataById(1);
                 $dateformat = date($setting['datetime'], strtotime($data->transactiondate));
                 return $dateformat;
@@ -501,15 +502,16 @@ class ReportsController extends Controller
     {
         if ($request->ajax()) {
             $data = $this->sellService->getcheckoutreport();
-            
+            // dd($data);
             return DataTables::of($data)
             ->addColumn('code', function($data) {
                 return '<div>
-                
+
                 <p class="mb-0">'.$data->code.'</p>
                 </div>';
             })->filter(function ($query) use ($request) {
-				
+                // dd($query);
+
 				if (!empty($request->get('category'))) {
 					$query->where('stockitem.categoryid', '=', $request->get('category'));
 				}
@@ -523,48 +525,50 @@ class ReportsController extends Controller
 				}
 
                 if (!empty($request->get('customer'))) {
-					$query->where('transaction.contactid', '=', $request->get('customer'));
+					$query->where('sell_order_detail.contactid', '=', $request->get('customer'));
 				}
 
                 if (!empty($request->get('warehouse'))) {
 					$query->where('transaction.warehouseid', '=', $request->get('warehouse'));
 				}
-               
+
 				if (!empty($request->get('startdate')) && !empty($request->get('enddate'))) {
                     $startDate = date('Y-m-d', strtotime($request->get('startdate')));
                     $endDate = date('Y-m-d', strtotime($request->get('enddate')));
-					$query->whereBetween('transaction.transactiondate', [$startDate, $endDate]);
+					$query->whereBetween('sell_order_detail.selldate', [$startDate, $endDate]);
 				}
 
 			})
             ->addColumn('carton_quantity', function ($data)  {
                 $ret = "";
                 $qty = 0;
-                $carton_unitid = $data->stock_base_unit_name == 'karton' ? $data->stock_unitid : $data->unitconverterto;
-                if ($data->unitid == $carton_unitid) {
-                    $qty = $data->quantity;
-                } else {
-                    if ($data->stock_base_unit_name == 'karton') {
-                        $qty = $data->quantity * ($data->unitconverter / $data->unitconverter1);
-                    } else {
-                        $qty = $data->quantity * ($data->unitconverter1 / $data->unitconverter);
-                    }
-                }
+                $qty = $data->quantity;
+                // $carton_unitid = $data->stock_base_unit_name == 'karton' ? $data->stock_unitid : $data->unitconverterto;
+                // if ($data->unitid == $carton_unitid) {
+                //     $qty = $data->quantity;
+                // } else {
+                //     if ($data->stock_base_unit_name == 'karton') {
+                //         $qty = $data->quantity * ($data->unitconverter / $data->unitconverter1);
+                //     } else {
+                //         $qty = $data->quantity * ($data->unitconverter1 / $data->unitconverter);
+                //     }
+                // }
                 return round($qty, 2);
             })
             ->addColumn('pair_quantity', function ($data)  {
                 $ret = "";
                 $qty = 0;
                 $carton_unitid = $data->stock_base_unit_name == 'para' ? $data->stock_unitid : $data->unitconverterto;
-                if ($data->unitid == $carton_unitid) {
-                    $qty = $data->quantity;
-                } else {
-                    if ($data->stock_base_unit_name == 'para') {
-                        $qty = $data->quantity * ($data->unitconverter / $data->unitconverter1);
-                    } else {
-                        $qty = $data->quantity * ($data->unitconverter1 / $data->unitconverter);
-                    }
-                }
+                $qty = $data->quantity*$data->unitconverter;
+                // if ($data->unitid == $carton_unitid) {
+                //     $qty = $data->quantity;
+                // } else {
+                //     if ($data->stock_base_unit_name == 'para') {
+                //         $qty = $data->quantity * ($data->unitconverter / $data->unitconverter1);
+                //     } else {
+                //         $qty = $data->quantity * ($data->unitconverter1 / $data->unitconverter);
+                //     }
+                // }
                 return round($qty, 2);
             })
             ->addColumn('unitconverter', function ($data)  {
@@ -593,7 +597,7 @@ class ReportsController extends Controller
             })
             ->rawColumns(['code', 'carton_qunatity', 'pair_quantity'])
             ->addColumn('selldate', function($data){
-                //get setting 
+                //get setting
                 $setting = $this->settingsService->getdataById(1);
                 $dateformat = date($setting['datetime'], strtotime($data->selldate));
                 return $dateformat;
@@ -610,7 +614,7 @@ class ReportsController extends Controller
     public function getwarehousereport(Request $request)
     {
         if ($request->ajax()) {
-            
+
 
             $data = $this->stockitemService->getstockbywarehouse();
 
@@ -625,7 +629,7 @@ class ReportsController extends Controller
     public function getcategoryreport(Request $request)
     {
         if ($request->ajax()) {
-            
+
 
             $data = $this->stockitemService->getstockbycategory();
 
@@ -636,7 +640,7 @@ class ReportsController extends Controller
 
         return abort(403, 'Unauthorized access.');
     }
-    
+
     public function getSumData(Request $request)
     {
         $start = $request->input('date_range')[0];
@@ -646,7 +650,7 @@ class ReportsController extends Controller
         $sum_price = 0;
         $sum_carton_qty = 0;
         $sum_pair_qty = 0;
-        
+
         foreach($checkout_price_data as $data) {
             $sum_price += $data->total_amount + $data->discount;
             $sum_carton_qty += $data->carton_qty;
@@ -655,4 +659,3 @@ class ReportsController extends Controller
         return response()->json(["sum_price" => $sum_price, 'sum_carton_qty' => $sum_carton_qty, 'sum_pair_qty' => $sum_pair_qty]);
     }
 }
- 

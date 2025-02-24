@@ -242,7 +242,7 @@
             var DataId = button.data('btndetail');
             // Use an AJAX request to fetch the data for the given group
             $.ajax({
-                url: '/transaction/detail/' + DataId, // Replace with your actual route
+                url: '/warehouse/transaction/detail/' + DataId, // Replace with your actual route
                 type: 'GET',
                 dataType: 'json',
                 data: {
