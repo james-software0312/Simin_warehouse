@@ -298,11 +298,12 @@ class ReportsController extends Controller
         $customers    = $this->contactService->getcustomer();
         $warehouses = $this->warehouseService->getAll();
         $categories = $this->categoryService->getAll();
-        // dd($warehouses);
+        $creators = $this->userService->getAllUser();
         return view('reports.checkout')->with([
             'customers' => $customers,
             'warehouses' => $warehouses,
             'categories' => $categories,
+            'creators' =>$creators
         ]);
     }
 
@@ -539,6 +540,10 @@ class ReportsController extends Controller
 					$query->where('transaction.warehouseid', '=', $request->get('warehouse'));
 				}
 
+                if (!empty($request->get('creator'))) {
+					$query->where('users.id', '=', $request->get('creator'));
+				}
+
 				if (!empty($request->get('startdate')) && !empty($request->get('enddate'))) {
                     $startDate = date('Y-m-d', strtotime($request->get('startdate')));
                     $endDate = date('Y-m-d', strtotime($request->get('enddate')));
@@ -561,6 +566,9 @@ class ReportsController extends Controller
                 //     }
                 // }
                 return round($qty, 2);
+            })
+            ->addColumn('creator', function($data) {
+                return $data->user;
             })
             ->addColumn('pair_quantity', function ($data)  {
                 $ret = "";

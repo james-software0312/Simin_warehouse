@@ -39,6 +39,16 @@
                 </div>
 
                 <div class="col-md-2">
+                    <label for="customer" class="form-label">{{__('text.creator')}}</label>
+                    <select name="creator" id="creator" class="form-control">
+                        <option value="">{{__('text.select')}}</option>
+                        @foreach($creators as $item)
+                        <option value='{{$item->id}}'>{{$item->name}}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="col-md-2">
                     <label for="warehouse" class="form-label">{{__('text.warehouse')}}</label>
                     <select name="warehouse" id="warehouse" class="form-control">
                         <option value="">{{__('text.select')}}</option>
@@ -79,7 +89,7 @@
                 <tr>
                     <th>{{ __('text.id') }}</th>
                     <th>No</th>
-                    {{-- <th>{{ __('text.reference') }}</th> --}}
+                    <th>{{ __('text.creator') }}</th>
                     <th>{{ __('text.customer') }}</th>
                     <th>{{ __('text.category') }}</th>
                     <th>{{ __('text.code') }}</th>
@@ -111,6 +121,7 @@
                 data: function(d) {
                     d.customer = $('#customer').val();
                     d.warehouse = $('#warehouse').val();
+                    d.creator = $("#creator").val();
                     d.category = $('#category').val();
                     d.keyword = $('input[name=keyword]').val();
                     d.startdate = $('input[name=startdate]').val();
@@ -133,10 +144,10 @@
                     data: 'DT_RowIndex',
                     name: 'DT_RowIndex'
                 },
-                // {
-                //     data: 'reference',
-                //     name: 'reference'
-                // },
+                {
+                    data: 'creator',
+                    name: 'creator'
+                },
                 {
                     data: 'customer',
                     name: 'customer'

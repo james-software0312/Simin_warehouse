@@ -475,8 +475,8 @@
                             var unitconverter =  data.unitconverter;
                             var unitconverter1 =  data.unitconverter1;
                             var itemCodeName = data.code;
-                            // var itemName = data.itemname;
-                            var itemName = 'para';
+                            var itemName = data.name;
+                            // var itemName = 'para';
                             // var itemCodeName = $(this).find('.itemcode').data('code');
                             // var itemName = $(this).find('.itemname').text();
                             // var quantity = 1; // default quantity

@@ -9,6 +9,7 @@ use App\Models\SellHideHistoryModel;
 use App\Models\StockItemModel;
 use App\Models\TransactionModel;
 use App\Models\SHProductCategoryModel;
+use App\Models\User;
 use DB;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -470,10 +471,11 @@ class SellService
         ->leftJoin('category', 'stockitem.categoryid', '=', 'category.id')
         ->leftJoin('unit', 'unit.id', '=', 'sell_order_detail.unitid')
         ->leftJoin('transaction', 'transaction.stockitemid', '=','sell_order_detail.stockitemid')
+        ->leftJoin('users', 'sell_order.creator', '=', 'users.id')
         ->select('stockitem.name','contact.name as customer',
             'stockitem.categoryid',
             'category.name as category',
-            'sell_order.creator as creator',
+            'users.name as user',
             'sell_order_detail.*',DB::raw('SUM(wh_sell_order_detail.quantity) as totalquantity'),'stockitem.unitconverter1','stockitem.unitconverter','stockitem.size' ,'stockitem.code','unit.name as unit_name')
         ->where('sell_order.confirmed', true)
         ->groupBy('sell_order_detail.reference')

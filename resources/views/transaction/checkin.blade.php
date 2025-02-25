@@ -312,7 +312,7 @@
                         var itemName = data.name;
                         var quantity = 1; // default quantity
                         var price = 0; // default quantity
-
+                        // console.log(data.name);
                         // Check if the item already exists in the table
                         var existingRow = $('#selectedItemsBody tr[data-id="' + itemId + '"]');
                         if (existingRow.length > 0) {
