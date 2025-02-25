@@ -79,9 +79,9 @@
                 <tr>
                     <th>{{ __('text.id') }}</th>
                     <th>No</th>
-                    <th>{{ __('text.reference') }}</th>
+                    {{-- <th>{{ __('text.reference') }}</th> --}}
                     <th>{{ __('text.customer') }}</th>
-                    {{-- <th>{{ __('text.category') }}</th> --}}
+                    <th>{{ __('text.category') }}</th>
                     <th>{{ __('text.code') }}</th>
                     <th>{{ __('text.size') }}</th>
                     <th>{{ __('excel.carton') }}</th>
@@ -133,18 +133,18 @@
                     data: 'DT_RowIndex',
                     name: 'DT_RowIndex'
                 },
-                {
-                    data: 'reference',
-                    name: 'reference'
-                },
+                // {
+                //     data: 'reference',
+                //     name: 'reference'
+                // },
                 {
                     data: 'customer',
                     name: 'customer'
                 },
-                // {
-                //     data: 'category',
-                //     name: 'category'
-                // },
+                {
+                    data: 'category',
+                    name: 'category'
+                },
                 {
                     data: 'code',
                     name: 'code'

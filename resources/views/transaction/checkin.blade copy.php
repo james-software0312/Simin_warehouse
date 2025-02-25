@@ -9,9 +9,6 @@
     .mobile-label {
         display: none;
     }
-    #data {
-        cursor: pointer;
-    }
     .mobile-hide {
         display: block;
     }
@@ -132,10 +129,7 @@
                         <div class="col-md-12">
                                 <div class="mb-3">
                                     <label for="item" class="form-label">{{__('text.item')}}</label>
-                                    {{-- <input type="text" class="form-control" id="item" name="item" placeholder="Search code or item name..."  > --}}
-                                    <div class="d-flex"><a data-bs-toggle="modal" data-bs-target="#filterModel" id="btnedit" class="btn btn-sm btn-success d-flex align-items-center" data-toggle="modal">
-                                        <span class="material-symbols-rounded">edit</span> {{ __('text.items') }}</a></div>
-                                        <br>
+                                    <input type="text" class="form-control" id="item" name="item" placeholder="Search code or item name..."  >
                                     <ul id="searchResults"></ul>
                                     <div class="searchitemresult">
                                         <small id="searchresultmsg" class="text-left mb-0">{{__('text.search_results')}}...</small>
@@ -213,24 +207,30 @@
 
 
 <!-- Modal -->
-<div class="modal fade" id="filterModel" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="detailModel" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content ">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">{{ __('text.Search_name') }}</h5>
+                <h5 class="modal-title" id="exampleModalLabel">{{ __('text.detail') }}</h5>
                 <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
 
             <div class="modal-body overflow-scroll">
-                <input type="text" class="form-control" id="item" name="item" placeholder="Search code or item name..."  >
                 <div class="table-responsive-sm">
-                    <table class="table" id="data" style="width:100%!important;">
+                    <table class="table" id="data">
                         <thead>
                             <tr>
+                                <th></th>
+                                <th>{{__('text.id')}}</th>
+                                <th class="text-center">{{__('text.photo')}}</th>
                                 <th>{{__('text.name')}}</th>
+                                <!-- <th>{{__('text.supplier')}}</th> -->
                                 <th>{{__('text.selling_price')}}</th>
+                                <!-- <th>{{__('text.quantity')}}</th> -->
+                                <th>{{__('text.quantity_packed')}}</th>
+                                <th></th>
                             </tr>
                         </thead>
                     </table>
@@ -238,7 +238,7 @@
             </div>
 
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary d-flex align-items-center modal-close" data-bs-dismiss="modal">
+                <button type="button" class="btn btn-secondary d-flex align-items-center" data-bs-dismiss="modal">
                     <span class="material-symbols-rounded">
                         close
                     </span>{{ __('text.close') }}
@@ -263,91 +263,19 @@
             var query = $(this).val();
 
             if (query.length >= 2 && warehouseid) { // Minimum characters to trigger the search
-
-                console.log(query,'aaaa');
-                if ($.fn.DataTable.isDataTable('#data')) {
-                    $('#data').DataTable().destroy();
-                }
-
-
-                const tablestockitem = $('#data').DataTable({
-                processing: true,
-                serverSide: true,
-                ajax: {
+                $.ajax({
                     url: '{{ route("transaction.searchitem") }}',
+                    method: 'GET',
                     data: { query: query, warehouseid },
-                },
-                dom: '<"d-flex align-items-md-center flex-column flex-md-row justify-content-md-between pb-3"Bf>rt<"pt-3 d-flex align-items-md-center flex-column flex-md-row justify-content-md-between"lp><"clear">',
-                language: {
-                    url: langUrl // Polish language JSON file
-                },
-                bFilter: false,
-                order: [[1, "desc"]],
-                columns: [
-
-                    // { data: 'code', name: 'code' },
-                    { data: 'name', name: 'name' },
-                    { data: 'price', name: 'price', render: function(data, type, row) {
-                        return `${row.price ? row.price + ' {{__("text.PLN")}}' : 'Undefined'}`
-                    } },
-                    // { data: 'convertedQty', name: 'convertedQty'},
-
-                ],
-                buttons: [
-
-            ],
-            rowCallback: function(row, data, index) {
-                 // Add a click event to the row to redirect to the Edit screen
-                $(row).on('click', function() {
-                    if (!$(event.target).closest('td').hasClass('action') && !$(event.target).is('input[type="checkbox"]')) {
-                        $('#searchresultmsg').addClass('d-none');
-                        $('#selectedItemsTable').removeClass('d-none');
-                        $("#noitem").addClass('d-none');
-                        $('#item').val('');
-                        console.log(data);
-                        var itemId = data.id;
-                        var unitid = data.unitid;
-                        var unitconverterto = data.unitconverterto;
-                        var itemCodeName = data.code;
-                        var itemName = data.name;
-                        var quantity = 1; // default quantity
-                        var price = 0; // default quantity
-
-                        // Check if the item already exists in the table
-                        var existingRow = $('#selectedItemsBody tr[data-id="' + itemId + '"]');
-                        if (existingRow.length > 0) {
-                            // Item already exists, update the quantity
-                            var currentQuantity = parseInt(existingRow.find('.quantity-input').val());
-                            existingRow.find('.quantity-input').val(currentQuantity + 1);
-                        } else {
-                            // Item does not exist, add a new row
-                            var quantityInput = '<div style="width:100%"><input id="quantity" required class="form-control quantity-input" name="quantity[]" type="number" min="1" value="' + quantity + '"></div>';
-                            var priceInput = '<label class="mobile-label">{!!__("text.price")!!}</label><input id="price" required class="form-control price-input" name="price[]" type="number" min="0" step="0.01" value="' + price + '">';
-                            var subtotal_priceInput = '<label class="mobile-label">{!!__("text.total_price")!!}</label><input id="subtotal_price" required class="form-control subtotal_price-input" name="subtotal_price[]" type="number" min="0" step="0.01" value="' + price + '">';
-                            var unitInput = $("#unit_list").html()
-
-                            var itemCode = '<input type="hidden" name="stockitemid[]" value="' + itemId + '">';
-                            var newRow = '<tr data-id="' + itemId + '"><td class="mobile-inline"><div style="width: 95%"><span class="itemname">' + itemName + '</span><br/><span class="itemcode">' + itemCodeName + '</span></div><a href="#blank" class="remove-item mobile-label"><span class="material-symbols-rounded">delete</span></a></td><td style="display:flex;flex-direction:row">' + itemCode + quantityInput + '<div class="unitInput"  style="width:100%">' + unitInput + '</div></td><td>' + priceInput + '</td><td>' + subtotal_priceInput + '</td><td align="center">&nbsp;<a href="#blank" class="remove-item mobile-hide"><span class="material-symbols-rounded">delete</span></a></td></tr>';
-                            $('#selectedItemsBody').append(newRow);
-
-                            // select for product unit as default
-                            $('#selectedItemsBody').find("tr[data-id='" + itemId + "']").find(".unitInput").find("select").find('option').filter(function() {
-                                return $(this).val() == unitid;  // Change 'Unit 2' to the text you want to match
-                            }).prop('selected', true);
-                        }
-
-                        // Clear the search input and results
-                        $('#searchInput').val('');
+                    success: function (data) {
                         $('#searchResults').empty();
-                        calculateTotals();
-                        $(".modal-close").click();
+
+                        $.each(data, function (index, item) {
+                            $('#searchResults').append('<li class="search-result" data-id="' + item.id + '" data-unitid="' + item.unitid + '" data-unitconverterto="' + item.unitconverterto + '"><span data-name="'+item.name+'" class="itemname">' + item.name + '</span><br/><span data-code="'+item.code+'" class="itemcode">'+item.code+'</span></li>');
+                            // Customize the display based on your model's structure
+                        });
                     }
-
                 });
-            }
-            });
-
-
             } else {
                 $('#searchResults').empty();
             }
@@ -498,53 +426,6 @@
         $(document).on('input', '.quantity-input, .price-input', function() {
             calculateTotals();
         });
-
-
-        // const tablestockitem = $('#data').DataTable({
-        //         processing: true,
-        //         serverSide: true,
-        //         ajax: {
-        //             url: '{!! route('stock.get') !!}',
-        //             data: function(d) {
-        //                 d.keyword = $('input[name=keyword]').val();
-        //                 d.subtype = $('input[name=subtype]').val();
-        //                 d.startdate = $('input[name=startdate]').val();
-        //                 d.enddate = $('input[name=enddate]').val();
-        //                 d.supplier = $("#supplier").val();
-        //                 d.filterby = $("#filterby").val();
-        //                 d.isVisible = $("#isVisible").is(':checked') ? 1 : 0;
-        //                 d.isWithoutPhoto = $("#isWithoutPhoto").is(':checked') ? 1 : 0;
-
-        //             },
-        //         },
-        //         dom: '<"d-flex align-items-md-center flex-column flex-md-row justify-content-md-between pb-3"Bf>rt<"pt-3 d-flex align-items-md-center flex-column flex-md-row justify-content-md-between"lp><"clear">',
-        //         language: {
-        //             url: langUrl // Polish language JSON file
-        //         },
-        //         bFilter: false,
-        //         order: [[1, "desc"]],
-        //         columns: [
-        //             {
-        //                 data: null, // Use null for data as we are generating the checkbox manually
-        //                 orderable: false,
-        //                 searchable: false,
-        //                 render: function(data, type, row) {
-        //                     return `<input data-id="${row.id}" data-quantity="${row.single_quantity}" type="checkbox" value="1" class="me-2 row-select">`;
-        //                 }
-        //             },
-        //             { data: 'item_photo', name: 'photo' },
-        //             // { data: 'code', name: 'code' },
-        //             { data: 'name', name: 'name' },
-        //             { data: 'price', name: 'price', render: function(data, type, row) {
-        //                 return `${row.price ? row.price + ' {{__("text.PLN")}}' : 'Undefined'}`
-        //             } },
-        //             { data: 'convertedQty', name: 'convertedQty'},
-
-        //         ],
-        //         buttons: [
-
-        //     ],
-        //     });
 </script>
 @endpush
 @endsection

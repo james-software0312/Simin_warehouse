@@ -471,7 +471,9 @@ class SellService
         ->leftJoin('unit', 'unit.id', '=', 'sell_order_detail.unitid')
         ->leftJoin('transaction', 'transaction.stockitemid', '=','sell_order_detail.stockitemid')
         ->select('stockitem.name','contact.name as customer',
+            'stockitem.categoryid',
             'category.name as category',
+            'sell_order.creator as creator',
             'sell_order_detail.*',DB::raw('SUM(wh_sell_order_detail.quantity) as totalquantity'),'stockitem.unitconverter1','stockitem.unitconverter','stockitem.size' ,'stockitem.code','unit.name as unit_name')
         ->where('sell_order.confirmed', true)
         ->groupBy('sell_order_detail.reference')

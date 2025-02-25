@@ -284,7 +284,21 @@ class TransactionController extends Controller
         $term = $request->get('query');
         $warehouseid = $request->get('warehouseid');
         $data = $this->stockitemService->SearchItem($term, $warehouseid);
-        return response()->json($data);
+        // dd($data);
+
+        return DataTables::of($data)
+
+
+            // ->addColumn('code', function($data) {
+            //     return '<div>
+            //     <div class="barcodecode text-center">
+            //     <img src="data:image/png;base64,' . call_user_func_array([new DNS2D(), 'getBarcodePNG'], [$data->code, "QRCODE"]). '"alt="barcode" width="70"  />
+            //     <p class="text-center mb-0">'.$data->code.'</p>
+            //     </div>';
+            // })
+
+            ->rawColumns(['item_photo', 'code','action', 'quantity', 'convertedQty'])
+            ->make(true);
     }
 
 

@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'Search_name' => 'Search code or item name',
     'dashboard_overview' => 'Dashboard Overview',
     'checkins' => 'Checkins',
     'checkouts' => 'Checkouts',

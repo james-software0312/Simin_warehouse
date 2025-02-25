@@ -79,7 +79,7 @@
                 <tr>
                     <th>{{ __('text.id') }}</th>
                     <th>No</th>
-                    <th>{{ __('text.reference') }}</th>
+                    {{-- <th>{{ __('text.reference') }}</th> --}}
                     <th>{{ __('text.supplier') }}</th>
                     <th>{{ __('text.category') }}</th>
                     <th>{{ __('text.code') }}</th>
@@ -133,10 +133,10 @@
                     data: 'DT_RowIndex',
                     name: 'DT_RowIndex'
                 },
-                {
-                    data: 'reference',
-                    name: 'reference'
-                },
+                // {
+                //     data: 'reference',
+                //     name: 'reference'
+                // },
                 {
                     data: 'supplier',
                     name: 'supplier'

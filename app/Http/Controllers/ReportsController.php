@@ -12,6 +12,7 @@ use App\Services\UserService;
 use App\Services\SettingsService;
 use App\Services\ContactService;
 use App\Services\SellService;
+use App\Models\SHProductCategoryModel;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use DataTables;
@@ -469,6 +470,12 @@ class ReportsController extends Controller
                 }
                 return $qty;
             })
+            ->addColumn('category', function ($data) {
+                // dd($data->categoryid);
+                $category = SHProductCategoryModel::where('id', $data->categoryid)->first();
+                return $category->title;
+                // return $data->category;
+            })
             ->addColumn('unit', function ($data)  {
                 $ret = "";
                 if ($data->unitid == $data->stock_unitid) {
@@ -482,7 +489,7 @@ class ReportsController extends Controller
                 return $data->price . __('text.PLN');
             })
             ->addColumn('total_price', function ($data) {
-                return $data->price * $data->quantity . __('text.PLN');
+                return $data->price * $data->quantity*$data->unitconverter . __('text.PLN');
             })
             ->rawColumns(['code', 'carton_qunatity', 'pair_quantity'])
             ->addColumn('transactiondate', function($data){
@@ -502,7 +509,7 @@ class ReportsController extends Controller
     {
         if ($request->ajax()) {
             $data = $this->sellService->getcheckoutreport();
-            // dd($data);
+            // dd($data->get());
             return DataTables::of($data)
             ->addColumn('code', function($data) {
                 return '<div>
@@ -592,8 +599,13 @@ class ReportsController extends Controller
             ->addColumn('price', function ($data) {
                 return $data->price . __('text.PLN');
             })
+            ->addColumn('category', function ($data) {
+                $category = SHProductCategoryModel::where('id', $data->categoryid)->first();
+                return $category->title;
+                // return $data->category;
+            })
             ->addColumn('total_price', function ($data) {
-                return $data->price * $data->quantity . __('text.PLN');
+                return $data->price * $data->quantity*$data->unitconverter . __('text.PLN');
             })
             ->rawColumns(['code', 'carton_qunatity', 'pair_quantity'])
             ->addColumn('selldate', function($data){

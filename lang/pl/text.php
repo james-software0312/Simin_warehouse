@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'Search_name' => 'Wyszukaj kod lub nazwę elementu',
     'dashboard_overview' => 'Pulpit',
     'checkins' => 'Przychód',
     'checkouts' => 'Rozchód',

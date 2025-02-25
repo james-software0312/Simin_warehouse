@@ -19,6 +19,9 @@
     .mobile-hide {
         display: block;
     }
+    #data {
+        cursor: pointer;
+    }
     @media (max-width: 768px) {
         #selectedItemsBody,
         #selectedItemsBody tr,
@@ -134,7 +137,11 @@
                                 <span class="material-symbols-rounded">scan</span>{{__('text.scan')}}</a>
                         </div>
                         <input type="hidden" id="barcode" name="barcode">
-                        <input type="text" class="form-control" id="item" name="item" placeholder="{{ __('text.search_code_or_item_name') }}">
+                        {{-- <input type="text" class="form-control" id="item" name="item" placeholder="{{ __('text.search_code_or_item_name') }}"> --}}
+
+                        <div class="d-flex"><a data-bs-toggle="modal" data-bs-target="#filterModel" id="btnedit" class="btn btn-sm btn-success d-flex align-items-center" data-toggle="modal">
+                            <span class="material-symbols-rounded">edit</span> {{ __('text.items') }}</a></div>
+                            <br>
                         <ul id="searchResults"></ul>
                         <div class="searchitemresult">
                             <small id="searchresultmsg" class="text-left mb-0">{{ __('text.search_results') }}</small>
@@ -352,6 +359,48 @@
 </div>
 <!-- Define the modal content and title -->
 
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="filterModel" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content ">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">{{ __('text.Search_name') }}</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body overflow-scroll">
+                <input type="text" class="form-control" id="item" name="item" placeholder="Search code or item name..."  >
+                <div class="table-responsive-sm">
+                    <table class="table" id="data" style="width:100%!important;">
+                        <thead>
+                            <tr>
+                                <th>{{__('text.name')}}</th>
+                                <th>{{__('text.selling_price')}}</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary d-flex align-items-center modal-close" data-bs-dismiss="modal">
+                    <span class="material-symbols-rounded">
+                        close
+                    </span>{{ __('text.close') }}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
 @push('scripts')
 
 <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
@@ -360,36 +409,146 @@
     // console.log('123123123123', {{ $units }});
     let unit = @json($units);
     var real_unit;
-    console.log(unit);
     $(function() {
 
         //Search Item
         $('#item').on('input', function () {
             var warehouseid = $("#warehouse").val();
             var query = $(this).val();
+            console.log('1',query);
 
             if (query.length >= 2 && warehouseid) { // Minimum characters to trigger the search
-                $.ajax({
-                    url: '{{ route("transaction.searchitem") }}',
-                    method: 'GET',
-                    data: { query: query, warehouseid: warehouseid },
-                    success: function (data) {
-                        $('#searchResults').empty();
-                        data = data.filter((item)=>(item.single_quantity > 0));
-                        console.log("-data",data)
 
-                        $.each(data, function (index, item) {
-                            for(let i = 0; i < unit.length; i ++){
-                                if(unit[i]['id'] ==1) {
-                                    real_unit = unit[i]['name'];
-                                }
+
+                console.log(query);
+
+
+
+
+                if ($.fn.DataTable.isDataTable('#data')) {
+                    $('#data').DataTable().destroy();
+                }
+
+
+                const tablestockitem = $('#data').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: {
+                    url: '{{ route("transaction.searchitem") }}',
+                    data: { query: query, warehouseid },
+                },
+                dom: '<"d-flex align-items-md-center flex-column flex-md-row justify-content-md-between pb-3"Bf>rt<"pt-3 d-flex align-items-md-center flex-column flex-md-row justify-content-md-between"lp><"clear">',
+                language: {
+                    url: langUrl // Polish language JSON file
+                },
+                bFilter: false,
+                order: [[1, "desc"]],
+                columns: [
+
+                    // { data: 'code', name: 'code' },
+                    { data: 'name', name: 'name' },
+                    { data: 'price', name: 'price', render: function(data, type, row) {
+                        return `${row.price ? row.price + ' {{__("text.PLN")}}' : 'Undefined'}`
+                    } },
+                    // { data: 'convertedQty', name: 'convertedQty'},
+
+                ],
+                buttons: [
+
+                ],
+                rowCallback: function(row, data, index) {
+                    // Add a click event to the row to redirect to the Edit screen
+                    $(row).on('click', function() {
+                        if (!$(event.target).closest('td').hasClass('action') && !$(event.target).is('input[type="checkbox"]')) {
+
+
+                            $('#searchresultmsg').addClass('d-none');
+                            $('#selectedItemsTable').removeClass('d-none');
+                            $("#noitem").addClass('d-none');
+                            $('#item').val('');
+                            console.log(data.price);
+                            var itemId =data.id;
+                            var price =  data.price;
+                            // unit part
+                            var unitid =  data.unitid;
+                            var unitconverterto = data.unitconverterto;
+                            var unitconverter =  data.unitconverter;
+                            var unitconverter1 =  data.unitconverter1;
+                            var itemCodeName = data.code;
+                            // var itemName = data.itemname;
+                            var itemName = 'para';
+                            // var itemCodeName = $(this).find('.itemcode').data('code');
+                            // var itemName = $(this).find('.itemname').text();
+                            // var quantity = 1; // default quantity
+                            var quantity = unitid == 1 ? Math.max(unitconverter,unitconverter1) : 1; // default quantity
+                            var discount = 0;
+                            console.log(itemId,price,unitid,unitconverterto,unitconverter,unitconverter1,itemCodeName,itemName,quantity)
+                            // Check if the item already exists in the table
+                            var existingRow = $('#selectedItemsBody tr[data-id="' + itemId + '"]');
+                            if (existingRow.length > 0) {
+                                // Item already exists, update the quantity
+                                var currentQuantity = parseInt(existingRow.find('.quantity-input').val());
+                                // existingRow.find('.quantity-input').val(currentQuantity + 1);
+                                var currentUnit = parseInt(existingRow.find('.unit-input').val());
+                                // existingRow.find('.quantity-input').val(currentQuantity + (currentUnit == 1 ? Math.max(unitconverter,unitconverter1) : 1));
+                            } else {
+                                // Item does not exist, add a new row
+                                var quantityInput = '<div class="input-group" style="margin-right: 10px"><input type="hidden" name="unitconverter[]" id="unitconverter" value="'+unitconverter+'"><div class="input-group-text qty-minus" style = "cursor: pointer;" >-</div><input disabled id="quantity" required class="form-control quantity-input" name="quantity[]" value="' + unitconverter + '" style="text-align:center;"><div class="input-group-text qty-plus" style = "cursor: pointer;">+</div></div>';
+                                var itemCode = '<input type="hidden" name="stockitemid[]" value="' + itemId + '">';
+                                var priceInput = '<label class="mobile-label">{!!__("text.sale_price")!!}</label><input required class="form-control price-input" name="price[]" type="number" min="0" step="0.01" value="' + price + '" disabled />';
+                                var realpriceInput = '<label class="mobile-label">{!!__("text.real_price")!!}</label><input required class="form-control realprice-input" name="realprice[]" type="number" min="0" step="0.01" value="' + price + '" />';
+                                var discountInput = '<label class="mobile-label">{!!__("text.discount")!!}</label><div class="d-flex align-items-center"><input id="discount" required class="form-control discount-input" name="discount[]" value="' + discount + '" style="margin-right: 5px" disabled /> {{ __("text.PLN") }}</div>';
+                                // var unitInput = $("#unit_list").html();
+                                // var unitInput = `<select class="form-control unit-input" name="unit[]"><option value="${unitid}">${$("#unit_list").find("option[value="+unitid+"]").text()}</option><option value="${unitconverterto}">${$("#unit_list").find("option[value="+unitconverterto+"]").text()}</option></select>`;
+                                var unitInput = `<select class="form-control unit-input" name="unit[]">
+                                        <option value="2" ${unitid == 2 || unitconverterto == 2 ? 'selected' : ''}>para</option>
+                                    </select>`;
+                                    //  ${real_unit} is first
+                                var newRow = '<tr data-id="' + itemId + '" data-unitid="' + unitid + '" data-unitconverter="' + unitconverter + '" data-unitconverter1="' + unitconverter1 + '" data-price="' + price + '" data-unitid="' + unitid + '" data-unitconverterto="' + unitconverterto + '"><td class="mobile-inline"><div style="width: 95%"><span class="itemname">' + itemName + '</span><br/><span class="itemcode">' + itemCodeName + '</span></div><a href="#blank" class="remove-item mobile-label"><span class="material-symbols-rounded">delete</span></a></td><td style="display:flex;flex-direction:row">' + itemCode + quantityInput + '' + unitInput + '</td><td>' + priceInput + '</td><td class="realprice-value">' + realpriceInput + '</td><td class="discount-value">' + discountInput + '</td><td align="center">&nbsp;<a href="#blank" class="remove-item mobile-hide"><span class="material-symbols-rounded">delete</span></a></td></tr>';
+
+                                $('#selectedItemsBody').append(newRow);
                             }
-                        console.log(item);
-                            $('#searchResults').append('<li class="search-result" data-id="' + item.id + '" data-price="' + item.price + '" data-unitid="' + item.unitid + '" data-unitconverterto="' + item.unitconverterto + '"data-unitconverter="' + item.unitconverter + '" data-unitconverter1="' + item.unitconverter1 + '" data-itemquantity="' + item.quantity + '"><span data-name="'+item.name+'" class="itemname">' + item.name + '(' + item.single_quantity + ' ' + real_unit + ')</span><br/><span data-code="'+item.code+'" class="itemcode">'+item.code+'</span></li>');
-                            // Customize the display based on your model's structure
-                        });
-                    }
+
+
+                            // Clear the search input and results
+                            $('#searchInput').val('');
+                            $('#searchResults').empty();
+                            initDiscuount();
+                            $(".modal-close").click();
+                        }
+
+                    });
+                }
                 });
+
+
+
+
+
+
+
+
+                // $.ajax({
+                //     url: '{{ route("transaction.searchitem") }}',
+                //     method: 'GET',
+                //     data: { query: query, warehouseid: warehouseid },
+                //     success: function (data) {
+                //         $('#searchResults').empty();
+                //         data = data.filter((item)=>(item.single_quantity > 0));
+                //         console.log("-data",data)
+
+                //         $.each(data, function (index, item) {
+                //             for(let i = 0; i < unit.length; i ++){
+                //                 if(unit[i]['id'] ==1) {
+                //                     real_unit = unit[i]['name'];
+                //                 }
+                //             }
+                //         console.log(item);
+                //             $('#searchResults').append('<li class="search-result" data-id="' + item.id + '" data-price="' + item.price + '" data-unitid="' + item.unitid + '" data-unitconverterto="' + item.unitconverterto + '"data-unitconverter="' + item.unitconverter + '" data-unitconverter1="' + item.unitconverter1 + '" data-itemquantity="' + item.quantity + '"><span data-name="'+item.name+'" class="itemname">' + item.name + '(' + item.single_quantity + ' ' + real_unit + ')</span><br/><span data-code="'+item.code+'" class="itemcode">'+item.code+'</span></li>');
+                //             // Customize the display based on your model's structure
+                //         });
+                //     }
+                // });
             } else {
                 $('#searchResults').empty();
             }

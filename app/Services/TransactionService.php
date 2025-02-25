@@ -185,6 +185,7 @@ class TransactionService
             'transaction.*',
             'stockitem.name',
             'stockitem.code',
+            'stockitem.categoryid',
             'stockitem.size',
             'stockitem.unitid as stock_unitid',
             'stockitem.unitconverter',
