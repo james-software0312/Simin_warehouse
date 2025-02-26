@@ -132,7 +132,7 @@
                                             <tbody id="selectedItemsBody">
                                                 <!-- Selected items will be added here dynamically -->
                                             </tbody>
-                                            <tfoot>
+                                            {{-- <tfoot>
                                                 <tr>
                                                     <th width="40%" class="mobile-label"></th>
                                                     <th width="15%"><small>{{__('text.total_quantity')}}:&nbsp;</small><span id="total_quantity">0</span>&nbsp;carton</th>
@@ -140,7 +140,7 @@
                                                     <th width="15%"><small>{{__('text.total_price')}}:&nbsp;</small><span id="total_price">0</span>{{ __('text.PLN') }}</th>
                                                     <th width="10%" class="mobile-label"></th>
                                                 </tr>
-                                            </tfoot>
+                                            </tfoot> --}}
                                         </table>
                                         <input type="hidden" name="itemselecteds" id="itemselecteds" required/>
                                         <label for="quantity" class="error"></label>
@@ -199,7 +199,8 @@
                         data: { query: query, warehouseid: warehouseid },
                     success: function (data) {
                             $('#searchResults').empty();
-                            data = data.filter((item)=>(item.single_quantity > 0));
+                            console.log(data);
+                            data = data.data.filter((item)=>(item.single_quantity > 0));
 
                             $.each(data, function (index, item) {
                                 $('#searchResults').append('<li class="search-result" data-id="' + item.id + '" data-price="' + item.price + '" data-unitid="' + item.unitid + '" data-unitconverterto="' + item.unitconverterto + '"data-unitconverter="' + item.unitconverter + '" data-unitconverter1="' + item.unitconverter1 + '" data-itemquantity="' + item.quantity + '"><span data-name="'+item.name+'" class="itemname">' + item.name + '(' + item.quantity + ' carton' + ')</span><br/><span data-code="'+item.code+'" class="itemcode">'+item.code+'</span></li>');

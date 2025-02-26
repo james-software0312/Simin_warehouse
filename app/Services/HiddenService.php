@@ -241,10 +241,12 @@ class HiddenService
             'stockitem.categoryid',
             'category.name as category',
             'users.name as user',
-            'sell_order_detail.*',DB::raw('SUM(wh_sell_order_detail.quantity) as totalquantity'),'stockitem.unitconverter1','stockitem.unitconverter','stockitem.size' ,'stockitem.code','unit.name as unit_name')
+            'sell_order_detail.*',
+            // DB::raw('SUM(wh_sell_order_detail.quantity) as totalquantity'),
+            'stockitem.unitconverter1','stockitem.unitconverter','stockitem.size' ,'stockitem.code','unit.name as unit_name')
         ->where('sell_order.confirmed', true)
         ->where('sell_order.hidden', false)
-        ->groupBy('sell_order_detail.reference')
+        // ->groupBy('sell_order_detail.reference')
         ->orderBy('sell_order_detail.selldate','DESC');
     }
 
@@ -276,5 +278,33 @@ class HiddenService
         ->whereRaw('wh_transaction.quantity - wh_transaction.hidden_amount != 0')
         ->orderBy('transaction.transactiondate','DESC')
         ->orderBy('transaction.created_at','DESC');
+    }
+
+    public function getPriceHistory($id)
+    {
+        return SellOrderDetailModel::leftJoin('sell_order', 'sell_order.reference', '=', 'sell_order_detail.reference')
+            ->leftJoin('users', 'users.id', '=', 'sell_order.creator')
+            ->leftJoin('unit', 'unit.id', '=', 'sell_order_detail.unitid')
+            ->leftJoin('stockitem', 'stockitem.id', '=', 'sell_order_detail.stockitemid')
+            ->select(
+                'sell_order.reference',
+                'sell_order.show_reference',
+                'stockitem.unitconverter',
+                'stockitem.quantity',
+                'stockitem.unitconverter1',
+                'stockitem.unitconverterto',
+                'stockitem.unitid as stockunitid',
+                'users.name as creator',
+                'sell_order_detail.price',
+                'sell_order_detail.updated_at',
+                'sell_order_detail.unitid',
+                'unit.name as sell_unit_name',
+            )
+            ->where('sell_order_detail.stockitemid', '=', $id)
+            ->where('sell_order.hidden', '=', 0)
+            // ->where('sell_order.confirmed', true)
+            ->orderBy('sell_order_detail.updated_at', 'desc')
+            ->get();
+
     }
 }

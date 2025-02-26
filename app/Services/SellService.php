@@ -476,9 +476,14 @@ class SellService
             'stockitem.categoryid',
             'category.name as category',
             'users.name as user',
-            'sell_order_detail.*',DB::raw('SUM(wh_sell_order_detail.quantity) as totalquantity'),'stockitem.unitconverter1','stockitem.unitconverter','stockitem.size' ,'stockitem.code','unit.name as unit_name')
+            'sell_order_detail.*',
+            // DB::raw('SUM(wh_sell_order_detail.quantity) as totalquantity'),
+            'stockitem.unitconverter1','stockitem.unitconverter',
+            'stockitem.size' ,
+            'stockitem.code',
+            'unit.name as unit_name')
         ->where('sell_order.confirmed', true)
-        ->groupBy('sell_order_detail.reference')
+        // ->groupBy('sell_order_detail.reference')
         ->orderBy('sell_order_detail.selldate','DESC');
     }
 

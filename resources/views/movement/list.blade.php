@@ -52,7 +52,7 @@
                         @endforeach
                     </select>
                 </div>
-                
+
                 <div class="col-md-2">
                     <label for="target_warehouse" class="form-label">{{__('text.target_warehouse')}}</label>
                     <select name="target_warehouse" id="target_warehouse" class="form-control">
@@ -241,7 +241,9 @@ $(function() {
         var DataId = button.data('btndetail');
         // Use an AJAX request to fetch the data for the given group
         $.ajax({
-            url: '/warehouse/movement/detail/' + DataId, // Replace with your actual route
+
+            url: "{{ route('movement.show', ':id') }}".replace(':id', DataId),
+            // url: '/warehouse/movement/detail/' + DataId, // Replace with your actual route
             type: 'GET',
             dataType: 'json',
             data: {
@@ -418,8 +420,8 @@ $("#btn_download").on('click', function() {
     var keyword = $('input[name=keyword]').val();
     var startdate = $('input[name=startdate]').val();
     var enddate = $('input[name=enddate]').val();
-    var downloadUrl = `{!! route('movement.export') !!}?keyword=` + encodeURIComponent(keyword) + 
-                      `&startdate=` + encodeURIComponent(startdate) + 
+    var downloadUrl = `{!! route('movement.export') !!}?keyword=` + encodeURIComponent(keyword) +
+                      `&startdate=` + encodeURIComponent(startdate) +
                       `&enddate=` + encodeURIComponent(enddate);
 
     // Trigger a file download by changing the window location

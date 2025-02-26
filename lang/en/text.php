@@ -326,4 +326,7 @@ return [
     'image' => 'Image',
     'websiteqty_bigger_qty' => 'Website qty can not be bigger than Qty',
     'websiteqty_must_be_multiple_by_unitconverter' => 'websiteqty must be multiple by unitconverter',
+    'total_cart' => 'Total Cart Quantity',
+    'total_Pair' => 'Total Pair Quantity',
+    'sub_total' => 'Sub Total'
 ];

@@ -567,8 +567,10 @@ class ReportsController extends Controller
 					$query->whereBetween('sell_order_detail.selldate', [$startDate, $endDate]);
 				}
 
+
 			})
             ->addColumn('carton_quantity', function ($data)  {
+                // if($data->reference != 'REF250226GzY' ) dd($data);
                 $ret = "";
                 $qty = 0;
                 $qty = $data->quantity;

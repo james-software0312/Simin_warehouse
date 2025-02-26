@@ -16,15 +16,16 @@
                         <div class="alert alert-warning alert-dismissible fade show d-flex align-items-center" role="alert">
                             <span class="material-symbols-rounded">error</span> {{ session('statuserror') }}
                         </div>
-                        @endif  
+                        @endif
                         @if(session('status'))
                         <div class="alert alert-success alert-dismissible fade show d-flex align-items-center" role="alert">
                             <span class="material-symbols-rounded">error</span> {{ session('status') }}
                         </div>
-                        @endif  
+                        @endif
                         <div class="mb-3">
-                            
-                            <img width="80" src="{{ asset('public/storage/settings/').'/'.$data->logo }}" class="img-fluid" />
+
+                            {{-- <img width="80" src="{{ asset('public/storage/settings/').'/'.$data->logo }}" class="img-fluid" /> --}}
+                            <img width="80" src="{{ env('MEDIA_UPLOADER_URL') .'/'.$data->logo }}" class="img-fluid" />
                             <h3 class="mt-2">{{__('auth.welcome_back')}}</h3>
                         </div>
                         <div class="mb-3">
@@ -62,12 +63,12 @@
                         <div class="alert alert-success alert-dismissible fade show d-flex align-items-center" role="alert">
                             <span class="material-symbols-rounded">task_alt</span> {{ session('status') }}
                         </div>
-                        @endif   
+                        @endif
                         @if(session('statuserror'))
                         <div class="alert alert-warning alert-dismissible fade show d-flex align-items-center" role="alert">
                             <span class="material-symbols-rounded">error</span> {{ session('statuserror') }}
                         </div>
-                        @endif  
+                        @endif
                         <div class="mb-3">
                         <img width="80" src="{{ asset('public/storage/settings/').'/'.$data->logo }}" class="img-fluid" />
                             <h3 class="mt-2">{{ __('auth.forgot_password') }}?</h3>
@@ -112,7 +113,7 @@ $(document).ready(function() {
 
     var Param = {{$id = request('status','0')}};
     if(Param == 1){
-       
+
             $("#login").addClass('d-none');
             $("#forgot").addClass('animation');
             $("#forgot").removeClass('d-none');
@@ -136,7 +137,7 @@ $(document).ready(function() {
         }
     });
 
-    
+
 });
 </script>
 @endpush

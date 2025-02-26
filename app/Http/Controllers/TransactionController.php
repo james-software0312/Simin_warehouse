@@ -1305,8 +1305,13 @@ class TransactionController extends Controller
     }
     public function getsellpricehistory(Request $request)
     {
+        $hasSeeHiddenPermission = $request->hasSeeHiddenPermission;
         $stockitemid = $request->get('stockitemid');
-        $data = $this->sellService->getPriceHistory($stockitemid);
+        if($hasSeeHiddenPermission){
+            $data = $this->sellService->getPriceHistory($stockitemid);
+        } else {
+            $data= $this -> hiddenService->getPriceHistory($stockitemid);
+        }
         return DataTables::of($data)
             ->addColumn('updated_at', function($data) {
                 // $date = date('Y-m-d H:i:s', strtotime($data->updated_at));

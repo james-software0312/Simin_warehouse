@@ -17,6 +17,7 @@ public function getAll()
     return ActivityLogModel::join('users', 'activity_log.causer_id', '=', 'users.id')
         ->select('activity_log.*', 'users.name as user')
         ->where('log_name', '!=', 'sell_hide_history')
+        ->where('event', '!=', 'deleted')
         ->orderBy('activity_log.created_at', 'desc')
         ->get();
 }
@@ -69,5 +70,5 @@ public function getById($id)
     return ActivityLogModel::findOrFail($id);
 }
 
-   
+
 }

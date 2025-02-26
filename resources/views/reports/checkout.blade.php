@@ -92,7 +92,7 @@
                     <th>{{ __('text.creator') }}</th>
                     <th>{{ __('text.customer') }}</th>
                     <th>{{ __('text.category') }}</th>
-                    <th>{{ __('text.code') }}</th>
+                    <th>{{ __('text.name') }}</th>
                     <th>{{ __('text.size') }}</th>
                     <th>{{ __('excel.carton') }}</th>
                     <th>{{ __('excel.packing') }}</th>
@@ -102,6 +102,24 @@
                     <th>{{ __('text.total_price') }}</th>
                     <th width="100px">{{ __('text.date') }}</th>
                 </tr>
+                <tfoot>
+                    <tr>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th>{{__('text.total_cart')}} : </th>
+                        <th id="total_cart_quantity"></th>
+                        <th>{{__('text.total_Pair')}} : </th>
+                        <th id="total_pair_quantity"></th>
+                        <th>{{__('text.sub_total')}} :</th>
+                        <th id="total_sub_price"></th>
+                        <th></th>
+                        <th></th>
+
+                    </tr>
+                </tfoot>
             </thead>
         </table>
      </div>
@@ -128,6 +146,24 @@
                     d.enddate = $('input[name=enddate]').val();
                 },
             },
+            drawCallback: function() {
+            let totalQuantity = 0;
+            let totalPrice = 0;
+            let totalCartonQuantity =0;
+            let totalPairQuantity=0;
+            $('#data tbody tr').each(function() {
+                let carton_quantity = parseFloat($(this).find('td').eq(6).text()) || 0; // Assuming the total quantity is in the 3rd column
+                let pair_quantity = parseFloat($(this).find('td').eq(8).text()) || 0; // Assuming the price is in the 4th column
+                let total_price = parseFloat($(this).find('td').eq(11).text()) || 0; // Assuming the price is in the 4th column
+
+                totalCartonQuantity += carton_quantity;
+                totalPairQuantity += pair_quantity;
+                totalPrice += total_price;
+            });
+            $("#total_cart_quantity").text(totalCartonQuantity);
+            $("#total_pair_quantity").text(totalPairQuantity);
+            $("#total_sub_price").text(totalPrice);
+        },
             dom: '<"d-flex align-items-md-center flex-column flex-md-row justify-content-md-between pb-3"Bf>rt<"pt-3 d-flex align-items-md-center flex-column flex-md-row justify-content-md-between"p><"clear">',
             language: {
                 url: langUrl // Polish language JSON file
@@ -156,9 +192,13 @@
                     data: 'category',
                     name: 'category'
                 },
+                // {
+                //     data: 'code',
+                //     name: 'code'
+                // },
                 {
-                    data: 'code',
-                    name: 'code'
+                    data: 'name',
+                    name: 'name'
                 },
                 {
                     data: 'size',

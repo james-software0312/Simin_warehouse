@@ -82,7 +82,7 @@
                     {{-- <th>{{ __('text.reference') }}</th> --}}
                     <th>{{ __('text.supplier') }}</th>
                     <th>{{ __('text.category') }}</th>
-                    <th>{{ __('text.code') }}</th>
+                    <th>{{ __('text.name') }}</th>
                     <th>{{ __('text.size') }}</th>
                     <th>{{ __('excel.carton') }}</th>
                     <th>{{ __('excel.packing') }}</th>
@@ -145,9 +145,13 @@
                     data: 'category',
                     name: 'category'
                 },
+                // {
+                //     data: 'code',
+                //     name: 'code'
+                // },
                 {
-                    data: 'code',
-                    name: 'code'
+                    data: 'name',
+                    name: 'name'
                 },
                 {
                     data: 'size',
