@@ -32,17 +32,17 @@ class RoleService
             ['userid' => $userid, 'module' => 'purchase', 'permission' => ''],
             ['userid' => $userid, 'module' => 'transaction', 'permission' => '1,2,3,4'],
             ['userid' => $userid, 'module' => 'warehouse', 'permission' => '1,2,3,4'],
-            ['userid' => $userid, 'module' => 'category', 'permission' => '1,2,3'],
+            ['userid' => $userid, 'module' => 'category', 'permission' => '1,2,3,4'],
             ['userid' => $userid, 'module' => 'shelf', 'permission' => '1,2,3'],
-            ['userid' => $userid, 'module' => 'unit', 'permission' => '1,2,3'],
+            ['userid' => $userid, 'module' => 'unit', 'permission' => '1,2,3,4'],
             ['userid' => $userid, 'module' => 'size', 'permission' => '1,2,3'],
             ['userid' => $userid, 'module' => 'customer', 'permission' => '1,2,3,4'],
             ['userid' => $userid, 'module' => 'supplier', 'permission' => '1,2,3,4'],
             ['userid' => $userid, 'module' => 'user', 'permission' => ''],
             ['userid' => $userid, 'module' => 'activity', 'permission' => ''],
-            ['userid' => $userid, 'module' => 'settings', 'permission' => ''],
+            ['userid' => $userid, 'module' => 'settings', 'permission' => '3'],
             ['userid' => $userid, 'module' => 'reports', 'permission' => '1'],
-            ['userid' => $userid, 'module' => 'vat', 'permission' => '1'],
+            ['userid' => $userid, 'module' => 'vat', 'permission' => '1,2,3,4'],
             // Add other arrays for additional records
         ];
 

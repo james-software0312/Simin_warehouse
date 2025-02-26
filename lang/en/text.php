@@ -26,6 +26,7 @@ return [
     'warehouse' => 'Warehouse',
     'shelf' => 'Shelf',
     'quantity' => 'Qty',
+    'quantity_website' => 'Qty in Website',
     'quantity_converted' => 'Qty(converted)',
     'action' => 'Action',
     'select' => 'Select',
@@ -322,5 +323,7 @@ return [
     'carton' => 'Carton',
     'date_range' => 'Date Range',
     'category_field_required' => 'Category field is required',
-    'image' => 'Image'
+    'image' => 'Image',
+    'websiteqty_bigger_qty' => 'Website qty can not be bigger than Qty',
+    'websiteqty_must_be_multiple_by_unitconverter' => 'websiteqty must be multiple by unitconverter',
 ];

@@ -468,6 +468,7 @@ class TransactionController extends Controller
         return abort(403, 'Unauthorized access.');
     }
 
+
     /**
      * Get data checkout for transaction, used in DataTables.
      *
@@ -476,11 +477,13 @@ class TransactionController extends Controller
      */
     public function getcheckout(Request $request)
     {
+
         // Retrieve permissions from the middleware
         $hasEditPermission   = $request->hasEditPermission;
         $hasDeletePermission = $request->hasDeletePermission;
         $hasViewPermission   = $request->hasViewPermission;
         $hasSeeHiddenPermission = $request->hasSeeHiddenPermission;
+        // dd($hasViewPermission);
         if ($request->ajax()) {
             if ($hasSeeHiddenPermission) {
                 $data = $this->sellService->getcheckout();
@@ -1071,7 +1074,7 @@ class TransactionController extends Controller
         // get current qty
         $currentQty = $this->stockitemService->getitemcurrentQty($stockitemid);
         // $quantity = $unit == $currentQty['unitid'] ? $quantity : $quantity * $currentQty['unitconverter'];
-        if ($quantity > $currentQty['quantity']*$currentQty['unitconverter']) {
+        if ($quantity > $currentQty['quantity']*$currentQty['unitconverter'] - $currentQty['quantity_website']) {
             return response()->json(["avaiable" => false]);
         } else {
             return response()->json(["avaiable" => true]);

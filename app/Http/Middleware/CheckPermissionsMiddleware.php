@@ -12,23 +12,16 @@ class CheckPermissionsMiddleware
     {
         $userId = Auth::id();
         $moduleName = $request->segment(1); // Assuming the module is the first segment in the URL
-        // dd($moduleName);
         if(DB::connection()->getDatabaseName()){
             $requiredHasSeePermissions = $this->getRequiredPermissions($userId, 'user');
-            if($moduleName == "purchase" || $moduleName == "transaction"  || $moduleName == "stock"){
-
-                $requiredPermissions = $this->getRequiredPermissions($userId, 'user');
-            } else {
-                $requiredPermissions = $this->getRequiredPermissions($userId, $moduleName);
-            }
-
+            $requiredPermissions = $this->getRequiredPermissions($userId, $moduleName);
             // Check if the user has the required permissions
             $hasViewPermission = in_array(1, $requiredPermissions);
             $hasCreatePermission = in_array(2, $requiredPermissions);
             $hasEditPermission = in_array(3, $requiredPermissions);
             $hasDeletePermission = in_array(4, $requiredPermissions);
             $hasAssignPermission = in_array(5, $requiredPermissions);
-            $hasSeeHiddenPermission = in_array(6, $requiredPermissions);
+            $hasSeeHiddenPermission = in_array(6, $requiredHasSeePermissions);
             $hasEditStockQtyPermission = in_array(7, $requiredPermissions);
             // Pass the permission variables to the view
             view()->share([
@@ -40,15 +33,15 @@ class CheckPermissionsMiddleware
                 'hasSeeHiddenPermission' => $hasSeeHiddenPermission,
                 'hasEditStockQtyPermission' => $hasEditStockQtyPermission,
             ]);
-
             // Pass the permission variables to the request
             $request->merge([
+
                 'hasViewPermission' => in_array(1, $requiredPermissions),
                 'hasCreatePermission' => in_array(2, $requiredPermissions),
                 'hasEditPermission' => in_array(3, $requiredPermissions),
                 'hasDeletePermission' => in_array(4, $requiredPermissions),
                 'hasAssignPermission' => in_array(5, $requiredPermissions),
-                'hasSeeHiddenPermission' => in_array(6, $requiredPermissions),
+                'hasSeeHiddenPermission' => $hasSeeHiddenPermission,
                 'hasEditStockQtyPermission' => in_array(7, $requiredPermissions),
             ]);
         }

@@ -17,13 +17,12 @@ class CheckViewAccess
         // Check if the user has the required permissions
         $hasViewPermission = in_array(1, $requiredPermissions);
         $hasEditPermission = in_array(3, $requiredPermissions);
-
+        // dd($requiredPermissions);
         if (!$hasViewPermission && $moduleName !=='setting') {
             // Redirect or return an error response for unauthorized access
             //return abort(403, 'Unauthorized access.'); // You can customize this based on your requirements
             redirect('login');
         }
-
         return $next($request);
     }
 

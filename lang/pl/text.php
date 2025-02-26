@@ -26,6 +26,7 @@ return [
     'warehouse' => 'Magazyn',
     'shelf' => 'Półka',
     'quantity' => 'Ilość',
+    'quantity_website' => 'Ilość w witrynie',
     'quantity_converted' => 'Ilość (karton)',
     'action' => 'Akcja',
     'select' => 'Wybierz',
@@ -329,4 +330,6 @@ return [
     'carton' => 'Karton',
     'not_available_units' => "Jednostki nie mogą być takie same",
     'converter_val_error' => "Jednym z konwerterów musi być 1",
+    'websiteqty_bigger_qty' => 'Ilość na stronie internetowej nie może być większa niż Ilość',
+    'websiteqty_must_be_multiple_by_unitconverter' => 'ilość stron internetowych musi być wielokrotnością konwertera jednostek',
 ];

@@ -415,7 +415,7 @@ class StockItemController extends Controller
         ]);
         $id   = $request->only(['editid']);
         $image = $request->file('photo');
-        $data = $request->only(['code', 'product_id', 'categoryid', 'unitid','warehouseid','name','quantity','description', 'itemsubtype', 'price', 'vat','size', 'unitconverter', 'unitconverterto', 'unitconverter1', 'is_visible', 'color']);
+        $data = $request->only(['code', 'product_id', 'categoryid', 'unitid','warehouseid','name','quantity','quantity_website','description', 'itemsubtype', 'price', 'vat','size', 'unitconverter', 'unitconverterto', 'unitconverter1', 'is_visible', 'color']);
         $group = $this->stockitemService->update($id, $data, $image);
         return redirect()->route('stock.index');
         // return redirect()->route('stock.edit', ['id' => $id["editid"]])->with('success', __('text.msg_stock_updated'));

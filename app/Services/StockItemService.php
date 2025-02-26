@@ -336,6 +336,7 @@ class StockItemService
         $SetData = StockItemModel::findOrFail($id);
         $sh_product = SHProductModel::where('id', $SetData[0]->product_id)->firstOrFail();
         $sh_product->fill($data);
+        $sh_product->status =  ($data['is_visible'] == 1) ? 'publish' : 'draft';
         $sh_product->save();
         if ($data['price'] != $SetData[0]->price) { // update stockitem history
             StockItemPriceHistoryModel::create([
@@ -697,7 +698,7 @@ class StockItemService
 
     public function getitemcurrentQty($id) {
         $item = StockItemModel::find($id);
-        return ['quantity' => $item->quantity, 'unitid' => $item->unitid, 'unitconverter' => $item->unitconverter];
+        return ['quantity' => $item->quantity, 'quantity_website' => $item->quantity_website, 'unitid' => $item->unitid, 'unitconverter' => $item->unitconverter];
     }
 
     /**

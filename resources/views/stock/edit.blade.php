@@ -121,6 +121,13 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
+                                    <label for="quantity" class="form-label">{{__('text.quantity_website')}}</label>
+
+                                    <input type="number" class="form-control" id="editquantity_website" name="quantity_website" placeholder="{{__('text.quantity')}}" value="{{$data->quantity_website}}" {{$hasEditQtyPermission ? 'readonly' : ''}}>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
                                     <label for="warehouse" class="form-label">{{__('text.warehouse')}}</label>
                                     <select name="warehouseid" id="editwarehouse" class="form-control warehousedata" disabled>
                                         <option value="">{{__('text.select')}}...</option>
@@ -432,6 +439,23 @@
         $('#isVisibleChk').change(function() {
             $('#is_visible').val(this.checked ? 1 : 0);
         });
+        $("#editquantity_website").change(function() {
+            let websiteValue = parseInt($("#editquantity_website").val());
+            let editValue = parseInt($("#editquantity").val());
+            let unitconverter = parseInt($("#unitconverter").val());
+
+            // Check if the value of editquantity_website is greater than editquantity
+            if (websiteValue > editValue) {
+                // Reset to the value of editquantity
+                $("#editquantity_website").val(editValue);
+                return alert("{!!__('text.websiteqty_bigger_qty')!!}");
+            }
+
+            if (websiteValue % unitconverter != 0) {
+                $("#editquantity_website").val(0);
+                return alert("{!!__('text.websiteqty_must_be_multiple_by_unitconverter')!!}");
+            }
+        })
     })
 </script>
 @endpush
