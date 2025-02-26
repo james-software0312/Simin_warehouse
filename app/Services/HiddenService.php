@@ -227,4 +227,54 @@ class HiddenService
             $item->delete();
         }
     }
+
+
+    public function getcheckouthiddenreport() {
+        return SellOrderDetailModel::leftJoin('sell_order', 'sell_order.reference', '=', 'sell_order_detail.reference')
+        ->leftJoin('stockitem', 'stockitem.id', '=', 'sell_order_detail.stockitemid')
+        ->leftJoin('contact', 'contact.id', '=', 'sell_order_detail.contactid')
+        ->leftJoin('category', 'stockitem.categoryid', '=', 'category.id')
+        ->leftJoin('unit', 'unit.id', '=', 'sell_order_detail.unitid')
+        ->leftJoin('transaction', 'transaction.stockitemid', '=','sell_order_detail.stockitemid')
+        ->leftJoin('users', 'sell_order.creator', '=', 'users.id')
+        ->select('stockitem.name','contact.name as customer',
+            'stockitem.categoryid',
+            'category.name as category',
+            'users.name as user',
+            'sell_order_detail.*',DB::raw('SUM(wh_sell_order_detail.quantity) as totalquantity'),'stockitem.unitconverter1','stockitem.unitconverter','stockitem.size' ,'stockitem.code','unit.name as unit_name')
+        ->where('sell_order.confirmed', true)
+        ->where('sell_order.hidden', false)
+        ->groupBy('sell_order_detail.reference')
+        ->orderBy('sell_order_detail.selldate','DESC');
+    }
+
+    public function getcheckinhiddenreport() {
+        return TransactionModel::leftJoin('stockitem', 'stockitem.id', '=', 'transaction.stockitemid')
+        ->leftJoin('contact', 'contact.id', '=', 'transaction.contactid')
+        ->leftJoin('unit as stock_base_unit', 'stock_base_unit.id', '=', 'stockitem.unitid')
+        ->leftJoin('unit as stock_converted_unit', 'stock_converted_unit.id', '=', 'stockitem.unitconverterto')
+        ->leftJoin('category', 'stockitem.categoryid', '=', 'category.id')
+        ->leftJoin('users', 'users.id', '=', 'transaction.creator')
+        ->select(
+            'transaction.*',
+            DB::raw('(wh_transaction.quantity - wh_transaction.hidden_amount) as available_quantity'),
+            'stockitem.name',
+            'stockitem.code',
+            'stockitem.categoryid',
+            'stockitem.size',
+            'stockitem.unitid as stock_unitid',
+            'stockitem.unitconverter',
+            'stockitem.unitconverter1',
+            'stockitem.unitconverterto',
+            'stock_base_unit.name as stock_base_unit_name',
+            'stock_converted_unit.name as stock_converted_unit_name',
+            'contact.name as supplier',
+            'category.name as category',
+            'users.name as user_name'
+        )
+        ->where('transaction.status', 1)
+        ->whereRaw('wh_transaction.quantity - wh_transaction.hidden_amount != 0')
+        ->orderBy('transaction.transactiondate','DESC')
+        ->orderBy('transaction.created_at','DESC');
+    }
 }

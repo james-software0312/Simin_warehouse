@@ -315,6 +315,7 @@ class TransactionController extends Controller
         $hasDeletePermission = $request->hasDeletePermission;
         $hasViewPermission   = $request->hasViewPermission;
         $hasSeeHiddenPermission   = $request->hasSeeHiddenPermission;
+        // dd($hasSeeHiddenPermission);
         if ($request->ajax()) {
             $filter = [
                 'keyword' => $request->get('keyword'),
@@ -364,8 +365,20 @@ class TransactionController extends Controller
                     $dateformat = date($setting['datetime'], strtotime($data->transactiondate));
                     return $dateformat;
             })
-            ->addColumn('total_quantity', function ($data) {
-                return $data->total_quantity . " " . $data->unit_name;
+            ->addColumn('total_quantity', function ($data) use ($hasSeeHiddenPermission)  {
+                $stockitems = $this->transactionService->getStockItemsByReference($data->reference);
+                $retvalue = 0;
+                foreach($stockitems as $stockitem) {
+                    if ($hasSeeHiddenPermission == true) {
+                        $retvalue +=  $stockitem->quantity;
+                    } else if($hasSeeHiddenPermission == false){
+                        if ($stockitem->quantity - $stockitem->hidden_amount > 0) {
+                            $retvalue +=  ($stockitem->quantity - $stockitem->hidden_amount);
+                        }
+                    }
+                }
+                // return $data->total_quantity . " " . $data->unit_name;
+                return $retvalue . " " . $data->unit_name;
             })
             ->addColumn('total_price', function ($data) {
                 return $data->total_price . __('text.PLN');

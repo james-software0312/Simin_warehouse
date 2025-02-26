@@ -123,7 +123,7 @@
                                 <div class="mb-3">
                                     <label for="quantity" class="form-label">{{__('text.quantity_website')}}</label>
 
-                                    <input type="number" class="form-control" id="editquantity_website" name="quantity_website" placeholder="{{__('text.quantity')}}" value="{{$data->quantity_website}}" {{$hasEditQtyPermission ? 'readonly' : ''}}>
+                                    <input type="number" class="form-control" id="editquantity_website" name="quantity_website" step="{{ $data->unitconverter }}" placeholder="{{__('text.quantity')}}" value="{{$data->quantity_website}}" {{$hasEditQtyPermission ? 'readonly' : ''}}>
                                 </div>
                             </div>
                             <div class="col-md-6">

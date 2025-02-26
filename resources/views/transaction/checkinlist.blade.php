@@ -351,6 +351,10 @@ $(function() {
                 data: 'total_quantity',
                 name: 'total_quantity'
             },
+            // {
+            //     data: 'stockitems',
+            //     name: 'total_quantity'
+            // },
             {
                 data: 'total_price',
                 name: 'total_price'
@@ -431,7 +435,7 @@ $(function() {
         var checkbox = $(this);  // Store the reference to the checkbox
         var isChecked = checkbox.is(':checked');
         if (confirm("{!!__('text.purchase_sure_confirm')!!}")) {
-    
+
             // You can access the row data using closest
             var rowData = $(this).data("reference");
             $.ajax({
@@ -482,8 +486,8 @@ $("#btn_download").on('click', function() {
     var keyword = $('input[name=keyword]').val();
     var startdate = $('input[name=startdate]').val();
     var enddate = $('input[name=enddate]').val();
-    var downloadUrl = `{!! route('transaction.checkinexport') !!}?keyword=` + encodeURIComponent(keyword) + 
-                      `&startdate=` + encodeURIComponent(startdate) + 
+    var downloadUrl = `{!! route('transaction.checkinexport') !!}?keyword=` + encodeURIComponent(keyword) +
+                      `&startdate=` + encodeURIComponent(startdate) +
                       `&enddate=` + encodeURIComponent(enddate);
 
     // Trigger a file download by changing the window location

@@ -183,6 +183,7 @@ class TransactionService
         ->leftJoin('users', 'users.id', '=', 'transaction.creator')
         ->select(
             'transaction.*',
+            DB::raw('wh_transaction.quantity as available_quantity'),
             'stockitem.name',
             'stockitem.code',
             'stockitem.categoryid',

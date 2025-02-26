@@ -12,6 +12,7 @@ use App\Services\UserService;
 use App\Services\SettingsService;
 use App\Services\ContactService;
 use App\Services\SellService;
+use App\Services\HiddenService;
 use App\Models\SHProductCategoryModel;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -33,6 +34,7 @@ class ReportsController extends Controller
     protected $settingsService;
     protected $contactService;
     protected $sellService;
+    protected $hiddenService;
 
 
     // Constructor to inject services and apply middleware
@@ -45,6 +47,7 @@ class ReportsController extends Controller
                                 ContactService $contactService,
                                 SettingsService $settingsService,
                                 SellService $sellService,
+                                HiddenService $hiddenService,
                                 ShelfService $shelfService)
     {
         $this->middleware('checkLogin');
@@ -58,6 +61,7 @@ class ReportsController extends Controller
         $this->contactService       = $contactService;
         $this->settingsService      = $settingsService;
         $this->sellService          = $sellService;
+        $this->hiddenService          = $hiddenService;
     }
 
     // Render the index view for reports
@@ -395,7 +399,13 @@ class ReportsController extends Controller
     public function getcheckinreport(Request $request)
     {
         if ($request->ajax()) {
-            $data = $this->transactionService->getcheckinreport();
+            $hasSeeHiddenPermission = $request->hasSeeHiddenPermission;
+            if($hasSeeHiddenPermission){
+                $data = $this->transactionService->getcheckinreport();
+            } else {
+                $data = $this->hiddenService->getcheckinhiddenreport();
+            }
+            // dd($data);
 
             return DataTables::of($data)
             ->addColumn('code', function($data) {
@@ -437,12 +447,12 @@ class ReportsController extends Controller
                 $qty = 0;
                 $carton_unitid = $data->stock_base_unit_name == 'karton' ? $data->stock_unitid : $data->unitconverterto;
                 if ($data->unitid == $carton_unitid) {
-                    $qty = $data->quantity;
+                    $qty = $data->available_quantity;
                 } else {
                     if ($data->stock_base_unit_name == 'karton' && $data->unitconverter1 != 0) {
-                        $qty = $data->quantity * ($data->unitconverter / $data->unitconverter1);
+                        $qty = $data->available_quantity * ($data->unitconverter / $data->unitconverter1);
                     } else if($data->unitconverter != 0){
-                        $qty = $data->quantity * ($data->unitconverter1 / $data->unitconverter);
+                        $qty = $data->available_quantity * ($data->unitconverter1 / $data->unitconverter);
                     }
                 }
                 return $qty;
@@ -452,12 +462,12 @@ class ReportsController extends Controller
                 $qty = 0;
                 $carton_unitid = $data->stock_base_unit_name == 'para' ? $data->stock_unitid : $data->unitconverterto;
                 if ($data->unitid == $carton_unitid) {
-                    $qty = $data->quantity;
+                    $qty = $data->available_quantity;
                 } else {
                     if ($data->stock_base_unit_name == 'para' && $data->unitconverter1 != 0) {
-                        $qty = $data->quantity * ($data->unitconverter / $data->unitconverter1);
+                        $qty = $data->available_quantity * ($data->unitconverter / $data->unitconverter1);
                     } else if($data->unitconverter != 0){
-                        $qty = $data->quantity * ($data->unitconverter1 / $data->unitconverter);
+                        $qty = $data->available_quantity * ($data->unitconverter1 / $data->unitconverter);
                     }
                 }
                 return $qty;
@@ -509,7 +519,14 @@ class ReportsController extends Controller
     public function getcheckoutreport(Request $request)
     {
         if ($request->ajax()) {
-            $data = $this->sellService->getcheckoutreport();
+            $hasSeeHiddenPermission = $request->hasSeeHiddenPermission;
+            // dd($hasSeeHiddenPermission);
+            if($hasSeeHiddenPermission){
+                $data = $this->sellService->getcheckoutreport();
+            } else {
+                $data = $this->hiddenService->getcheckouthiddenreport();
+            }
+            // dd($data);
             // dd($data->get());
             return DataTables::of($data)
             ->addColumn('code', function($data) {
