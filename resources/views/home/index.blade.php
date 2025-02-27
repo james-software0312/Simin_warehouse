@@ -118,7 +118,7 @@
             </div>
         </div>
 
-        <div class="border-top pt-5">
+        <!-- <div class="border-top pt-5">
             <div class="row">
                 <div class="col-md-4">
                     <p class="text-center"><strong>{{__('text.top_10_items_by_quantity')}}</strong></p>
@@ -134,7 +134,7 @@
 
                 </div>
             </div>
-        </div>
+        </div> -->
     </div>
 
 </div>
@@ -155,28 +155,28 @@
         // Generate random colors for each dataset
         var colors = warehousename.map(() => '#' + Math.floor(Math.random()*16777215).toString(16));
         var warehousegraph = document.getElementById("warehousegraph");
-        var bystatus = new Chart(warehousegraph, {
-            type: 'pie',
+        // var bystatus = new Chart(warehousegraph, {
+        //     type: 'pie',
             
-            data: {
-                labels: warehousename,
-                datasets: [
-                {
+        //     data: {
+        //         labels: warehousename,
+        //         datasets: [
+        //         {
                     
-                    data: warehousevalue,
-                    backgroundColor: colors,
-                    borderWidth: 1
-                }
-                ]
-            },
-            options: {
+        //             data: warehousevalue,
+        //             backgroundColor: colors,
+        //             borderWidth: 1
+        //         }
+        //         ]
+        //     },
+        //     options: {
                 
-                    plugins: {
-                    legend: {
-                        position: 'bottom',
-                    }
-            }   }
-        });
+        //             plugins: {
+        //             legend: {
+        //                 position: 'bottom',
+        //             }
+        //     }   }
+        // });
 
 
         //Graph top product
@@ -190,28 +190,28 @@
         // Generate random colors for each dataset
         var colorsproduct = productname.map(() => '#' + Math.floor(Math.random()*16777215).toString(16));
         var productgraph = document.getElementById("productgraphByQty");
-        var bystatus = new Chart(productgraph, {
-            type: 'pie',
+        // var bystatus = new Chart(productgraph, {
+        //     type: 'pie',
             
-            data: {
-                labels: productname,
-                datasets: [
-                {
+        //     data: {
+        //         labels: productname,
+        //         datasets: [
+        //         {
                     
-                    data: productvalue,
-                    backgroundColor: colorsproduct,
-                    borderWidth: 1
-                }
-                ]
-            },
-            options: {
+        //             data: productvalue,
+        //             backgroundColor: colorsproduct,
+        //             borderWidth: 1
+        //         }
+        //         ]
+        //     },
+        //     options: {
                 
-                    plugins: {
-                    legend: {
-                        position: 'bottom',
-                    }
-            }   }
-        });
+        //             plugins: {
+        //             legend: {
+        //                 position: 'bottom',
+        //             }
+        //     }   }
+        // });
 
         //overview graph
         var dataTotalcheckin = @json($dataTotalCheckin);
@@ -278,28 +278,28 @@
         // Generate random colors for each dataset
         var colorsproductBySale = productnameBySale.map(() => '#' + Math.floor(Math.random()*16777215).toString(16));
         var productgraph = document.getElementById("productgraph");
-        var bySale = new Chart(productgraph, {
-            type: 'pie',
+        // var bySale = new Chart(productgraph, {
+        //     type: 'pie',
             
-            data: {
-                labels: productnameBySale,
-                datasets: [
-                {
+        //     data: {
+        //         labels: productnameBySale,
+        //         datasets: [
+        //         {
                     
-                    data: productvalueBySale,
-                    backgroundColor: colorsproductBySale,
-                    borderWidth: 1
-                }
-                ]
-            },
-            options: {
+        //             data: productvalueBySale,
+        //             backgroundColor: colorsproductBySale,
+        //             borderWidth: 1
+        //         }
+        //         ]
+        //     },
+        //     options: {
                 
-                    plugins: {
-                    legend: {
-                        position: 'bottom',
-                    }
-            }   }
-        });
+        //             plugins: {
+        //             legend: {
+        //                 position: 'bottom',
+        //             }
+        //     }   }
+        // });
 
         flatpickr("#startdate", {
             locale: currentLang, // Set the locale to Polish

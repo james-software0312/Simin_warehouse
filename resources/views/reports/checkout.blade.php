@@ -114,7 +114,7 @@
                         <th>{{__('text.total_Pair')}} : </th>
                         <th id="total_pair_quantity"></th>
                         <th>{{__('text.sub_total')}} :</th>
-                        <th id="total_sub_price"></th>
+                        <th><span id="total_sub_price"></span> {{ __('text.PLN') }}</th>
                         <th></th>
                         <th></th>
 

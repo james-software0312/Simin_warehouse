@@ -174,6 +174,13 @@
                                         <td id="details_total_price"></td>
                                         <td id="details_total_discount"></td>
                                     </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td id="details_total_real_price"></td>
+                                    </tr>
                                 </tfoot>
                             </table>
                         </div>
@@ -233,7 +240,7 @@ $(function() {
         dateFormat: "d/m/Y" // Format to match your backend expectations
     });
 
-    function updateTable(data) {
+    function updateTable(data, discount) {
         var tbody = $('#datalistpopup');
 
         // Clear existing rows
@@ -245,12 +252,13 @@ $(function() {
             var baseUnit = item.unitid == item.stockitem_unitid ? item.base_unit_name : item.converted_unit_name;
             var convertedUnit = item.unitid != item.stockitem_unitid ? item.base_unit_name : item.converted_unit_name;
             var realPrice = item.price + item.discount;
-            totalPrice += realPrice * item.quantity;
-            var row = $('<tr><td>' + item.name + '</td><td>' + item.quantity + "&nbsp;" + baseUnit + '</td><td>' + item.converted_quantity + "&nbsp;" + convertedUnit + '</td><td>' + realPrice + '{{ __("text.PLN") }}</td><td>' + item.discount + '{{ __("text.PLN") }}</td></tr>');
+            totalPrice += item.price * item.converted_quantity;
+            var row = $('<tr><td>' + item.name + '</td><td>' + item.quantity + "&nbsp;" + baseUnit + '</td><td>' + item.converted_quantity + "&nbsp;" + convertedUnit + '</td><td>' + item.price + '{{ __("text.PLN") }}</td><td>' + item.discount + '{{ __("text.PLN") }}</td></tr>');
             // Add other cells as needed
             tbody.append(row);
         });
         $("#details_total_price").text(totalPrice + "{{ __('text.PLN') }}")
+        $("#details_total_real_price").text((totalPrice * 1 + discount * 1) + "{{ __('text.PLN') }}")
     }
 
 
@@ -282,7 +290,7 @@ $(function() {
                 $('.createdatecontent').html(data.created_at[0]);
                 $('.warehousedetail').html(data.data.warehouse);
                 $("#details_total_discount").text(data.sellOrder.discount + " {{__('text.PLN')}}");
-                updateTable(data.data);
+                updateTable(data.data, data.sellOrder.discount);
 
             },
             error: function() {

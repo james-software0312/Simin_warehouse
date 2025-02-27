@@ -15,6 +15,7 @@ use App\Services\SellService;
 use DB;
 use Auth;
 use Carbon\Carbon;
+use DateTime;
 
 class HiddenService
 {
@@ -306,5 +307,30 @@ class HiddenService
             ->orderBy('sell_order_detail.updated_at', 'desc')
             ->get();
 
+    }
+
+    public function getSumPrice($startTime, $endTime)
+    {
+        $dateObject = DateTime::createFromFormat('d/m/Y', $startTime);
+        $start_date = $dateObject->format('Y-m-d');
+
+        $dateObject = DateTime::createFromFormat('d/m/Y', $endTime);
+        $end_date = $dateObject->format('Y-m-d');
+
+
+        return SellOrderDetailModel::leftJoin('sell_order', 'sell_order.reference', '=', 'sell_order_detail.reference')
+        ->leftJoin('stockitem', 'stockitem.id', '=', 'sell_order_detail.stockitemid')
+        ->leftJoin('unit', 'unit.id', '=', 'sell_order_detail.unitid')
+        // ->groupBy('sell_order.reference')
+        ->select(
+            'sell_order.reference',
+            'sell_order.discount',
+            'sell_order_detail.price',
+            'sell_order_detail.quantity',
+            'stockitem.unitconverter',
+        )
+        ->where('sell_order.hidden', false)
+        ->whereBetween('sell_order.selldate', [$start_date, $end_date])
+        ->get();
     }
 }

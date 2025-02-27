@@ -332,7 +332,7 @@ return [
     'converter_val_error' => "Jednym z konwerterów musi być 1",
     'websiteqty_bigger_qty' => 'Ilość na stronie internetowej nie może być większa niż Ilość',
     'websiteqty_must_be_multiple_by_unitconverter' => 'ilość stron internetowych musi być wielokrotnością konwertera jednostek',
-    'total_cart' => 'Total Cart Quantity',
-    'total_Pair' => 'Total Pair Quantity',
+    'total_cart' => ' Suma kartonów',
+    'total_Pair' => 'Suma pa',
     'sub_total' => 'Wartość'
 ];

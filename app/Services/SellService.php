@@ -549,11 +549,6 @@ class SellService
 
     public function getSumPrice($startTime, $endTime)
     {
-        // $timestamp = strtotime(preg_replace('/\\s\\(.*\\)$/', '', $startTime));
-        // $start_date = date('Y-m-d H:i:s', $timestamp);
-
-        // $timestamp = strtotime(preg_replace('/\\s\\(.*\\)$/', '', $endTime));
-        // $end_date = date('Y-m-d H:i:s', $timestamp);
         $dateObject = DateTime::createFromFormat('d/m/Y', $startTime);
         $start_date = $dateObject->format('Y-m-d');
 
@@ -564,32 +559,13 @@ class SellService
         return SellOrderDetailModel::leftJoin('sell_order', 'sell_order.reference', '=', 'sell_order_detail.reference')
         ->leftJoin('stockitem', 'stockitem.id', '=', 'sell_order_detail.stockitemid')
         ->leftJoin('unit', 'unit.id', '=', 'sell_order_detail.unitid')
-        ->groupBy('sell_order.reference')
+        // ->groupBy('sell_order.reference')
         ->select(
+            'sell_order.reference',
             'sell_order.discount',
-            DB::raw('SUM(wh_sell_order_detail.price * wh_sell_order_detail.quantity) as total_amount'),
-            DB::raw('SUM(wh_sell_order_detail.quantity) as total_qty'),
-            DB::raw('SUM(
-                    CASE
-                        WHEN wh_sell_order_detail.unitid = wh_stockitem.unitid and wh_sell_order_detail.unitid=1 THEN
-                            wh_sell_order_detail.quantity * wh_stockitem.unitconverter1 / wh_stockitem.unitconverter
-                                    WHEN wh_sell_order_detail.unitid != wh_stockitem.unitid and wh_sell_order_detail.unitid=1 THEN
-                            wh_sell_order_detail.quantity * wh_stockitem.unitconverter / wh_stockitem.unitconverter1
-                        ELSE
-                            wh_sell_order_detail.quantity
-                    END
-                ) AS carton_qty'),
-            DB::raw('SUM(
-                CASE
-                    WHEN wh_sell_order_detail.unitid = wh_stockitem.unitid and wh_sell_order_detail.unitid=2 THEN
-                        wh_sell_order_detail.quantity * wh_stockitem.unitconverter1 / wh_stockitem.unitconverter
-                                WHEN wh_sell_order_detail.unitid != wh_stockitem.unitid and wh_sell_order_detail.unitid=2 THEN
-                        wh_sell_order_detail.quantity * wh_stockitem.unitconverter / wh_stockitem.unitconverter1
-                    ELSE
-                        wh_sell_order_detail.quantity
-                END
-            ) AS pair_qty'),
-
+            'sell_order_detail.price',
+            'sell_order_detail.quantity',
+            'stockitem.unitconverter',
         )
         ->whereBetween('sell_order.selldate', [$start_date, $end_date])
         ->get();

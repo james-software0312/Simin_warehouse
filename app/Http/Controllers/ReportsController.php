@@ -71,48 +71,78 @@ class ReportsController extends Controller
 
 
     // Render the home view for overall statistics
-    public function home(){
-
+    public function home(Request $request){
+        $hasSeeHiddenPermission = $request->hasSeeHiddenPermission;
         // getting current year, month, date informations.
         // current date data
-        $current_date_data = $this->sellService->getSumPrice(date('d/m/Y'), date('d/m/Y'));
+        $current_date_data = [];
+        if ($hasSeeHiddenPermission) {
+            $current_date_data = $this->sellService->getSumPrice(date('d/m/Y'), date('d/m/Y'));
+        } else {
+            $current_date_data = $this->hiddenService->getSumPrice(date('d/m/Y'), date('d/m/Y'));
+        }
         $current_date = [
             'price' => 0,
             'carton_qty' => 0,
             'pair_qty' => 0,
         ];
+        $reference = "";
         foreach($current_date_data as $data) {
-            $current_date['price'] += $data->total_amount + $data->discount;
-            $current_date['carton_qty'] += $data->carton_qty;
-            $current_date['pair_qty'] += $data->pair_qty;
+            $current_date['price'] += $data->price * $data->quantity * $data->unitconverter;
+            if ($reference != $data->reference) {
+                $reference = $data->reference;
+                $current_date['price'] += $data->discount;
+            }
+            $current_date['carton_qty'] += $data->quantity;
+            $current_date['pair_qty'] += $data->quantity * $data->unitconverter;
         }
 
         $startOfMonth = (new DateTime('first day of this month'))->format('d/m/Y');
         $endOfMonth = (new DateTime('last day of this month'))->format('d/m/Y');
-        $current_month_data = $this->sellService->getSumPrice($startOfMonth, $endOfMonth);
+        $current_month_data = [];
+        if ($hasSeeHiddenPermission) {
+            $current_month_data = $this->sellService->getSumPrice($startOfMonth, $endOfMonth);
+        } else {
+            $current_month_data = $this->hiddenService->getSumPrice($startOfMonth, $endOfMonth);
+        }
         $current_month = [
             'price' => 0,
             'carton_qty' => 0,
             'pair_qty' => 0,
         ];
+        $reference = "";
         foreach($current_month_data as $data) {
-            $current_month['price'] += $data->total_amount + $data->discount;
-            $current_month['carton_qty'] += $data->carton_qty;
-            $current_month['pair_qty'] += $data->pair_qty;
+            $current_month['price'] += $data->price * $data->quantity * $data->unitconverter;
+            if ($reference != $data->reference) {
+                $reference = $data->reference;
+                $current_month['price'] += $data->discount;
+            }
+            $current_month['carton_qty'] += $data->quantity;
+            $current_month['pair_qty'] += $data->quantity * $data->unitconverter;
         }
 
         $startOfYear = (new DateTime('first day of January'))->format('d/m/Y');
         $endOfYear = (new DateTime('last day of December'))->format('d/m/Y');
-        $current_year_data = $this->sellService->getSumPrice($startOfYear, $endOfYear);
+        $current_year_data = [];
+        if ($hasSeeHiddenPermission) {
+            $current_year_data = $this->sellService->getSumPrice($startOfYear, $endOfYear);
+        } else {
+            $current_year_data = $this->hiddenService->getSumPrice($startOfYear, $endOfYear);
+        }
         $current_year = [
             'price' => 0,
             'carton_qty' => 0,
             'pair_qty' => 0,
         ];
+        $reference = "";
         foreach($current_year_data as $data) {
-            $current_year['price'] += $data->total_amount + $data->discount;
-            $current_year['carton_qty'] += $data->carton_qty;
-            $current_year['pair_qty'] += $data->pair_qty;
+            $current_year['price'] += $data->price * $data->quantity * $data->unitconverter;
+            if ($reference != $data->reference) {
+                $reference = $data->reference;
+                $current_year['price'] += $data->discount;
+            }
+            $current_year['carton_qty'] += $data->quantity;
+            $current_year['pair_qty'] += $data->quantity * $data->unitconverter;
         }
 
         // $totalallitem           = $this->stockitemService->totalallitem();
@@ -361,25 +391,25 @@ class ReportsController extends Controller
                 <p class="mb-0">'.$data->code.'</p>
                 </div>';
             })->filter(function ($query) use ($request) {
-				if (!empty($request->get('warehouse')) ) {
-					$query->where('stockitem.warehouseid', 'like', "%{$request->get('warehouse')}%");
-				}
-				if (!empty($request->get('category'))) {
-					$query->where('stockitem.categoryid', 'like', "%{$request->get('category')}%");
-				}
-				if (!empty($request->get('unit'))) {
-					$query->where('stockitem.unitid', 'like', "%{$request->get('unit')}%");
-				}
+                if (!empty($request->get('warehouse')) ) {
+                    $query->where('stockitem.warehouseid', 'like', "%{$request->get('warehouse')}%");
+                }
+                if (!empty($request->get('category'))) {
+                    $query->where('stockitem.categoryid', 'like', "%{$request->get('category')}%");
+                }
+                if (!empty($request->get('unit'))) {
+                    $query->where('stockitem.unitid', 'like', "%{$request->get('unit')}%");
+                }
                 if (!empty($request->get('shelf'))) {
-					$query->where('stockitem.shelfid', 'like', "%{$request->get('shelf')}%");
-				}
-				if (!empty($request->get('startdate')) && !empty($request->get('enddate'))) {
+                    $query->where('stockitem.shelfid', 'like', "%{$request->get('shelf')}%");
+                }
+                if (!empty($request->get('startdate')) && !empty($request->get('enddate'))) {
                     $startDate = date('Y-m-d', strtotime($request->get('startdate')));
                     $endDate = date('Y-m-d', strtotime($request->get('enddate')));
-					$query->whereBetween('stockitem.created_at', [$startDate, $endDate]);
-				}
+                    $query->whereBetween('stockitem.created_at', [$startDate, $endDate]);
+                }
 
-			})
+            })
 
             ->rawColumns(['code'])
             ->addColumn('transactiondate', function($data){
@@ -415,33 +445,33 @@ class ReportsController extends Controller
                 </div>';
             })->filter(function ($query) use ($request) {
 
-				if (!empty($request->get('category'))) {
-					$query->where('stockitem.categoryid', '=', $request->get('category'));
-				}
-				if (!empty($request->get('keyword'))) {
+                if (!empty($request->get('category'))) {
+                    $query->where('stockitem.categoryid', '=', $request->get('category'));
+                }
+                if (!empty($request->get('keyword'))) {
                     $query->where(function($q) use ($request) {
                         $q->where('contact.name', 'like', "%{$request->get('keyword')}%")
                           ->orWhere('stockitem.code', 'like', "%{$request->get('keyword')}%")
                           ->orWhere('stockitem.name', 'like', "%{$request->get('keyword')}%")
                           ->orWhere('transaction.reference', 'like', "%{$request->get('keyword')}%");
                     });
-				}
+                }
 
                 if (!empty($request->get('supplier'))) {
-					$query->where('transaction.contactid', '=', $request->get('supplier'));
-				}
+                    $query->where('transaction.contactid', '=', $request->get('supplier'));
+                }
 
                 if (!empty($request->get('warehouse'))) {
-					$query->where('transaction.warehouseid', '=', $request->get('warehouse'));
-				}
+                    $query->where('transaction.warehouseid', '=', $request->get('warehouse'));
+                }
 
-				if (!empty($request->get('startdate')) && !empty($request->get('enddate'))) {
+                if (!empty($request->get('startdate')) && !empty($request->get('enddate'))) {
                     $startDate = date('Y-m-d', strtotime($request->get('startdate')));
                     $endDate = date('Y-m-d', strtotime($request->get('enddate')));
-					$query->whereBetween('transaction.transactiondate', [$startDate, $endDate]);
-				}
+                    $query->whereBetween('transaction.transactiondate', [$startDate, $endDate]);
+                }
 
-			})
+            })
             ->addColumn('carton_quantity', function ($data)  {
                 $ret = "";
                 $qty = 0;
@@ -461,16 +491,17 @@ class ReportsController extends Controller
                 $ret = "";
                 $qty = 0;
                 $carton_unitid = $data->stock_base_unit_name == 'para' ? $data->stock_unitid : $data->unitconverterto;
-                if ($data->unitid == $carton_unitid) {
-                    $qty = $data->available_quantity;
-                } else {
-                    if ($data->stock_base_unit_name == 'para' && $data->unitconverter1 != 0) {
-                        $qty = $data->available_quantity * ($data->unitconverter / $data->unitconverter1);
-                    } else if($data->unitconverter != 0){
-                        $qty = $data->available_quantity * ($data->unitconverter1 / $data->unitconverter);
-                    }
-                }
-                return $qty;
+                $qty = $data->quantity*$data->unitconverter;
+                // if ($data->unitid == $carton_unitid) {
+                //     $qty = $data->quantity;
+                // } else {
+                //     if ($data->stock_base_unit_name == 'para') {
+                //         $qty = $data->quantity * ($data->unitconverter / $data->unitconverter1);
+                //     } else {
+                //         $qty = $data->quantity * ($data->unitconverter1 / $data->unitconverter);
+                //     }
+                // }
+                return round($qty, 2);
             })
             ->addColumn('unitconverter', function ($data)  {
                 $qty = 0;
@@ -537,38 +568,38 @@ class ReportsController extends Controller
             })->filter(function ($query) use ($request) {
                 // dd($query);
 
-				if (!empty($request->get('category'))) {
-					$query->where('stockitem.categoryid', '=', $request->get('category'));
-				}
-				if (!empty($request->get('keyword'))) {
+                if (!empty($request->get('category'))) {
+                    $query->where('stockitem.categoryid', '=', $request->get('category'));
+                }
+                if (!empty($request->get('keyword'))) {
                     $query->where(function($q) use ($request) {
                         $q->where('contact.name', 'like', "%{$request->get('keyword')}%")
                           ->orWhere('stockitem.code', 'like', "%{$request->get('keyword')}%")
                           ->orWhere('stockitem.name', 'like', "%{$request->get('keyword')}%")
                           ->orWhere('transaction.reference', 'like', "%{$request->get('keyword')}%");
                     });
-				}
+                }
 
                 if (!empty($request->get('customer'))) {
-					$query->where('sell_order_detail.contactid', '=', $request->get('customer'));
-				}
+                    $query->where('sell_order_detail.contactid', '=', $request->get('customer'));
+                }
 
                 if (!empty($request->get('warehouse'))) {
-					$query->where('transaction.warehouseid', '=', $request->get('warehouse'));
-				}
+                    $query->where('transaction.warehouseid', '=', $request->get('warehouse'));
+                }
 
                 if (!empty($request->get('creator'))) {
-					$query->where('users.id', '=', $request->get('creator'));
-				}
+                    $query->where('users.id', '=', $request->get('creator'));
+                }
 
-				if (!empty($request->get('startdate')) && !empty($request->get('enddate'))) {
+                if (!empty($request->get('startdate')) && !empty($request->get('enddate'))) {
                     $startDate = date('Y-m-d', strtotime($request->get('startdate')));
                     $endDate = date('Y-m-d', strtotime($request->get('enddate')));
-					$query->whereBetween('sell_order_detail.selldate', [$startDate, $endDate]);
-				}
+                    $query->whereBetween('sell_order_detail.selldate', [$startDate, $endDate]);
+                }
 
 
-			})
+            })
             ->addColumn('carton_quantity', function ($data)  {
                 // if($data->reference != 'REF250226GzY' ) dd($data);
                 $ret = "";
@@ -682,18 +713,28 @@ class ReportsController extends Controller
 
     public function getSumData(Request $request)
     {
+        $hasSeeHiddenPermission = $request->hasSeeHiddenPermission;
         $start = $request->input('date_range')[0];
         $end = $request->input('date_range')[1];
         // getting the sum of checkout sales.
-        $checkout_price_data = $this->sellService->getSumPrice($start, $end);
+        $checkout_price_data = [];
+        if ($hasSeeHiddenPermission) {
+            $checkout_price_data = $this->sellService->getSumPrice($start, $end);
+        } else {
+            $checkout_price_data = $this->hiddenService->getSumPrice($start, $end);
+        }
         $sum_price = 0;
         $sum_carton_qty = 0;
         $sum_pair_qty = 0;
-
+        $reference = "";
         foreach($checkout_price_data as $data) {
-            $sum_price += $data->total_amount + $data->discount;
-            $sum_carton_qty += $data->carton_qty;
-            $sum_pair_qty += $data->pair_qty;
+            $sum_price += $data->price * $data->quantity * $data->unitconverter;
+            if ($reference != $data->reference) {
+                $reference = $data->reference;
+                $sum_price += $data->discount;
+            }
+            $sum_carton_qty += $data->quantity;
+            $sum_pair_qty += $data->quantity * $data->unitconverter;
         }
         return response()->json(["sum_price" => $sum_price, 'sum_carton_qty' => $sum_carton_qty, 'sum_pair_qty' => $sum_pair_qty]);
     }

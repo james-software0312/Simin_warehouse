@@ -11,7 +11,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
 class MovementService
-{   
+{
 
     /**
      * Get all transactions.
@@ -84,7 +84,7 @@ class MovementService
         return $data1;
     }
 
-    public function updateOrder($data, $itemids, $quantity, $unit, $reference) 
+    public function updateOrder($data, $itemids, $quantity, $unit, $reference)
     {
         // Use the reference to get the existing records
         $existingRecords = MovementModel::where('reference', $reference)->get();
@@ -153,15 +153,15 @@ class MovementService
                 ->leftJoin('warehouse as source_warehouse', 'source_warehouse.id', '=', 'movement.source_warehouse_id')
                 ->leftJoin('warehouse as target_warehouse', 'target_warehouse.id', '=', 'movement.target_warehouse_id')
                 ->select(
-                    'stockitem.id as stockitemid', 
-                    'stockitem.name', 
-                    'stockitem.code', 
-                    'stockitem.price as stock_price', 
-                    'stockitem.unitconverter', 
-                    'stockitem.unitconverter1', 
-                    'stockitem.unitconverterto', 
-                    'stockitem.unitid as stockunit', 
-                    'movement.*', 
+                    'stockitem.id as stockitemid',
+                    'stockitem.name',
+                    'stockitem.code',
+                    'stockitem.price as stock_price',
+                    'stockitem.unitconverter',
+                    'stockitem.unitconverter1',
+                    'stockitem.unitconverterto',
+                    'stockitem.unitid as stockunit',
+                    'movement.*',
                     'unit.name as movement_unitname',
                     'source_warehouse.name as source_warehouse_name',
                     'target_warehouse.name as target_warehouse_name'
@@ -169,7 +169,7 @@ class MovementService
                 ->where('movement.reference', $reference)
                 ->get();
     }
-    
+
     /**
      * Update a stock item.
      *
@@ -200,14 +200,15 @@ class MovementService
                 $data['quantity'] = 0;
                 $data['single_quantity'] = 0;
                 $targetStockItem->fill($data);
+                $targetStockItem->quantity_website = 0;
                 $targetStockItem->save();
                 $targetStockItem = StockItemModel::where('warehouseid', $item->target_warehouse_id)->where('code', $code)->first();
             }
-            
+
             if ($sourceStockItem->unitid != $newUnitid) {
                 $newQuantity = $newQuantity * $sourceStockItem->unitconverter / $sourceStockItem->unitconverter1;
             }
-            
+
             if($sourceStockItem->unitconverter > $sourceStockItem->unitconverter1 && $targetStockItem->unitid != $newUnitid){
                 $newSignleQuantity = $newSignleQuantity * $sourceStockItem->unitconverter / $sourceStockItem->unitconverter1;
             }else if($sourceStockItem->unitconverter < $sourceStockItem->unitconverter1 && $targetStockItem->unitid == $newUnitid){
@@ -216,20 +217,20 @@ class MovementService
             $updatedQuantity = $targetStockItem->quantity + $newQuantity * $status;
             $updatedSQuantity = $targetStockItem->single_quantity + $newSignleQuantity * $status;
 
-            if($status == 1)                
+            if($status == 1)
                 StockItemModel::where('code', $code)->where('warehouseid', $item->target_warehouse_id)->update([
-                    'quantity' => $targetStockItem->quantity + $newQuantity * $status, 
-                    'single_quantity' => $targetStockItem->single_quantity + $newSignleQuantity * $status, 
-                    'purchase_price'=>$sourceStockItem->purchase_price, 
+                    'quantity' => $targetStockItem->quantity + $newQuantity * $status,
+                    'single_quantity' => $targetStockItem->single_quantity + $newSignleQuantity * $status,
+                    'purchase_price'=>$sourceStockItem->purchase_price,
                     'contactid'=>$sourceStockItem->contactid
                 ]);
             else
             StockItemModel::where('code', $code)->where('warehouseid', $item->target_warehouse_id)->update([
-                'quantity' => $targetStockItem->quantity + $newQuantity * $status, 
+                'quantity' => $targetStockItem->quantity + $newQuantity * $status,
                 'single_quantity' => $targetStockItem->single_quantity + $newSignleQuantity * $status
             ]);
             StockItemModel::where('code', $code)->where('warehouseid', $item->source_warehouse_id)->update([
-                'quantity' => $sourceStockItem->quantity - $newQuantity * $status, 
+                'quantity' => $sourceStockItem->quantity - $newQuantity * $status,
                 'single_quantity' => $sourceStockItem->single_quantity - $newSignleQuantity * $status
             ]);
         }
@@ -253,9 +254,9 @@ class MovementService
      * @return bool
      */
     public function CheckCode($code){
-       
+
         return MovementModel::where('reference', $code)->exists();
-       
+
     }
 
 
@@ -287,9 +288,9 @@ class MovementService
         $lastNumber = 0;
         if ($lastReference) {
             $lastNumber = (int) substr($lastReference, -3);
-        }       
-            
+        }
+
         return $lastNumber;
-    
+
     }
 }
