@@ -9,6 +9,8 @@ use App\Models\MovementOrderModel;
 use DB;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
+use App\Models\SHProductModel;
 
 class MovementService
 {
@@ -203,20 +205,37 @@ class MovementService
                 $targetStockItem->quantity_website = 0;
                 $targetStockItem->save();
                 $targetStockItem = StockItemModel::where('warehouseid', $item->target_warehouse_id)->where('code', $code)->first();
+                $insert_sh_product_data = [
+                    'title' => $targetStockItem->name,
+                    'description' => $targetStockItem->description,
+                    'category_id' => $targetStockItem->categoryid,
+                    'price' => $targetStockItem->price,
+                    'sale_price' => $targetStockItem->price,
+                    'slug' => Str::slug($targetStockItem->name),
+                    'color' => $targetStockItem->color,
+                    'size' => $targetStockItem->size,
+                    'status' => ($targetStockItem->is_visible == 1) ? 'publish' : 'draft',
+                    'image' => $targetStockItem->photo
+                ];
+                $sh_product = SHProductModel::create($insert_sh_product_data);
+                $targetStockItem->product_id = $sh_product->id;
+                $targetStockItem->save();
+                $sourceStockItem->quantity_website = 0;
+                $sourceStockItem->save();
             }
 
-            if ($sourceStockItem->unitid != $newUnitid) {
-                $newQuantity = $newQuantity * $sourceStockItem->unitconverter / $sourceStockItem->unitconverter1;
-            }
+            // if ($sourceStockItem->unitid != $newUnitid) {
+            //     $newQuantity = $newQuantity * $sourceStockItem->unitconverter / $sourceStockItem->unitconverter1;
+            // }
 
-            if($sourceStockItem->unitconverter > $sourceStockItem->unitconverter1 && $targetStockItem->unitid != $newUnitid){
-                $newSignleQuantity = $newSignleQuantity * $sourceStockItem->unitconverter / $sourceStockItem->unitconverter1;
-            }else if($sourceStockItem->unitconverter < $sourceStockItem->unitconverter1 && $targetStockItem->unitid == $newUnitid){
-                $newSignleQuantity = $newSignleQuantity * $sourceStockItem->unitconverter1 / $sourceStockItem->unitconverter;
-            }
-            $updatedQuantity = $targetStockItem->quantity + $newQuantity * $status;
-            $updatedSQuantity = $targetStockItem->single_quantity + $newSignleQuantity * $status;
-
+            // if($sourceStockItem->unitconverter > $sourceStockItem->unitconverter1 && $targetStockItem->unitid != $newUnitid){
+            //     $newSignleQuantity = $newSignleQuantity * $sourceStockItem->unitconverter / $sourceStockItem->unitconverter1;
+            // }else if($sourceStockItem->unitconverter < $sourceStockItem->unitconverter1 && $targetStockItem->unitid == $newUnitid){
+            //     $newSignleQuantity = $newSignleQuantity * $sourceStockItem->unitconverter1 / $sourceStockItem->unitconverter;
+            // }
+            // $updatedQuantity = $targetStockItem->quantity + $newQuantity * $status;
+            // $updatedSQuantity = $targetStockItem->single_quantity + $newSignleQuantity * $status;
+            $newSignleQuantity = $newQuantity*$sourceStockItem->unitconverter;
             if($status == 1)
                 StockItemModel::where('code', $code)->where('warehouseid', $item->target_warehouse_id)->update([
                     'quantity' => $targetStockItem->quantity + $newQuantity * $status,
