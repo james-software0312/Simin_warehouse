@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 use DataTables;
 use Milon\Barcode\DNS2D;
 use Milon\Barcode\DNS1D;
+use App\Services\VatService;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 use App\Exports\SellExport;
@@ -36,6 +37,7 @@ class TransactionController extends Controller
     protected $shelfService;
     protected $transactionService;
     protected $sellService;
+    protected $vatService;
     protected $settingsService;
     protected $hiddenService;
 
@@ -61,6 +63,7 @@ class TransactionController extends Controller
                                 TransactionService $transactionService,
                                 SellService $sellService,
                                 ShelfService $shelfService,
+                                VatService $vatService,
                                 SettingsService $settingsService,
                                 HiddenService $hiddenService,
                                 )
@@ -73,6 +76,7 @@ class TransactionController extends Controller
         $this->shelfService         = $shelfService;
         $this->transactionService   = $transactionService;
         $this->sellService          = $sellService;
+        $this->vatService           = $vatService;
         $this->settingsService      = $settingsService;
         $this->hiddenService        = $hiddenService;
     }
@@ -165,6 +169,7 @@ class TransactionController extends Controller
         $contact    = $this->contactService->getcustomer();
         $stock      = $this->stockitemService->getAll();
         $units      = $this->unitService->getAll();
+        $vats        = $this->vatService->getAll();
         // Generate a reference for the transaction
         $ref        = $this->generatereference();
         $show_ref        = $this->sellService->getNewShowReference('bank_transfer', date('Y-m-d'));
@@ -176,6 +181,7 @@ class TransactionController extends Controller
             'warehouses' => $warehouses,
             'units' => $units,
             'ref' => $ref,
+            'vats' => $vats,
             'show_ref' => $show_ref
         ]);
     }
@@ -720,7 +726,7 @@ class TransactionController extends Controller
         $warehouseid     = $request->input('warehouse');
         $quantity   = $request->input('quantity');
         $unitconverter = $request->input('unitconverter');
-
+        $vat = $request->input('vat');
         // $id = StockItemModel::where('id', $request)
         // dd($quantity);
         $data = $request->only(['transactiondate', 'contactid','reference','description', 'discount_type', 'total_discount', 'payment_type', 'show_reference']);
@@ -730,7 +736,7 @@ class TransactionController extends Controller
         $pre_order = $request->boolean('pre_order');
         DB::beginTransaction();
         try {
-            $transaction = $this->sellService->createcheckout($data, $warehouseid, $withInvoice, $confirmed, $quantity, $unit, $price, $discount, $itemid, $pre_order, $unitconverter);
+            $transaction = $this->sellService->createcheckout($data, $warehouseid, $withInvoice, $confirmed, $quantity, $unit, $price, $discount, $itemid, $pre_order, $unitconverter, $vat);
             $transaction = $this->sellService->getStockItemsByReference($data['reference']);
             // $transaction['quantity'] /= $transaction['unitconverter'];
             // foreach($transaction as $tran){
@@ -1246,7 +1252,8 @@ class TransactionController extends Controller
                     "creator" => $item->creator,
                     "creator_email" => $item->creator_email,
                     "description" => $item->description,
-                    "stock_items" => []
+                    "stock_items" => [],
+                    'real_vat' => $item->realVat,
                 ];
             }
             $stock_item_data = [
@@ -1267,7 +1274,7 @@ class TransactionController extends Controller
                                 $this->settingsService->formatQuantity($item->quantity * $item->unitconverter / $item->unitconverter1),
                 "sale_price" => $item->price,
                 "discount" => $item->discount,
-                "stock_qty" => $item->stock_qty
+                "stock_qty" => $item->stock_qty,
             ];
             $excel_data[$item->reference]["stock_items"][] = $stock_item_data;
         }

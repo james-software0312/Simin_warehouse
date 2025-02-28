@@ -22,8 +22,10 @@ class SellService
         return SellOrderModel::all();
     }
 
-    public function createcheckout($data, $warehouseid, $withInvoice, $confirmed, $quantity, $unit, $price, $discount, $itemids, $pre_order, $unitconverter)
+    public function createcheckout($data, $warehouseid, $withInvoice, $confirmed, $quantity, $unit, $price, $discount, $itemids, $pre_order, $unitconverter, $vat)
     {
+
+        // dd($vat);
         $count = count($itemids);
         try {
             for ($i = 0; $i < $count; $i++) {
@@ -52,6 +54,7 @@ class SellService
                 'discount_type' => $data['discount_type'],
                 'confirmed' => $confirmed,
                 'pre_order' => $pre_order,
+                'vat' => $vat,
                 'withinvoice' => $withInvoice,
                 'payment_type' => $data['payment_type'],
                 'description' => $data['description'],
@@ -262,6 +265,7 @@ class SellService
         return SellOrderDetailModel::leftJoin('stockitem', 'stockitem.id', '=', 'sell_order_detail.stockitemid')
         ->leftJoin('contact', 'contact.id', '=', 'sell_order_detail.contactid')
         ->leftJoin('unit', 'unit.id', '=', 'sell_order_detail.unitid')
+        ->leftJoin('sell_order', 'sell_order_detail.reference', '=', 'sell_order.reference')
         ->leftJoin('unit as stock_base_unit', 'stock_base_unit.id', '=', 'stockitem.unitid')
         ->leftJoin('unit as stock_converted_unit', 'stock_converted_unit.id', '=', 'stockitem.unitconverterto')
         ->select(
@@ -273,6 +277,7 @@ class SellService
             'contact.email as supplieremail',
             'contact.company as suppliercompany',
             'stock_base_unit.name as base_unit_name',
+            'sell_order.show_reference',
             'stock_converted_unit.name as converted_unit_name',
             DB::raw('CASE
                 WHEN wh_sell_order_detail.unitid = wh_stockitem.unitid THEN
@@ -312,6 +317,7 @@ class SellService
                     'stockitem.id as stockitemid',
                     'stockitem.name',
                     'stockitem.code',
+                    'sell_order.vat as realVat',
                     'stockitem.size',
                     'stockitem.itemsubtype',
                     'stockitem.vat',

@@ -11,12 +11,12 @@ class SellOrderModel extends Model
 {
     use HasFactory;
     use LogsActivity;
-    
-    protected static $logAttributes = [ 'warehouseid', 'contactid', 'reference','selldate','description', 'discount', 'discount_type', 'confirmed', 'withinvoice', 'hidden', 'signed', 'creator', 'payment_type', 'show_reference', 'pre_order'];
+
+    protected static $logAttributes = [ 'warehouseid', 'contactid', 'reference','selldate','description', 'discount', 'discount_type', 'confirmed', 'withinvoice', 'hidden', 'signed', 'creator', 'payment_type', 'show_reference', 'pre_order', 'vat'];
     protected $table = 'sell_order';
 
     protected $fillable = [
-        'warehouseid', 'contactid','reference','selldate','description', 'discount', 'discount_type', 'confirmed', 'withinvoice', 'hidden', 'signed', 'creator', 'payment_type', 'show_reference', 'pre_order'
+        'warehouseid', 'contactid','reference','selldate','description', 'discount', 'discount_type', 'confirmed', 'withinvoice', 'hidden', 'signed', 'creator', 'payment_type', 'show_reference', 'pre_order', 'vat'
     ];
 
     public function getActivitylogOptions(): LogOptions

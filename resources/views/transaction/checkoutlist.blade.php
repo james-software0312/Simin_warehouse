@@ -140,8 +140,9 @@
                             <p class="mb-0 referencecontent">reference</p>
                         </div>
                         <div class="col-md-3 mb-3">
-                            <small class="mb-0 text-neutral-80"><strong>{{ __('text.date') }}:</strong></small>
-                            <p class="mb-0 datecontent">date</p>
+                            <div> </div>
+                            {{-- <small class="mb-0 text-neutral-80"><strong>{{ __('text.date') }}:</strong></small>
+                            <p class="mb-0 datecontent">date</p> --}}
                         </div>
                         <div class="col-md-4 mb-3">
                             <small class="mb-0 text-neutral-80"><strong>{{ __('text.customer') }}:</strong></small>
@@ -156,10 +157,11 @@
                             <table border="0" width="100%" class="table ">
                                 <thead>
                                     <tr>
-                                        <th width="40%"><small class="text-neutral-80">{{ __('text.item_name') }}</small></th>
-                                        <th width="20%"><small class="text-neutral-80">{{ __('text.quantity_karton') }}</small></th>
+                                        <th width="25%"><small class="text-neutral-80">{{ __('text.item_name') }}</small></th>
+                                        <th width="15%"><small class="text-neutral-80">{{ __('text.quantity_karton') }}</small></th>
                                         <th width="20%"><small class="text-neutral-80">{{ __('text.quantity_para') }}</small></th>
-                                        <th width="10%"><small class="text-neutral-80">{{ __('text.price') }}</small></th>
+                                        <th width="15%"><small class="text-neutral-80">{{ __('text.price') }}</small></th>
+                                        <th width="15%"><small class="text-neutral-80">{{ __('text.sub_total') }}</small></th>
                                         <th width="10%"><small class="text-neutral-80">{{ __('text.discount') }}</small></th>
                                     </tr>
                                 </thead>
@@ -170,16 +172,16 @@
                                     <tr>
                                         <td></td>
                                         <td></td>
-                                        <td></td>
+                                        <td>{{ __('text.total') }}</td>
                                         <td id="details_total_price"></td>
                                         <td id="details_total_discount"></td>
                                     </tr>
                                     <tr>
                                         <td></td>
                                         <td></td>
-                                        <td></td>
-                                        <td></td>
+                                        <td>{{ __('text.total_woth_discount') }}</td>
                                         <td id="details_total_real_price"></td>
+                                        <td></td>
                                     </tr>
                                 </tfoot>
                             </table>
@@ -253,7 +255,7 @@ $(function() {
             var convertedUnit = item.unitid != item.stockitem_unitid ? item.base_unit_name : item.converted_unit_name;
             var realPrice = item.price + item.discount;
             totalPrice += item.price * item.converted_quantity;
-            var row = $('<tr><td>' + item.name + '</td><td>' + item.quantity + "&nbsp;" + baseUnit + '</td><td>' + item.converted_quantity + "&nbsp;" + convertedUnit + '</td><td>' + item.price + '{{ __("text.PLN") }}</td><td>' + item.discount + '{{ __("text.PLN") }}</td></tr>');
+            var row = $('<tr><td>' + item.name + '</td><td>' + item.quantity + "&nbsp;" + baseUnit + '</td><td>' + item.converted_quantity + "&nbsp;" + convertedUnit + '</td><td>' + item.price + '{{ __("text.PLN") }}</td><td>' +item.price*item.converted_quantity+ '{{ __("text.PLN") }}</td><td>' + item.discount + '{{ __("text.PLN") }}</td></tr>');
             // Add other cells as needed
             tbody.append(row);
         });
@@ -282,7 +284,7 @@ $(function() {
 
                 $('.qrcodedetail').attr('src', data.dataURL);
 
-                $('.referencecontent').html(data.data[0].reference);
+                $('.referencecontent').html(data.data[0].show_reference);
                 $('.datecontent').html(data.data[0].selldate);
                 $('.suppliercontent').html(data.data[0].supplier);
                 $('.companycontent').html(data.data[0].suppliercompany);

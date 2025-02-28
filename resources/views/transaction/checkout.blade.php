@@ -169,7 +169,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <label for="discount_type" class="form-label">{{ __('text.discount_type') }} </label>
                     <div class="d-flex mt-2">
                         <div class="form-check" style="margin-right: 20px">
@@ -184,6 +184,16 @@
                                 {{__('text.discount_type2')}}
                             </label>
                         </div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-check row">
+                        <label for="vat" class="form-label">{{ __('text.vat') }}</label>
+                        <select class="form-control" name="vat" id = "vat">
+                            @foreach($vats as $vat)
+                                <option value="{{$vat->name}}" @if($vat->name == 23) selected @endif>{{$vat->name}}%</option>
+                            @endforeach
+                            </select>
                     </div>
                 </div>
                 <div class="col-md-6">
