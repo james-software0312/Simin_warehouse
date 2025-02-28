@@ -153,7 +153,7 @@
             $("#total_pair_quantity").text(totalPairQuantity);
             $("#total_sub_price").text(totalPrice);
         },
-            dom: '<"d-flex align-items-md-center flex-column flex-md-row justify-content-md-between pb-3"Bf>rt<"pt-3 d-flex align-items-md-center flex-column flex-md-row justify-content-md-between"p><"clear">',
+            dom: '<"d-flex align-items-md-center flex-column flex-md-row justify-content-md-between pb-3"Bf>rt<"pt-3 d-flex align-items-md-center flex-column flex-md-row justify-content-md-between"pl><"clear">',
             language: {
                 url: langUrl // Polish language JSON file
             },
