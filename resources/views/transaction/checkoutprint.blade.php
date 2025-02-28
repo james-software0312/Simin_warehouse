@@ -89,7 +89,7 @@
                             <th>{{__('excel.carton')}}</th>
                             <th>{{__('excel.packing')}}</th>
                             <th>{{__('text.qty')}}</th>
-                            <th>{{__('text.unit')}}</th>
+                            <th>{{__('text.unit_short')}}</th>
                             <th>{{__('excel.sale_price_without_vat')}}</th>
                             <th>{{__('excel.total_price_without_vat')}}</th>
                             <th>{{__('text.discount')}}</th>
@@ -106,12 +106,14 @@
                             $total_sale_discount = $order['total_discount'];
                         ?>
                         @foreach($order['stock_items'] as $index => $item)
+
                             <?php
                                 $total_carton += $item['base_unit_name'] == 'karton' ? $item['item_base_quantity'] : $item['item_converted_quantity'];
                                 $total_pair += $item['base_unit_name'] == 'para' ? $item['item_base_quantity'] : $item['item_converted_quantity'];
                                 $item_price = $item['sale_price'] + ($order['discount_type'] == 'peritem' ?$item['discount'] : 0);
-                                $total_sale_price_without_vat += $item_price * $item['item_converted_quantity'];
-                                $total_sale_price_with_vat += $item_price * $item['item_converted_quantity'] * (1 + $item['item_vat'] / 100);
+                                $item_price_with_total = $item['sale_price'];
+                                $total_sale_price_without_vat += $item_price_with_total * $item['item_converted_quantity'];
+                                $total_sale_price_with_vat += $item_price_with_total * $item['item_converted_quantity'] * (1 + $item['item_vat'] / 100);
                             ?>
                             <tr style="font-size: 16px">
                                 <td>{{$index + 1}}</td>
@@ -123,7 +125,7 @@
                                 <td class="text-center">{{$item['base_unit_name'] == 'karton' ? $item['item_base_quantity'] : $item['item_converted_quantity']}}</td>
                                 <td class="text-center">{{$item['item_unitconverter']}}</td>
                                 <td class="text-center">{{$item['base_unit_name'] != 'karton' ? $item['item_base_quantity'] : $item['item_converted_quantity']}}</td>
-                                <td >Para</td>
+                                <td >Par</td>
                                 {{-- <td >{{$item['base_unit_name']}}</td> --}}
                                 <td class="text-center">{{ $item_price }}</td>
                                 <td class="text-center">{{ ($item_price * $item['item_converted_quantity']  )}}</td>
@@ -132,7 +134,9 @@
                         @endforeach
                         <?php
                             $total_sale_price_without_vat += $total_sale_discount;
-                            $total_sale_price_with_vat += $total_sale_discount;
+                            // $total_sale_price_with_vat += $total_sale_discount;
+                            $vat_test = $total_sale_price_without_vat*0.23;
+                            $total_sale_price_with_vat = $vat_test + $total_sale_price_without_vat;
                         ?>
                     </tbody>
                     <tfoot>
@@ -145,7 +149,7 @@
                             <th class="text-right">{{$total_carton}}</th>
                             <th>Opk</th>
                             <th class="text-right">{{$total_pair}}</th>
-                            <th>Para</th>
+                            <th>par</th>
                         </tr>
                     </tfoot>
                 </table>
@@ -175,7 +179,8 @@
                         @endif
                         <tr>
                             <th>{{__('excel.total_vat')}}</th>
-                            <td class="text-right noline">{{ format_price($total_sale_price_with_vat - $total_sale_price_without_vat) }} {{ __('text.PLN') }}</td>
+                            {{-- <td class="text-right noline">{{ format_price($total_sale_price_with_vat - $total_sale_price_without_vat) }} {{ __('text.PLN') }}</td> --}}
+                            <td class="text-right noline">{{ format_price($vat_test) }} {{ __('text.PLN') }}</td>
                         </tr>
                         <tr>
                             <th>{{__('excel.total_price_with_vat')}}</th>

@@ -132,11 +132,11 @@
                 <div class="p-4">
 
                     <div class="row border-bottom mb-3 pb-4">
-                        <div class="col-md-2 mb-3">
+                        {{-- <div class="col-md-2 mb-3">
                             <img src="" alt="{{ __('text.barcode') }}" width="100" class="qrcodedetail" />
-                        </div>
+                        </div> --}}
                         <div class="col-md-3 mb-3">
-                            <small class="mb-0 text-neutral-80"><strong>{{ __('text.reference') }}:</strong></small>
+                            <small class="mb-0 text-neutral-80"><strong>{{ __('text.transaction_number') }}:</strong></small>
                             <p class="mb-0 referencecontent">reference</p>
                         </div>
                         <div class="col-md-3 mb-3">
@@ -156,11 +156,11 @@
                             <table border="0" width="100%" class="table ">
                                 <thead>
                                     <tr>
-                                        <th width="80%"><small class="text-neutral-80">{{ __('text.item_name') }}</small></th>
-                                        <th width="6%"><small class="text-neutral-80">{{ __('text.quantity') }}</small></th>
-                                        <th width="6%"><small class="text-neutral-80">{{ __('text.quantity_converted') }}</small></th>
-                                        <th width="6%"><small class="text-neutral-80">{{ __('text.price') }}</small></th>
-                                        <th width="6%"><small class="text-neutral-80">{{ __('text.discount') }}</small></th>
+                                        <th width="40%"><small class="text-neutral-80">{{ __('text.item_name') }}</small></th>
+                                        <th width="20%"><small class="text-neutral-80">{{ __('text.quantity_karton') }}</small></th>
+                                        <th width="20%"><small class="text-neutral-80">{{ __('text.quantity_para') }}</small></th>
+                                        <th width="10%"><small class="text-neutral-80">{{ __('text.price') }}</small></th>
+                                        <th width="10%"><small class="text-neutral-80">{{ __('text.discount') }}</small></th>
                                     </tr>
                                 </thead>
                                 <tbody id="datalistpopup">
@@ -260,6 +260,7 @@ $(function() {
         $("#details_total_price").text(totalPrice + "{{ __('text.PLN') }}")
         $("#details_total_real_price").text((totalPrice * 1 + discount * 1) + "{{ __('text.PLN') }}")
     }
+
 
 
     $('#detailModel').on('show.bs.modal', function(event) {
