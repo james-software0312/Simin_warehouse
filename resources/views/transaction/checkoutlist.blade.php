@@ -255,7 +255,7 @@ $(function() {
             var convertedUnit = item.unitid != item.stockitem_unitid ? item.base_unit_name : item.converted_unit_name;
             var realPrice = item.price + item.discount;
             totalPrice += item.price * item.converted_quantity;
-            var row = $('<tr><td>' + item.name + '</td><td>' + item.quantity + "&nbsp;" + baseUnit + '</td><td>' + item.converted_quantity + "&nbsp;" + convertedUnit + '</td><td>' + item.price + '{{ __("text.PLN") }}</td><td>' +item.price*item.converted_quantity+ '{{ __("text.PLN") }}</td><td>' + item.discount + '{{ __("text.PLN") }}</td></tr>');
+            var row = $('<tr><td>' + item.name + '</td><td>' + item.quantity + "&nbsp;" + baseUnit + '</td><td>' + item.converted_quantity + "&nbsp;" + convertedUnit + '</td><td>' + realPrice + '{{ __("text.PLN") }}</td><td>' +item.price*item.converted_quantity+ '{{ __("text.PLN") }}</td><td>' + item.discount + '{{ __("text.PLN") }}</td></tr>');
             // Add other cells as needed
             tbody.append(row);
         });

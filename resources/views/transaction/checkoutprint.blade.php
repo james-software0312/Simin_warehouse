@@ -136,7 +136,6 @@
                             $total_sale_price_without_vat += $total_sale_discount;
                             // $total_sale_price_with_vat += $total_sale_discount;
                             $vat_test = $total_sale_price_without_vat*$order['real_vat']/100;
-                            $vat_test = $total_sale_price_without_vat*$order['real_vat']/100;
                             $total_sale_price_with_vat = $vat_test + $total_sale_price_without_vat;
                         ?>
                     </tbody>

@@ -351,7 +351,11 @@ class StockItemController extends Controller
     {
         $validatedData = $request->validate([
             'photo' => 'image|mimes:jpeg,png,jpg,gif,webp|max:2048',
-            'categoryid' => 'required'
+            'categoryid' => 'required',
+            'name' => 'required',
+            'size' => 'required',
+            'color' => 'required',
+            'price' => 'required',
         ]);
         $image = $request->file('photo');
 

@@ -641,6 +641,7 @@ class TransactionController extends Controller
             $status = $request->input('status');
             $sellOrder = $this->sellService->getOrderByRef($id);
             $data = $this->sellService->getByRef($id);
+            // dd($data[0]['discount']);
             if ($data) {
                 $code = call_user_func_array([new DNS2D(), 'getBarcodePNG'], [$id, "QRCODE"]);
                 $dataURL = "data:image/png;base64," . ($code);
